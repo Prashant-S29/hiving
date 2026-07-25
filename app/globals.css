@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+ * DESIGN TOKENS — the single source of truth for every color on the site.
+ * Comma-separated R,G,B triplets (no #) so both Tailwind (via
+ * tailwind.config.ts's rgba(var(--x), <alpha-value>) pattern) and the raw
+ * CSS/inline styles below can apply opacity to the same value using the
+ * classic comma rgba() syntax — deliberately not the newer rgb(r g b / a)
+ * slash syntax, which this project's production CSS minifier can't parse.
+ * Change a value here and every bg-, text-, and border- utility class using
+ * it, every rule in this file, and every inline style that references it
+ * updates together — nothing hardcodes a hex/rgba copy anywhere else.
+ * ------------------------------------------------------------------------- */
+:root,
+:root[data-theme="dark"] {
+  --color-void: 15,15,18;
+  --color-deep: 20,20,24;
+  --color-surface: 26,26,34;
+  --color-lift: 34,34,46;
+  --color-paper: 246,243,237;
+  --color-cream: 238,233,223;
+  --color-signal: 214,59,47;
+  --color-signal-dark: 143,35,24;
+  --color-amber: 201,125,16;
+  --color-verify: 30,158,86;
+  --color-ink: 236,234,228;
+  --color-muted: 115,114,120;
+  --color-dim: 58,58,69;
+  --color-rule-base: 255,255,255;
+  --rule-alpha: 0.07;
+  --rule-strong-alpha: 0.13;
+}
+
+/* Light mode — same token names, same components, different values. This is
+ * the entire light theme: nothing else in the codebase needs to change. */
+:root[data-theme="light"] {
+  --color-void: 255,255,255;
+  --color-deep: 250,249,247;
+  --color-surface: 244,242,238;
+  --color-lift: 236,233,227;
+  --color-paper: 255,255,255;
+  --color-cream: 250,247,241;
+  --color-signal: 214,59,47;
+  --color-signal-dark: 143,35,24;
+  --color-amber: 176,108,10;
+  --color-verify: 21,120,64;
+  --color-ink: 20,20,24;
+  --color-muted: 100,98,104;
+  --color-dim: 205,202,208;
+  --color-rule-base: 0,0,0;
+  --rule-alpha: 0.08;
+  --rule-strong-alpha: 0.14;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: rgb(var(--color-void));
+  color: rgb(var(--color-ink));
+}
+
+/* Custom cursor only on devices with a real pointer */
+@media (hover: hover) and (pointer: fine) {
+  body.cursor-enabled {
+    cursor: none;
+  }
+}
+
+.noise-overlay::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.5;
+}
+
+@keyframes blink {
+  0%, 85%, 100% { transform: scaleY(1); opacity: 1; }
+  90% { transform: scaleY(0.1); opacity: 0.3; }
+}
+.animate-blink {
+  animation: blink 2.8s ease-in-out infinite;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker {
+  animation: ticker 28s linear infinite;
+}
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+/* Article body typography (Sanity Portable Text renders into this) */
+.prose-hivig {
+  font-family: var(--font-baskerville);
+  font-size: 18px;
+  line-height: 1.85;
+  color: rgba(var(--color-ink), 0.85);
+}
+.prose-hivig h2 {
+  font-family: var(--font-cormorant);
+  font-size: 30px;
+  font-weight: 700;
+  color: rgb(var(--color-ink));
+  margin: 2em 0 0.6em;
+  letter-spacing: -0.5px;
+}
+.prose-hivig h3 {
+  font-family: var(--font-cormorant);
+  font-size: 24px;
+  font-weight: 700;
+  color: rgb(var(--color-ink));
+  margin: 1.8em 0 0.5em;
+}
+.prose-hivig p {
+  margin-bottom: 1.4em;
+}
+.prose-hivig blockquote {
+  border-left: 3px solid rgb(var(--color-signal));
+  padding-left: 20px;
+  font-style: italic;
+  font-size: 20px;
+  color: rgb(var(--color-ink));
+  margin: 1.8em 0;
+}
+.prose-hivig code {
+  font-family: var(--font-dmmono);
+  background: rgb(var(--color-surface));
+  padding: 2px 6px;
+  font-size: 0.85em;
+  border-radius: 2px;
+}
+.prose-hivig pre {
+  font-family: var(--font-dmmono);
+  background: rgb(var(--color-surface));
+  padding: 20px;
+  overflow-x: auto;
+  font-size: 14px;
+  margin: 1.6em 0;
+  border-left: 2px solid rgb(var(--color-signal));
+}

@@ -1,0 +1,27 @@
+# Hivig — Hi-Tech Vigilance for the Agentic Age
+> Independent intelligence on agentic AI: platform verdicts, implementation
+> guides, and fearless analysis — no vendor sponsorships, ever. Also home to
+> The Race (a live AI model leaderboard) and the Agent Store (an on-demand
+> AI agent marketplace).
+
+## Editorial
+- /intel — article index (Deep Dives, How-To, Watchdog, Opinion, Fact-Checked)
+- /intel/{slug} — individual articles
+- /manifesto — what Hivig stands for
+- /about — origin, mission, editorial standards
+- /consultancy — independent AI agent implementation consulting
+- /subscribe — join the mailing list
+
+## The Race
+- /race — live leaderboard, all tracked AI models
+- /race/models/{slug} — individual model detail pages
+- /race/methodology — how rankings are computed
+
+## Agent Store
+- /agents — describe an agent, get a price quote
+- /agents/discover — instant, AI-generated feasibility study + quote
+- /agents/pricing — how quotes are calculated
+
+## Legal
+- /legal/privacy
+- /legal/terms
