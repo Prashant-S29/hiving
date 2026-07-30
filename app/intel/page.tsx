@@ -2,7 +2,10 @@ import { client, sanityConfigured } from "@/lib/sanity/client";
 import { allArticlesQuery } from "@/lib/sanity/queries";
 import { mockArticles } from "@/lib/mockArticles";
 import type { Article } from "@/lib/types";
+import { filterArticles, paginate, allPlatformTags } from "@/lib/articleFilters";
 import { ArticleCard } from "@/components/ArticleCard";
+import IntelFilterBar from "@/components/IntelFilterBar";
+import Pagination from "@/components/Pagination";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import type { Metadata } from "next";
 
@@ -24,8 +27,18 @@ async function getAllArticles(): Promise<Article[]> {
   return mockArticles;
 }
 
-export default async function IntelPage() {
-  const articles = await getAllArticles();
+export default async function IntelPage({
+  searchParams,
+}: {
+  searchParams: { category?: string; platform?: string; page?: string };
+}) {
+  const allArticles = await getAllArticles();
+  const category = searchParams.category || undefined;
+  const platform = searchParams.platform || undefined;
+
+  const filtered = filterArticles(allArticles, category, platform);
+  const { items, page, totalPages } = paginate(filtered, Number(searchParams.page) || 1);
+  const platforms = allPlatformTags(allArticles);
 
   return (
     <section className="px-6 md:px-12 pt-32 pb-24 max-w-content mx-auto">
@@ -40,19 +53,25 @@ export default async function IntelPage() {
         </p>
       </RevealOnScroll>
 
+      <IntelFilterBar activeCategory={category} activePlatform={platform} platforms={platforms} />
+
       <div className="grid md:grid-cols-3 gap-px bg-rule">
-        {articles.map((a, i) => (
+        {items.map((a, i) => (
           <RevealOnScroll key={a._id} delayMs={i * 60}>
             <ArticleCard article={a} />
           </RevealOnScroll>
         ))}
       </div>
 
-      {articles.length === 0 && (
+      {filtered.length === 0 && (
         <p className="font-body text-ink/50 py-20 text-center">
-          No articles published yet. Connect Sanity and publish your first piece.
+          {allArticles.length === 0
+            ? "No articles published yet. Connect Sanity and publish your first piece."
+            : "No articles match these filters."}
         </p>
       )}
+
+      <Pagination page={page} totalPages={totalPages} category={category} platform={platform} />
     </section>
   );
 }

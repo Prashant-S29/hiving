@@ -23,10 +23,10 @@ export default function Footer() {
         </div>
 
         <FooterCol title="Editorial" links={[
-          ["Deep Dives", "/intel"],
-          ["How-To Guides", "/intel"],
-          ["Watchdog Reports", "/intel"],
-          ["Opinion", "/intel"],
+          ["Deep Dives", "/intel?category=deep-dive"],
+          ["How-To Guides", "/intel?category=how-to"],
+          ["Watchdog Reports", "/intel?category=watchdog"],
+          ["Opinion", "/intel?category=opinion"],
         ]} />
         <FooterCol title="Company" links={[
           ["About Hivig", "/about"],
