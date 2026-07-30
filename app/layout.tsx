@@ -4,6 +4,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
+import CookieConsent from "@/components/CookieConsent";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -70,6 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <main>{children}</main>
         <Footer />
+        <CookieConsent />
       </body>
     </html>
   );

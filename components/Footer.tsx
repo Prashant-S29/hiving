@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CookiePreferencesLink from "@/components/CookiePreferencesLink";
 
 export default function Footer() {
   return (
@@ -33,10 +34,14 @@ export default function Footer() {
           ["Consultancy", "/consultancy"],
           ["Subscribe", "/subscribe"],
         ]} />
-        <FooterCol title="Legal" links={[
-          ["Privacy Policy", "/legal/privacy"],
-          ["Terms of Use", "/legal/terms"],
-        ]} />
+        <FooterCol
+          title="Legal"
+          links={[
+            ["Privacy Policy", "/legal/privacy"],
+            ["Terms of Use", "/legal/terms"],
+          ]}
+          extra={<CookiePreferencesLink />}
+        />
       </div>
 
       <div className="max-w-content mx-auto flex flex-col md:flex-row justify-between items-center gap-2 pt-6 font-mono text-[11px] text-dim">
@@ -47,7 +52,15 @@ export default function Footer() {
   );
 }
 
-function FooterCol({ title, links }: { title: string; links: [string, string][] }) {
+function FooterCol({
+  title,
+  links,
+  extra,
+}: {
+  title: string;
+  links: [string, string][];
+  extra?: React.ReactNode;
+}) {
   return (
     <div>
       <h4 className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted mb-5 pb-3 border-b border-rule">
@@ -61,6 +74,7 @@ function FooterCol({ title, links }: { title: string; links: [string, string][] 
             </Link>
           </li>
         ))}
+        {extra && <li>{extra}</li>}
       </ul>
     </div>
   );
