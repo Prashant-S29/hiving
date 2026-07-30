@@ -50,7 +50,7 @@ export default function ConsultancyPage() {
             and whether Hivig is the right fit for what you need.
           </p>
           <Link
-            href="/subscribe"
+            href="/consultancy/enquire"
             className="bg-signal hover:bg-signal-dark text-white font-sans text-[13px] font-bold uppercase tracking-[0.1em] px-9 py-[16px] inline-block transition-colors"
           >
             Enquire Now →
