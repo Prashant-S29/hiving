@@ -162,3 +162,46 @@ body {
   margin: 1.6em 0;
   border-left: 2px solid rgb(var(--color-signal));
 }
+.prose-hivig strong {
+  color: rgb(var(--color-ink));
+  font-weight: 700;
+}
+.prose-hivig a {
+  color: rgb(var(--color-signal));
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-hivig ul,
+.prose-hivig ol {
+  margin: 0 0 1.4em;
+  padding-left: 1.4em;
+}
+.prose-hivig ul {
+  list-style: disc;
+}
+.prose-hivig ol {
+  list-style: decimal;
+}
+.prose-hivig li {
+  margin-bottom: 0.6em;
+}
+.prose-hivig table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.6em 0;
+  font-size: 0.9em;
+}
+.prose-hivig th,
+.prose-hivig td {
+  border: 1px solid rgba(var(--color-rule-base), var(--rule-alpha));
+  padding: 10px 14px;
+  text-align: left;
+  vertical-align: top;
+}
+.prose-hivig th {
+  font-family: var(--font-dmmono);
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgb(var(--color-ink));
+}
