@@ -1,0 +1,72 @@
+<svg viewBox="0 0 960 560" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#0F0F12"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#D63B2F"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="560" fill="#ECEAE4"/>
+
+  <!-- Title block -->
+  <text x="40" y="46" font-family="DM Mono, monospace" font-size="12" letter-spacing="2" fill="#D63B2F">FIG. 01 — ORCHESTRATION MODEL</text>
+  <text x="40" y="78" font-family="Cormorant Garamond, Georgia, serif" font-size="30" fill="#0F0F12">How Bedrock's Supervisor Pattern Routes Work</text>
+  <line x1="40" y1="96" x2="920" y2="96" stroke="#0F0F12" stroke-width="1" opacity="0.25"/>
+
+  <!-- User request -->
+  <rect x="380" y="120" width="200" height="52" rx="4" fill="#0F0F12"/>
+  <text x="480" y="141" text-anchor="middle" font-family="DM Mono, monospace" font-size="11" fill="#ECEAE4" letter-spacing="1">INCOMING REQUEST</text>
+  <text x="480" y="160" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="13" fill="#ECEAE4">"Where is order #4471?"</text>
+
+  <line x1="480" y1="172" x2="480" y2="210" stroke="#0F0F12" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Supervisor -->
+  <rect x="330" y="212" width="300" height="76" rx="4" fill="none" stroke="#D63B2F" stroke-width="2.5"/>
+  <text x="480" y="240" text-anchor="middle" font-family="DM Mono, monospace" font-size="12" letter-spacing="1.5" fill="#D63B2F">SUPERVISOR AGENT</text>
+  <text x="480" y="262" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="13" fill="#0F0F12">Classifies intent, maintains context,</text>
+  <text x="480" y="279" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="13" fill="#0F0F12">routes to the right specialist</text>
+
+  <!-- Three sub-agent branches -->
+  <line x1="480" y1="288" x2="480" y2="316" stroke="#0F0F12" stroke-width="1.5"/>
+  <line x1="200" y1="316" x2="760" y2="316" stroke="#0F0F12" stroke-width="1.5"/>
+  <line x1="200" y1="316" x2="200" y2="344" stroke="#0F0F12" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="480" y1="316" x2="480" y2="344" stroke="#0F0F12" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="760" y1="316" x2="760" y2="344" stroke="#0F0F12" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Sub-agent 1 -->
+  <rect x="90" y="346" width="220" height="90" rx="4" fill="#0F0F12"/>
+  <text x="200" y="372" text-anchor="middle" font-family="DM Mono, monospace" font-size="10.5" letter-spacing="1" fill="#ECEAE4">SUB-AGENT</text>
+  <text x="200" y="392" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="17" fill="#ECEAE4">Order Management</text>
+  <text x="200" y="412" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="#D63B2F">→ Athena · Order DB</text>
+
+  <!-- Sub-agent 2 -->
+  <rect x="370" y="346" width="220" height="90" rx="4" fill="#0F0F12"/>
+  <text x="480" y="372" text-anchor="middle" font-family="DM Mono, monospace" font-size="10.5" letter-spacing="1" fill="#ECEAE4">SUB-AGENT</text>
+  <text x="480" y="392" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="17" fill="#ECEAE4">Product Information</text>
+  <text x="480" y="412" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="#D63B2F">→ Knowledge Base · OpenSearch</text>
+
+  <!-- Sub-agent 3 -->
+  <rect x="650" y="346" width="220" height="90" rx="4" fill="#0F0F12"/>
+  <text x="760" y="372" text-anchor="middle" font-family="DM Mono, monospace" font-size="10.5" letter-spacing="1" fill="#ECEAE4">SUB-AGENT</text>
+  <text x="760" y="392" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="17" fill="#ECEAE4">Technical Support</text>
+  <text x="760" y="412" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="#D63B2F">→ Human handoff · Ticketing</text>
+
+  <!-- Shared services row -->
+  <line x1="200" y1="436" x2="200" y2="466" stroke="#0F0F12" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="480" y1="436" x2="480" y2="466" stroke="#0F0F12" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="760" y1="436" x2="760" y2="466" stroke="#0F0F12" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="150" y1="466" x2="810" y2="466" stroke="#0F0F12" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <rect x="150" y="472" width="220" height="46" rx="4" fill="none" stroke="#0F0F12" stroke-width="1.2"/>
+  <text x="260" y="500" text-anchor="middle" font-family="DM Mono, monospace" font-size="11" fill="#0F0F12">Session Memory (DynamoDB)</text>
+
+  <rect x="390" y="472" width="180" height="46" rx="4" fill="none" stroke="#0F0F12" stroke-width="1.2"/>
+  <text x="480" y="500" text-anchor="middle" font-family="DM Mono, monospace" font-size="11" fill="#0F0F12">Guardrails</text>
+
+  <rect x="590" y="472" width="220" height="46" rx="4" fill="none" stroke="#0F0F12" stroke-width="1.2"/>
+  <text x="700" y="500" text-anchor="middle" font-family="DM Mono, monospace" font-size="11" fill="#0F0F12">Observability (OTel traces)</text>
+
+  <text x="40" y="548" font-family="DM Mono, monospace" font-size="10" fill="#0F0F12" opacity="0.55">Source: AWS Bedrock multi-agent collaboration docs; aws-solutions-library-samples reference architecture. Hivig, 2026.</text>
+</svg>

@@ -1,0 +1,48 @@
+<svg viewBox="0 0 960 460" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="960" height="460" fill="#0F0F12"/>
+
+  <text x="40" y="46" font-family="DM Mono, monospace" font-size="12" letter-spacing="2" fill="#D63B2F">FIG. 02 — WHY NOW</text>
+  <text x="40" y="78" font-family="Cormorant Garamond, Georgia, serif" font-size="30" fill="#ECEAE4">The Platform Is Moving Under Enterprises' Feet</text>
+  <line x1="40" y1="96" x2="920" y2="96" stroke="#ECEAE4" stroke-width="1" opacity="0.25"/>
+
+  <!-- timeline base line -->
+  <line x1="80" y1="260" x2="880" y2="260" stroke="#ECEAE4" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Node 1 -->
+  <circle cx="140" cy="260" r="7" fill="#ECEAE4"/>
+  <line x1="140" y1="260" x2="140" y2="180" stroke="#ECEAE4" stroke-width="1" opacity="0.5"/>
+  <text x="140" y="160" text-anchor="middle" font-family="DM Mono, monospace" font-size="11" fill="#D63B2F">NOV 2023</text>
+  <text x="140" y="140" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="12" fill="#ECEAE4">Bedrock Agents</text>
+  <text x="140" y="122" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="12" fill="#ECEAE4">launches</text>
+
+  <!-- Node 2 -->
+  <circle cx="340" cy="260" r="7" fill="#ECEAE4"/>
+  <line x1="340" y1="260" x2="340" y2="330" stroke="#ECEAE4" stroke-width="1" opacity="0.5"/>
+  <text x="340" y="350" text-anchor="middle" font-family="DM Mono, monospace" font-size="11" fill="#D63B2F">MAR 2025</text>
+  <text x="340" y="370" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="12" fill="#ECEAE4">Multi-agent collaboration</text>
+  <text x="340" y="388" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="12" fill="#ECEAE4">reaches general availability</text>
+
+  <!-- Node 3 -->
+  <circle cx="560" cy="260" r="7" fill="#D63B2F"/>
+  <line x1="560" y1="260" x2="560" y2="180" stroke="#D63B2F" stroke-width="1.2"/>
+  <text x="560" y="160" text-anchor="middle" font-family="DM Mono, monospace" font-size="11" fill="#D63B2F">APR 2026</text>
+  <text x="560" y="140" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="12" fill="#ECEAE4">AgentCore managed</text>
+  <text x="560" y="122" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="12" fill="#ECEAE4">harness enters preview</text>
+
+  <!-- Node 4 - highlighted -->
+  <circle cx="760" cy="260" r="9" fill="#D63B2F"/>
+  <line x1="760" y1="260" x2="760" y2="330" stroke="#D63B2F" stroke-width="1.5"/>
+  <rect x="660" y="336" width="200" height="70" rx="4" fill="none" stroke="#D63B2F" stroke-width="1.5"/>
+  <text x="760" y="358" text-anchor="middle" font-family="DM Mono, monospace" font-size="11.5" fill="#D63B2F">JUL 30, 2026</text>
+  <text x="760" y="378" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="12.5" fill="#ECEAE4">Bedrock Agents Classic</text>
+  <text x="760" y="396" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="12.5" fill="#ECEAE4">closes to new customers</text>
+
+  <!-- Node 5 -->
+  <circle cx="860" cy="260" r="6" fill="#ECEAE4" opacity="0.7"/>
+  <line x1="860" y1="260" x2="860" y2="200" stroke="#ECEAE4" stroke-width="1" opacity="0.4" stroke-dasharray="3,3"/>
+  <text x="860" y="185" text-anchor="middle" font-family="DM Mono, monospace" font-size="10.5" fill="#ECEAE4" opacity="0.85">Beyond</text>
+  <text x="860" y="170" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="11" fill="#ECEAE4" opacity="0.85">AgentCore is</text>
+  <text x="860" y="155" text-anchor="middle" font-family="Libre Baskerville, Georgia, serif" font-size="11" fill="#ECEAE4" opacity="0.85">the default path</text>
+
+  <text x="40" y="440" font-family="DM Mono, monospace" font-size="10" fill="#ECEAE4" opacity="0.55">Existing Classic customers may continue as normal — this is a new-customer cutoff, not a shutdown. Source: AWS docs, AWS What's New, Apr 2026. Hivig, 2026.</text>
+</svg>

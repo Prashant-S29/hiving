@@ -1,0 +1,53 @@
+<svg viewBox="0 0 960 520" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="960" height="520" fill="#ECEAE4"/>
+
+  <text x="40" y="46" font-family="DM Mono, monospace" font-size="12" letter-spacing="2" fill="#D63B2F">FIG. 03 — THE ECONOMICS</text>
+  <text x="40" y="78" font-family="Cormorant Garamond, Georgia, serif" font-size="30" fill="#0F0F12">One API, a 143x Price Spread</text>
+  <text x="40" y="100" font-family="Libre Baskerville, Georgia, serif" font-size="13" fill="#0F0F12" opacity="0.75">Input cost per 1M tokens, log scale — same account, same API call shape</text>
+
+  <!-- bars -->
+  <!-- baseline x = 260 -->
+  <g font-family="DM Mono, monospace" font-size="12" fill="#0F0F12">
+    <!-- Nova Micro -->
+    <text x="250" y="150" text-anchor="end">Amazon Nova Micro</text>
+    <rect x="260" y="132" width="20" height="24" fill="#0F0F12"/>
+    <text x="288" y="150" fill="#D63B2F">$0.035</text>
+
+    <!-- Nova Lite -->
+    <text x="250" y="196" text-anchor="end">Amazon Nova Lite</text>
+    <rect x="260" y="178" width="85" height="24" fill="#0F0F12"/>
+    <text x="353" y="196" fill="#D63B2F">$0.06</text>
+
+    <!-- Llama 4 8B -->
+    <text x="250" y="242" text-anchor="end">Meta Llama 4 8B</text>
+    <rect x="260" y="224" width="218" height="24" fill="#0F0F12"/>
+    <text x="486" y="242" fill="#D63B2F">$0.18</text>
+
+    <!-- Mistral Medium 3 -->
+    <text x="250" y="288" text-anchor="end">Mistral Medium 3</text>
+    <rect x="260" y="270" width="315" height="24" fill="#0F0F12"/>
+    <text x="583" y="288" fill="#D63B2F">$0.40</text>
+
+    <!-- Nova Pro -->
+    <text x="250" y="334" text-anchor="end">Amazon Nova Pro</text>
+    <rect x="260" y="316" width="398" height="24" fill="#0F0F12"/>
+    <text x="666" y="334" fill="#D63B2F">$0.80</text>
+
+    <!-- Nova Premier -->
+    <text x="250" y="380" text-anchor="end">Amazon Nova Premier</text>
+    <rect x="260" y="362" width="536" height="24" fill="#0F0F12"/>
+    <text x="804" y="380" fill="#D63B2F">$2.50</text>
+
+    <!-- Claude Opus 4.7 -->
+    <text x="250" y="426" text-anchor="end">Claude Opus 4.7</text>
+    <rect x="260" y="408" width="620" height="24" fill="#D63B2F"/>
+    <text x="888" y="426" fill="#0F0F12">$5.00</text>
+  </g>
+
+  <line x1="260" y1="130" x2="260" y2="440" stroke="#0F0F12" stroke-width="1" opacity="0.3"/>
+
+  <text x="40" y="470" font-family="Libre Baskerville, Georgia, serif" font-size="12.5" fill="#0F0F12">The whole point of a shared gateway: route routine, high-volume calls to the far left,</text>
+  <text x="40" y="490" font-family="Libre Baskerville, Georgia, serif" font-size="12.5" fill="#0F0F12">and pay far-right prices only for the reasoning that actually needs it.</text>
+
+  <text x="40" y="512" font-family="DM Mono, monospace" font-size="10" fill="#0F0F12" opacity="0.55">On-demand, us-east-1 list pricing as of mid-2026. Prices change — verify on the Bedrock pricing page before budgeting. Hivig, 2026.</text>
+</svg>

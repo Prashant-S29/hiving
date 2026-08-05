@@ -1,6 +1,38 @@
 import type { Article } from "@/lib/types";
+import { awsBedrockMultiAgentOrchestrationBody } from "@/lib/content/awsBedrockMultiAgentOrchestrationBody";
 
 export const mockArticles: Article[] = [
+  {
+    // Source: Intel/aws-bedrock-multi-agent-orchestration.md. Frontmatter mapped
+    // onto the Sanity `article` schema fields (sanity/schemaTypes/article.ts) —
+    // `target_keyword` and `og_description` were dropped, since neither has a
+    // matching schema field and the brief said not to invent new ones.
+    // Fields the source frontmatter didn't provide, filled in here and worth a
+    // human double-check before this goes into real Sanity Studio content:
+    //   - industryTag: inferred "tech-saas" (AWS Bedrock is unambiguously a
+    //     tech/cloud infrastructure topic, but this wasn't in the source file).
+    //   - deck: authored fresh — the frontmatter had no distinct 1-2 sentence
+    //     summary field (meta_description is a separate, shorter SEO string).
+    //   - author, featured: defaulted to match every other mock article's
+    //     convention ("The Hivig Editorial Team", unfeatured).
+    //   - publishedAt: source only gave "Aug 2026" (month precision); used the
+    //     file's actual creation date (2026-08-02) rather than guessing a day.
+    //   - metaDescription: source string was 163 chars, 3 over the schema's
+    //     max(160) validation — trimmed by three words to fit.
+    _id: "mock-6",
+    title: "Why Enterprises Are Standardizing on AWS Bedrock for Multi-Agent Orchestration",
+    slug: { current: "aws-bedrock-multi-agent-orchestration" },
+    tagType: "deep-dive",
+    industryTag: "tech-saas",
+    deck: "AWS Bedrock's multi-agent orchestration routes requests from one supervisor agent to specialized sub-agents under a single IAM and compliance boundary — and a July 2026 deadline means most enterprises are migrating to it whether they planned to or not.",
+    author: "The Hivig Editorial Team",
+    readTimeMinutes: 13,
+    publishedAt: "2026-08-02T09:00:00Z",
+    platformTags: ["AWS Bedrock"],
+    featured: false,
+    metaDescription: "What AWS Bedrock's multi-agent orchestration model actually is, why enterprises are consolidating onto it now, what it costs, and how to try it free this week.",
+    body: awsBedrockMultiAgentOrchestrationBody,
+  },
   {
     _id: "mock-1",
     title: "The Autonomous Agent Is No Longer a Prototype. It Is Your Next Employee.",
