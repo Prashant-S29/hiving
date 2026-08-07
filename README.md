@@ -14,7 +14,7 @@ command below is meant to be copy-pasted exactly as written.
 
 **In scope:** Home, Intel (article index + article template), Manifesto,
 About, Subscribe, Consultancy (single teaser page), Legal pages, and the
-Sanity Studio CMS embedded at `/studio`.
+Sanity Studio CMS embedded at `/studio`. 
 
 **Deliberately out of scope for this MVP**, per the phased roadmap: the 
 Industry Hub, Business Problem Hub, Workflow Library, Model Intelligence,
