@@ -7,27 +7,42 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "sanity:schema:validate": "sanity schema validate",
+    "sanity:seed:settings": "node scripts/sanity/seed-site-settings.mjs",
+    "sanity:seed:homepage": "node scripts/sanity/seed-homepage.mjs",
+    "sanity:seed:editorial": "node scripts/sanity/seed-editorial-settings.mjs",
+    "sanity:seed:company-pages": "tsx scripts/sanity/seed-company-pages.ts",
+    "sanity:seed:agent-pages": "tsx scripts/sanity/seed-agent-pages.ts",
+    "sanity:seed:conversion-pages": "tsx scripts/sanity/seed-conversion-pages.ts",
+    "sanity:seed:legal-pages": "tsx scripts/sanity/seed-legal-pages.ts",
+    "sanity:migrate:articles": "tsx scripts/sanity/migrate-mock-articles.ts",
+    "sanity:migrate:editorial": "tsx scripts/sanity/normalize-editorial-data.ts",
+    "sanity:migrate:race": "tsx scripts/sanity/migrate-race-data.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
+    "@portabletext/react": "^3.1.0",
+    "@portabletext/types": "^2.0.15",
+    "@sanity/client": "^7.26.2",
+    "@sanity/code-input": "^6.0.4",
+    "@sanity/image-url": "^1.1.0",
+    "@unosend/node": "^3.0.0",
     "next": "^14.2.5",
+    "next-sanity": "^9.4.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "@sanity/client": "^6.21.3",
-    "@sanity/image-url": "^1.1.0",
-    "next-sanity": "^9.4.4",
     "sanity": "^3.57.0",
-    "styled-components": "^6.1.12",
-    "@portabletext/react": "^3.1.0",
-    "@anthropic-ai/sdk": "^0.115.0"
+    "styled-components": "^6.1.12"
   },
   "devDependencies": {
-    "typescript": "^5.5.4",
     "@types/node": "^20.14.15",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "tailwindcss": "^3.4.10",
+    "autoprefixer": "^10.4.20",
     "postcss": "^8.4.41",
-    "autoprefixer": "^10.4.20"
+    "tailwindcss": "^3.4.10",
+    "tsx": "^4.23.11",
+    "typescript": "^5.5.4"
   }
 }

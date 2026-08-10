@@ -14,17 +14,23 @@ export default function Pagination({
   totalPages,
   category,
   platform,
+  ariaLabel,
+  previousLabel,
+  nextLabel,
 }: {
   page: number;
   totalPages: number;
   category?: string;
   platform?: string;
+  ariaLabel: string;
+  previousLabel: string;
+  nextLabel: string;
 }) {
   if (totalPages <= 1) return null;
 
   return (
     <nav
-      aria-label="Pagination"
+      aria-label={ariaLabel}
       className="flex items-center justify-center gap-2 mt-16 font-mono text-[12px] tracking-[0.08em]"
     >
       {page > 1 ? (
@@ -32,10 +38,10 @@ export default function Pagination({
           href={buildHref({ category, platform, page: page - 1 })}
           className="px-4 py-2 border border-rule-strong text-ink hover:border-ink transition-colors"
         >
-          ← Prev
+          {previousLabel}
         </Link>
       ) : (
-        <span className="px-4 py-2 border border-rule text-dim cursor-not-allowed">← Prev</span>
+        <span className="px-4 py-2 border border-rule text-dim cursor-not-allowed">{previousLabel}</span>
       )}
 
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
@@ -56,10 +62,10 @@ export default function Pagination({
           href={buildHref({ category, platform, page: page + 1 })}
           className="px-4 py-2 border border-rule-strong text-ink hover:border-ink transition-colors"
         >
-          Next →
+          {nextLabel}
         </Link>
       ) : (
-        <span className="px-4 py-2 border border-rule text-dim cursor-not-allowed">Next →</span>
+        <span className="px-4 py-2 border border-rule text-dim cursor-not-allowed">{nextLabel}</span>
       )}
     </nav>
   );

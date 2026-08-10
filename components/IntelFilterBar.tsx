@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TAG_LABELS, type TagType } from "@/lib/types";
+import type { EditorialSettings } from "@/lib/sanity/editorialSettings";
 
 function buildHref(params: { category?: string; platform?: string }) {
   const qs = new URLSearchParams();
@@ -28,26 +28,31 @@ export default function IntelFilterBar({
   activeCategory,
   activePlatform,
   platforms,
+  categories,
+  allCategoriesLabel,
+  allPlatformsLabel,
 }: {
   activeCategory?: string;
   activePlatform?: string;
   platforms: string[];
+  categories: EditorialSettings["categories"];
+  allCategoriesLabel: string;
+  allPlatformsLabel: string;
 }) {
-  const categories = Object.keys(TAG_LABELS) as TagType[];
 
   return (
     <div className="mb-14 space-y-5">
       <div className="flex flex-wrap gap-2">
         <Pill href={buildHref({ platform: activePlatform })} active={!activeCategory}>
-          All
+          {allCategoriesLabel}
         </Pill>
-        {categories.map((cat) => (
+        {categories.map((category) => (
           <Pill
-            key={cat}
-            href={buildHref({ category: activeCategory === cat ? undefined : cat, platform: activePlatform })}
-            active={activeCategory === cat}
+            key={category._key || category.value}
+            href={buildHref({ category: activeCategory === category.value ? undefined : category.value, platform: activePlatform })}
+            active={activeCategory === category.value}
           >
-            {TAG_LABELS[cat]}
+            {category.label}
           </Pill>
         ))}
       </div>
@@ -55,7 +60,7 @@ export default function IntelFilterBar({
       {platforms.length > 0 && (
         <div className="flex flex-wrap gap-2">
           <Pill href={buildHref({ category: activeCategory })} active={!activePlatform}>
-            All Platforms
+            {allPlatformsLabel}
           </Pill>
           {platforms.map((p) => (
             <Pill

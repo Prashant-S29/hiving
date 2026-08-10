@@ -9,9 +9,7 @@ export function middleware(request: NextRequest) {
   const country = request.headers.get("x-vercel-ip-country") ?? "US";
   const theme = resolveTheme(country);
 
-  // Set it as a *request* header (not just a response header) so it flows through
-  // to the page render and is readable via headers() in the Server Component —
-  // a response-only header would only reach the browser, not the render.
+  // Set it as a request header so it is readable by the Race Server Component.
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-race-theme", theme);
 

@@ -23,7 +23,11 @@ export const ACCENT_STYLES: Record<HeroChoice["accent"], { border: string; text:
   },
 };
 
-export default function HeroChoiceCards({ choices }: { choices: HeroChoice[] }) {
+export default function HeroChoiceCards({ choices, eyebrowLabel, actionLabel }: {
+  choices: HeroChoice[];
+  eyebrowLabel: string;
+  actionLabel: string;
+}) {
   return (
     <div className="grid gap-4 sm:grid-cols-3">
       {choices.map((choice) => {
@@ -34,13 +38,13 @@ export default function HeroChoiceCards({ choices }: { choices: HeroChoice[] }) 
             href={choice.href}
             className={`group block border border-rule-strong bg-surface/70 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 ${accent.border} ${accent.glow}`}
           >
-            <span className={`font-mono text-[10px] uppercase tracking-[0.15em] ${accent.text}`}>Choose</span>
+            <span className={`font-mono text-[10px] uppercase tracking-[0.15em] ${accent.text}`}>{eyebrowLabel}</span>
             <h3 className="mt-2 font-serif text-xl font-bold text-ink">{choice.label}</h3>
             <p className="mt-2 font-body text-sm leading-relaxed text-ink/65">{choice.description}</p>
             <span
               className={`mt-4 inline-block font-mono text-[11px] uppercase tracking-[0.1em] opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 ${accent.text}`}
             >
-              Go →
+              {actionLabel}
             </span>
           </Link>
         );

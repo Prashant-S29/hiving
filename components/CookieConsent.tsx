@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import type { SiteSettings } from "@/lib/sanity/siteSettings";
 import {
   readConsent,
   writeConsent,
@@ -13,7 +14,7 @@ type ToggleState = Record<ConsentCategory, boolean>;
 
 const DEFAULT_TOGGLES: ToggleState = { analytics: false, functional: false };
 
-export default function CookieConsent() {
+export default function CookieConsent({ copy }: { copy: SiteSettings["cookieConsent"] }) {
   // null until the first client-side check runs, so server and client
   // render the same (nothing) on first paint, no hydration mismatch.
   const [bannerVisible, setBannerVisible] = useState(false);
@@ -69,36 +70,35 @@ export default function CookieConsent() {
       {bannerVisible && !modalOpen && (
         <div
           role="region"
-          aria-label="Cookie consent"
+          aria-label={copy.regionAriaLabel}
           className="fixed bottom-0 left-0 right-0 z-50 bg-void border-t-2 border-signal px-6 md:px-12 py-6"
         >
           <div className="max-w-content mx-auto flex flex-col md:flex-row md:items-center gap-5 md:gap-8">
             <p className="font-body text-[13px] leading-[1.7] text-ink/70 flex-1">
-              We use cookies to run this site and, if you allow it, to understand how it&rsquo;s used.
-              Necessary cookies are always on. See our{" "}
+              {copy.bannerIntro}{" "}
               <Link href="/legal/privacy" className="text-signal hover:underline">
-                Privacy Policy
+                {copy.privacyLinkLabel}
               </Link>{" "}
-              for details.
+              {copy.bannerOutro}
             </p>
             <div className="flex flex-wrap gap-3 shrink-0">
               <button
                 onClick={openPreferences}
                 className="font-mono text-[11px] tracking-[0.1em] uppercase text-muted hover:text-ink border border-rule-strong px-5 py-3 transition-colors"
               >
-                Manage Preferences
+                {copy.manageLabel}
               </button>
               <button
                 onClick={rejectNonEssential}
                 className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink border border-rule-strong hover:border-ink px-5 py-3 transition-colors"
               >
-                Reject Non-Essential
+                {copy.rejectLabel}
               </button>
               <button
                 onClick={acceptAll}
                 className="bg-signal hover:bg-signal-dark text-white font-mono text-[11px] tracking-[0.1em] uppercase font-medium px-5 py-3 transition-colors"
               >
-                Accept All
+                {copy.acceptLabel}
               </button>
             </div>
           </div>
@@ -115,11 +115,11 @@ export default function CookieConsent() {
           <div className="bg-void border border-rule-strong max-w-[540px] w-full p-8 md:p-10 max-h-[90vh] overflow-y-auto">
             <div className="flex items-start justify-between gap-4 mb-6">
               <h2 id="cookie-preferences-title" className="font-serif text-[24px] font-bold tracking-tight">
-                Cookie Preferences
+                {copy.modalTitle}
               </h2>
               <button
                 onClick={() => setModalOpen(false)}
-                aria-label="Close"
+                aria-label={copy.closeLabel}
                 className="text-muted hover:text-ink text-[20px] leading-none"
               >
                 ×
@@ -128,20 +128,20 @@ export default function CookieConsent() {
 
             <div className="space-y-5 mb-8">
               <ConsentRow
-                title="Necessary"
-                description="Required for the site to function (theme preference, session security). Cannot be disabled."
+                title={copy.necessary.title}
+                description={copy.necessary.description}
                 checked
                 disabled
               />
               <ConsentRow
-                title="Analytics"
-                description="Helps us understand how visitors use the site, so we can improve it. No data is shared with advertisers."
+                title={copy.analytics.title}
+                description={copy.analytics.description}
                 checked={toggles.analytics}
                 onChange={(v) => setToggles((t) => ({ ...t, analytics: v }))}
               />
               <ConsentRow
-                title="Functional"
-                description="Enables extra features (e.g. remembering form inputs, embedded content preferences)."
+                title={copy.functional.title}
+                description={copy.functional.description}
                 checked={toggles.functional}
                 onChange={(v) => setToggles((t) => ({ ...t, functional: v }))}
               />
@@ -152,19 +152,19 @@ export default function CookieConsent() {
                 onClick={savePreferences}
                 className="bg-signal hover:bg-signal-dark text-white font-mono text-[11px] tracking-[0.1em] uppercase font-medium px-6 py-3 transition-colors"
               >
-                Save Preferences
+                {copy.saveLabel}
               </button>
               <button
                 onClick={rejectNonEssential}
                 className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink border border-rule-strong hover:border-ink px-6 py-3 transition-colors"
               >
-                Reject Non-Essential
+                {copy.rejectLabel}
               </button>
               <button
                 onClick={acceptAll}
                 className="font-mono text-[11px] tracking-[0.1em] uppercase text-muted hover:text-ink border border-rule-strong px-6 py-3 transition-colors"
               >
-                Accept All
+                {copy.acceptLabel}
               </button>
             </div>
           </div>

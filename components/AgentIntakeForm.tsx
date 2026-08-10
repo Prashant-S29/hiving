@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import type { QuoteBreakdown } from "@/lib/pricing-engine";
+import type { AgentQuoteFormCopy } from "@/lib/sanity/agentPages";
 
-export default function AgentIntakeForm() {
+export default function AgentIntakeForm({ copy }: { copy: AgentQuoteFormCopy }) {
   const [promptText, setPromptText] = useState("");
   const [quote, setQuote] = useState<QuoteBreakdown | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -22,12 +23,12 @@ export default function AgentIntakeForm() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Something went wrong.");
+        setError(copy.fallbackError);
         return;
       }
       setQuote(data as QuoteBreakdown);
     } catch {
-      setError("Could not reach the quote service.");
+      setError(copy.networkError);
     } finally {
       setLoading(false);
     }
@@ -37,7 +38,7 @@ export default function AgentIntakeForm() {
     <div>
       <form onSubmit={handleSubmit} className="space-y-3">
         <label htmlFor="promptText" className="block font-mono text-[11px] uppercase tracking-wider text-muted">
-          Describe the agent you want
+          {copy.promptLabel}
         </label>
         <textarea
           id="promptText"
@@ -46,7 +47,7 @@ export default function AgentIntakeForm() {
           rows={5}
           minLength={10}
           required
-          placeholder="e.g. An agent that reads incoming support emails, classifies urgency, drafts a reply, and escalates production issues to Slack."
+          placeholder={copy.promptPlaceholder}
           className="w-full border border-rule-strong bg-surface p-3 font-body text-sm text-ink placeholder:text-dim focus:border-signal focus:outline-none"
         />
         <button
@@ -54,7 +55,7 @@ export default function AgentIntakeForm() {
           disabled={loading || promptText.trim().length < 10}
           className="bg-signal hover:bg-signal-dark px-5 py-2.5 font-sans text-[11px] font-bold uppercase tracking-[0.1em] text-white transition-colors disabled:opacity-40"
         >
-          {loading ? "Getting quote…" : "Get a quote"}
+          {loading ? copy.loadingLabel : copy.submitLabel}
         </button>
       </form>
 
@@ -63,31 +64,30 @@ export default function AgentIntakeForm() {
       {quote && (
         <div className="mt-6 border border-rule bg-surface p-5">
           <p className="font-serif text-3xl font-bold text-ink">${quote.quotedPriceUSD.toFixed(2)}</p>
-          <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-muted">Region: {quote.geoRegion}</p>
+          <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-muted">{copy.regionLabel}: {quote.geoRegion}</p>
 
           <dl className="mt-5 grid grid-cols-2 gap-y-2 border-t border-rule pt-4 text-sm">
-            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">Model</dt>
+            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">{copy.modelLabel}</dt>
             <dd className="text-ink">{quote.breakdown.modelUsed}</dd>
 
-            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">Estimated tokens</dt>
+            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">{copy.tokensLabel}</dt>
             <dd className="text-ink">{quote.breakdown.estimatedTokens.toLocaleString()}</dd>
 
-            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">Estimated human hours</dt>
+            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">{copy.hoursLabel}</dt>
             <dd className="text-ink">{quote.breakdown.estimatedHumanHours}</dd>
 
-            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">Expertise tier</dt>
+            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">{copy.tierLabel}</dt>
             <dd className="text-ink">{quote.breakdown.expertiseTier}</dd>
 
-            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">Model credits cost</dt>
+            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">{copy.modelCostLabel}</dt>
             <dd className="text-ink">${quote.modelCreditsCostUSD.toFixed(2)}</dd>
 
-            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">Human hours cost</dt>
+            <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">{copy.humanCostLabel}</dt>
             <dd className="text-ink">${quote.humanHoursCostUSD.toFixed(2)}</dd>
           </dl>
 
           <p className="mt-4 font-mono text-[11px] leading-relaxed text-dim">
-            This is a quote only — no order or payment has been captured. Order capture
-            without live checkout is a v1 follow-up per BUILD_BRIEF.md Day 3.
+            {copy.quoteDisclaimer}
           </p>
         </div>
       )}

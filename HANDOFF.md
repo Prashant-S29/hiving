@@ -8,16 +8,21 @@ setup steps; this doc is scoped to **getting it live in ~3 days**.
 ## What's already built and working
 
 - Editorial site: homepage, Intel article index + article pages, Manifesto,
-  About, Consultancy, Subscribe, legal pages — all wired to Sanity CMS with a
-  graceful mock-content fallback when Sanity isn't configured yet.
-- **The Race** (`/race`): AI model leaderboard with per-model pages and a
-  ranking-methodology page. Seed data is real model names/orgs/dates but
-  **benchmark scores and market/funding data are intentionally placeholder**
-  (`data/seed-models.ts` header explains why — don't launch this claiming
-  sourced numbers without actually sourcing them first).
-- **Agent Store** (`/agents`, `/agents/discover`): a pricing-quote engine
-  (`lib/pricing-engine.ts`) and a Claude-API-powered "instant feasibility
-  study" flow. Both fully functional; verified end-to-end.
+  About, Consultancy, Subscribe, legal pages — all wired to Sanity CMS with
+  strict production failure handling. Intel uses
+  reusable Author, Article Type, Industry, Platform, and Source records; the
+  original six article slugs were preserved during reference normalization.
+- **The Race** (`/race`): Sanity-managed model leaderboard, per-model pages,
+  and methodology page. Race Data contains 16 organizations, 18 models, and 18
+  unscored benchmark records. Every migrated record is explicitly unverified;
+  there are no source records because the original seed had no defensible URLs.
+  Ranking remains a protected release-date placeholder calculation in code.
+- **Agent Store** (`/agents`, `/agents/pricing`, `/agents/discover`): a
+  pricing-quote engine (`lib/pricing-engine.ts`) and Claude-API-powered
+  feasibility flow. All page, quote-form, pricing-label, and result-interface
+  copy is managed in Sanity; calculations and AI behavior remain in code.
+  Quote generation is functional. Live Discover generation still requires an
+  `ANTHROPIC_API_KEY` and has not been exercised in the current environment.
 - Site-wide light/dark theme toggle, CMS-editable homepage hero (interactive
   animated picker / image / video, singleton in the Studio) — see README's
   "Editing the homepage hero" and "Light / dark mode" sections.
@@ -31,14 +36,21 @@ setup steps; this doc is scoped to **getting it live in ~3 days**.
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | CMS (articles, homepage hero) | `npx create-sanity@latest` — README Step 2 |
 | `NEXT_PUBLIC_SANITY_DATASET` | CMS | same, usually `production` |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | CMS | pin to a date, e.g. `2024-01-01` |
-| `SANITY_API_WRITE_TOKEN` | Only if you add server-side writes later | Not needed for launch |
-| `EMAIL_PROVIDER_API_KEY` | Subscribe form actually sending anything | Not wired yet — see Gaps below |
+| `SANITY_API_WRITE_TOKEN` | CMS migration/seed scripts | Sanity Editor token; never expose publicly |
+| `SANITY_API_READ_TOKEN` | Authenticated draft preview | Minimum-scope Sanity Viewer token |
+| `SANITY_REVALIDATE_SECRET` | Signed publish webhook | Shared secret configured in Sanity and Vercel |
+| `SANITY_STUDIO_PREVIEW_ORIGIN` | Presentation frontend | `https://hivig.com` in production |
+| `SANITY_ALLOW_FALLBACKS` | Emergency CMS fallback | Keep `false`; enable only during a monitored incident |
+| `UNOSEND_API_KEY` | Subscribe and consultancy email delivery | UnoSend dashboard (`EMAIL_PROVIDER_API_KEY` is a temporary fallback) |
+| `UNOSEND_FROM_EMAIL` | Verified sender identity | An address on the verified `hivig.com` domain |
+| `UNOSEND_NOTIFICATION_EMAIL` | Consultancy enquiry destination/reply-to | Client-owned monitored inbox |
 | `ANTHROPIC_API_KEY` | `/agents/discover`'s live AI generation | console.anthropic.com |
 
-Without `NEXT_PUBLIC_SANITY_*` set, the site runs fine on mock content —
-useful for a first deploy, not for real launch (no real articles/hero).
-Without `ANTHROPIC_API_KEY`, `/agents/discover` shows a clear config error;
-everything else still works.
+Without `NEXT_PUBLIC_SANITY_*`, local development can use fixtures, but a
+production build/request fails explicitly. Do not set `SANITY_ALLOW_FALLBACKS`
+to `true` except as a temporary, monitored emergency response.
+Without `ANTHROPIC_API_KEY`, `/agents/discover` cannot generate a live study
+and shows the CMS-managed fallback error; everything else still works.
 
 ## Suggested 3-day plan
 
@@ -54,9 +66,8 @@ everything else still works.
 **Day 2 — content + QA**
 1. Write/publish 8–12 real articles in the Studio (README Step 6 has the
    checklist per article).
-2. Fill in the Homepage Hero doc with real choice-card copy (placeholders
-   are functional but generic — see `lib/mockHero.ts` for what they currently
-   say).
+2. Review and publish the Homepage document, including choice cards and the
+   approved section order/visibility controls.
 3. Full click-through QA in **both** light and dark theme: homepage, Intel,
    an article, Manifesto, About, Consultancy, Subscribe, Race leaderboard, a
    model page, methodology, Agent Store quote flow, Discover flow.
@@ -75,14 +86,19 @@ everything else still works.
 
 ## Known gaps to make a call on before public launch
 
-- **Subscribe form doesn't send anything yet** — `app/api/subscribe/route.ts`
-  just logs submissions server-side. Wire in Resend/ConvertKit/Beehiiv (all
-  simple APIs) or decide this is a post-launch task.
-- **Legal pages are placeholders** — `app/legal/privacy/page.tsx` and
-  `app/legal/terms/page.tsx` need real counsel-reviewed copy.
-- **Race Tracker benchmark/funding data is unsourced** — see
-  `data/seed-models.ts` and `RANKING_METHODOLOGY.md`. The ranking itself is
-  also a placeholder formula (sorts by release date), not a real methodology.
+- **UnoSend needs an end-to-end delivery test and a future subscriber store** —
+  Subscribe sends a welcome email plus an internal signup notification;
+  Consultancy Enquiry sends an internal notification. UnoSend's current live
+  API does not expose the contacts/audiences advertised by its SDK, so it is
+  not yet the durable newsletter list. Configure the `UNOSEND_*` variables
+  from `.env.local.example` and verify delivery and reply-to behavior.
+- **Legal pages require counsel review** — both documents are now managed in
+  Sanity and intentionally retain working-draft notices, placeholder dates,
+  address, and privacy-contact fields until qualified counsel approves them.
+- **Race benchmark/funding data is unsourced** — the structured Sanity records
+  are intentionally unverified and unscored. Add reviewed Source documents
+  before entering claims. Ranking is still a placeholder formula (release date,
+  newest first), not a real methodology; see `RANKING_METHODOLOGY.md`.
 - **Model logos are all a placeholder icon** — `public/logos/README.md`
   explains what's needed (real licensed logos + a source log).
 - **Agent Store pricing constants are illustrative** — `lib/pricing-engine.ts`

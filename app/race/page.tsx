@@ -1,120 +1,123 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import Link from "next/link";
+import CmsLink from "@/components/CmsLink";
 import RaceTrack from "@/components/RaceTrack";
 import RevealOnScroll from "@/components/RevealOnScroll";
-import { SEED_MODELS } from "@/data/seed-models";
 import { DEFAULT_THEME_ID } from "@/lib/geo-theme";
+import { applyTemplate, getRaceModels, getRaceSettings, type RaceModel, type RaceSettingsContent } from "@/lib/sanity/race";
 
-export const metadata: Metadata = {
-  title: "The Race — Live Global AI Model Rankings",
-  description:
-    "Live-updated ranking of frontier AI models from the US, China, India, and beyond — with market/funding data and source-cited commentary, refreshed every 72 hours.",
-};
-
-function buildDefinitionalBlock(models: typeof SEED_MODELS, dateLabel: string) {
-  const top = [...models].sort((a, b) => a.rank_current - b.rank_current)[0];
-  const top10 = [...models].sort((a, b) => a.rank_current - b.rank_current).slice(0, 10);
-  const countryCount = (code: string) => top10.filter((m) => m.org_country === code).length;
-  const cn = countryCount("CN");
-  const us = countryCount("US");
-
-  return `As of ${dateLabel}, the top-ranked AI model on Hivig is ${top.model_name} from ${top.org_name} (${top.org_country}). The current top 10 includes ${us} model${us === 1 ? "" : "s"} from US labs and ${cn} from Chinese labs. Rankings use a placeholder methodology pending a documented formula — see the methodology page below.`;
-}
-
-function itemListJsonLd(models: typeof SEED_MODELS, dateModifiedIso: string) {
+export async function generateMetadata(): Promise<Metadata> {
+  const { seo } = await getRaceSettings();
   return {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "Global AI Model Race — Live Rankings",
-    description:
-      "Live-updated ranking of frontier AI models from the US, China, and India, refreshed every 72 hours.",
-    dateModified: dateModifiedIso,
-    itemListElement: [...models]
-      .sort((a, b) => a.rank_current - b.rank_current)
-      .map((m) => ({
-        "@type": "ListItem",
-        position: m.rank_current,
-        url: `https://hivig.com/race/models/${m.slug}`,
-        name: m.model_name,
-      })),
+    title: seo.metaTitle,
+    description: seo.metaDescription,
+    alternates: seo.canonicalUrl ? { canonical: seo.canonicalUrl } : undefined,
+    robots: seo.noIndex ? { index: false, follow: false } : undefined,
+    openGraph: {
+      title: seo.openGraphTitle || seo.metaTitle,
+      description: seo.openGraphDescription || seo.metaDescription,
+      images: seo.openGraphImageUrl ? [{ url: seo.openGraphImageUrl }] : undefined,
+    },
   };
 }
 
-function faqJsonLd(models: typeof SEED_MODELS) {
-  const top = [...models].sort((a, b) => a.rank_current - b.rank_current)[0];
+function itemListJsonLd(models: RaceModel[], settings: RaceSettingsContent, dateModified: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: settings.itemListName,
+    description: settings.itemListDescription,
+    dateModified,
+    itemListElement: models.map((model) => ({
+      "@type": "ListItem",
+      position: model.rank_current,
+      url: `https://hivig.com/race/models/${model.slug}`,
+      name: model.model_name,
+    })),
+  };
+}
+
+function faqJsonLd(models: RaceModel[], settings: RaceSettingsContent) {
+  const top = models[0];
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: [
       {
         "@type": "Question",
-        name: "Which AI model is currently ranked highest?",
+        name: settings.highestModelQuestion,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `${top.model_name} from ${top.org_name} is currently ranked #1 on Hivig's tracker.`,
+          text: applyTemplate(settings.highestModelAnswerTemplate, { model: top.model_name, organization: top.org_name }),
         },
       },
       {
         "@type": "Question",
-        name: "How often are these rankings updated?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Every 72 hours. The page shows a visible last-updated timestamp, matched by the dateModified field in this page's structured data.",
-        },
+        name: settings.refreshQuestion,
+        acceptedAnswer: { "@type": "Answer", text: settings.refreshAnswer },
       },
     ],
   };
 }
 
-export default function RacePage() {
-  const headerList = headers();
-  const themeId = headerList.get("x-race-theme") ?? DEFAULT_THEME_ID;
+function jsonLd(value: object) {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
+}
 
-  const models = [...SEED_MODELS].sort((a, b) => a.rank_current - b.rank_current);
-  const dateModifiedIso = models[0]?.last_updated ?? new Date().toISOString();
-  const dateLabel = new Date(dateModifiedIso).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+function displayDate(value: string, locale: string) {
+  try {
+    return new Date(value).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" });
+  } catch {
+    return new Date(value).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  }
+}
+
+export default async function RacePage() {
+  const [models, settings] = await Promise.all([getRaceModels(), getRaceSettings()]);
+  const themeId = headers().get("x-race-theme") ?? DEFAULT_THEME_ID;
+  const top = models[0];
+  const top10 = models.slice(0, 10);
+  const usCount = top10.filter((model) => model.org_country === "US").length;
+  const cnCount = top10.filter((model) => model.org_country === "CN").length;
+  const dateModified = top.last_updated;
+  const dateLabel = displayDate(dateModified, settings.dateLocale);
+  const definition = applyTemplate(settings.definitionTemplate, {
+    date: dateLabel,
+    model: top.model_name,
+    organization: top.org_name,
+    country: top.org_country,
+    usCount,
+    usWord: usCount === 1 ? "model" : "models",
+    cnCount,
+    cnWord: cnCount === 1 ? "model" : "models",
   });
 
   return (
     <section className="pt-32 pb-24 px-6 md:px-12">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd(models, dateModifiedIso)) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(models)) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(itemListJsonLd(models, settings, dateModified)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqJsonLd(models, settings)) }} />
 
       <div className="max-w-content mx-auto">
         <RevealOnScroll>
           <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-signal mb-5 flex items-center gap-4">
-            <span className="w-8 h-px bg-signal" /> Live · refreshed every 72h
+            <span className="w-8 h-px bg-signal" /> {settings.eyebrow}
           </div>
 
           <h1 className="font-serif text-[40px] md:text-[58px] font-bold tracking-tight leading-[1.05] text-ink">
-            The <span className="italic text-signal">Race</span> — Live Global AI Model Rankings
+            {settings.headingPrefix} <span className="italic text-signal">{settings.headingEmphasis}</span> {settings.headingSuffix}
           </h1>
 
-          <p className="mt-6 max-w-2xl font-body text-[16px] leading-[1.85] text-ink/75">
-            {buildDefinitionalBlock(models, dateLabel)}
-          </p>
+          <p className="mt-6 max-w-2xl font-body text-[16px] leading-[1.85] text-ink/75">{definition}</p>
 
           <p className="mt-3 font-mono text-[11px] uppercase tracking-wider text-muted">
-            Last updated: <time dateTime={dateModifiedIso}>{dateLabel}</time> · Theme: {themeId} ·{" "}
-            <Link href="/race/methodology" className="text-signal hover:text-ink transition-colors normal-case tracking-normal">
-              How rankings are computed
-            </Link>
+            {settings.lastUpdatedLabel}: <time dateTime={dateModified}>{dateLabel}</time> · {settings.themeLabel}: {themeId} ·{" "}
+            <CmsLink link={settings.methodologyAction} className="text-signal hover:text-ink transition-colors normal-case tracking-normal">
+              {settings.methodologyAction.label}
+            </CmsLink>
           </p>
         </RevealOnScroll>
 
-        <div className="mt-10">
-          <RaceTrack models={models} themeId={themeId} />
-        </div>
+        <div className="mt-10"><RaceTrack models={models} themeId={themeId} copy={settings} /></div>
       </div>
     </section>
   );

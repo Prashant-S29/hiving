@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "hivig-theme";
 
-export default function ThemeToggle() {
+export default function ThemeToggle({
+  switchToLightLabel,
+  switchToDarkLabel,
+}: {
+  switchToLightLabel: string;
+  switchToDarkLabel: string;
+}) {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   useEffect(() => {
@@ -27,7 +33,7 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+      aria-label={theme === "light" ? switchToDarkLabel : switchToLightLabel}
       className="flex h-7 w-7 items-center justify-center rounded-full border border-rule-strong text-[13px] text-muted transition-colors hover:text-ink"
     >
       {theme === "light" ? "☀" : "☾"}

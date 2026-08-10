@@ -1,3 +1,5 @@
+import type { ArticleBodyBlock } from "@/lib/types";
+
 // Portable Text body for the "aws-bedrock-multi-agent-orchestration" article.
 // Hand-converted from the source markdown (Intel/aws-bedrock-multi-agent-orchestration.md)
 // since this repo has no MDX pipeline — articles render via @portabletext/react
@@ -12,7 +14,7 @@
 
 const link = (key: string, href: string) => ({ _key: key, _type: "link", href });
 
-export const awsBedrockMultiAgentOrchestrationBody: unknown[] = [
+export const awsBedrockMultiAgentOrchestrationBody: ArticleBodyBlock[] = [
   {
     _type: "block",
     _key: "b1",

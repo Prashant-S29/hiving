@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const article = defineType({
   name: "article",
@@ -27,32 +27,19 @@ export const article = defineType({
     defineField({
       name: "tagType",
       title: "Article Type",
-      type: "string",
+      type: "reference",
       group: "content",
-      options: {
-        list: [
-          { title: "Deep Dive", value: "deep-dive" },
-          { title: "How-To Guide", value: "how-to" },
-          { title: "Watchdog Report", value: "watchdog" },
-          { title: "Opinion", value: "opinion" },
-          { title: "Fact-Checked Analysis", value: "verify" },
-        ],
-        layout: "radio",
-      },
+      to: [{ type: "articleType" }],
+      options: { filter: "active != false" },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "industryTag",
       title: "Industry",
-      type: "string",
+      type: "reference",
       group: "content",
-      options: {
-        list: [
-          { title: "Technology & SaaS", value: "tech-saas" },
-          { title: "Financial Services", value: "financial-services" },
-          { title: "Cross-Industry", value: "cross-industry" },
-        ],
-      },
+      to: [{ type: "industry" }],
+      options: { filter: "active != false" },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -64,11 +51,19 @@ export const article = defineType({
       validation: (Rule) => Rule.required().max(280),
     }),
     defineField({
+      name: "heroMedia",
+      title: "Hero image",
+      type: "imageWithAlt",
+      group: "content",
+    }),
+    defineField({
       name: "heroImage",
-      title: "Hero Image",
+      title: "Legacy hero image",
       type: "image",
       group: "content",
       options: { hotspot: true },
+      hidden: true,
+      deprecated: { reason: "Use Hero image, which requires accessible alternative text." },
     }),
     defineField({
       name: "body",
@@ -84,10 +79,37 @@ export const article = defineType({
             { title: "H3", value: "h3" },
             { title: "Quote", value: "blockquote" },
           ],
+          marks: {
+            annotations: [
+              {
+                name: "link",
+                title: "Link",
+                type: "object",
+                fields: [
+                  defineField({
+                    name: "href",
+                    title: "URL",
+                    type: "url",
+                    validation: (Rule) => Rule.required().uri({ scheme: ["http", "https", "mailto"] }),
+                  }),
+                ],
+              },
+            ],
+          },
         },
         {
           type: "image",
           options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alternative text",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({ name: "caption", title: "Caption", type: "string" }),
+            defineField({ name: "credit", title: "Credit", type: "string" }),
+          ],
         },
         {
           type: "code",
@@ -98,9 +120,11 @@ export const article = defineType({
     defineField({
       name: "author",
       title: "Author",
-      type: "string",
+      type: "reference",
       group: "content",
-      initialValue: "The Hivig Editorial Team",
+      to: [{ type: "author" }],
+      options: { filter: "active != false" },
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "readTimeMinutes",
@@ -121,14 +145,8 @@ export const article = defineType({
       title: "Related Platforms",
       type: "array",
       group: "content",
-      of: [{ type: "string" }],
-      options: {
-        list: [
-          "AWS Bedrock", "Salesforce Agentforce", "Microsoft Copilot Studio",
-          "Google Gemini", "Azure AI Foundry", "LangGraph", "CrewAI",
-          "AutoGen", "Anthropic Claude", "Open Source",
-        ],
-      },
+      of: [defineArrayMember({ type: "reference", to: [{ type: "platform" }] })],
+      validation: (Rule) => Rule.unique(),
     }),
     defineField({
       name: "featured",
@@ -137,23 +155,33 @@ export const article = defineType({
       group: "content",
       initialValue: false,
     }),
+    defineField({ name: "featurePriority", title: "Homepage feature priority", type: "number", group: "content", hidden: ({ parent }) => !parent?.featured, validation: (Rule) => Rule.integer().min(0) }),
+    defineField({ name: "reviewedAt", title: "Last reviewed", type: "datetime", group: "meta" }),
+    defineField({ name: "sources", title: "Sources", type: "array", group: "meta", of: [defineArrayMember({ type: "reference", to: [{ type: "sourceCitation" }] })], validation: (Rule) => Rule.unique() }),
+    defineField({ name: "relatedArticles", title: "Related articles", type: "array", group: "meta", of: [defineArrayMember({ type: "reference", to: [{ type: "article" }] })], validation: (Rule) => Rule.unique() }),
+    defineField({ name: "seo", title: "SEO and social sharing", type: "seo", group: "meta" }),
     defineField({
       name: "metaTitle",
-      title: "Meta Title (for search/AEO — overrides article title if set)",
+      title: "Legacy meta title",
       type: "string",
       group: "meta",
+      hidden: true,
+      deprecated: { reason: "Use the SEO and social sharing field." },
       validation: (Rule) => Rule.max(70),
     }),
     defineField({
       name: "metaDescription",
-      title: "Meta Description (for search/AEO)",
+      title: "Legacy meta description",
       type: "text",
       group: "meta",
+      hidden: true,
+      deprecated: { reason: "Use the SEO and social sharing field." },
       rows: 2,
       validation: (Rule) => Rule.max(160),
     }),
   ],
   preview: {
-    select: { title: "title", subtitle: "tagType", media: "heroImage" },
+    select: { title: "title", type: "tagType.name", author: "author.name", media: "heroMedia.image" },
+    prepare: ({ title, type, author, media }) => ({ title, subtitle: [type, author].filter(Boolean).join(" · "), media }),
   },
 });

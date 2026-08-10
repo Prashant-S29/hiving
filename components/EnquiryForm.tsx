@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import type { EnquiryFormCopy } from "@/lib/sanity/conversionPages";
 
-export default function EnquiryForm() {
+export default function EnquiryForm({ copy }: { copy: EnquiryFormCopy }) {
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ export default function EnquiryForm() {
   if (status === "done") {
     return (
       <div className="bg-verify/10 border border-verify text-verify font-mono text-[13px] px-6 py-5">
-        ✓ Thanks — we typically respond within 48 hours.
+        {copy.successMessage}
       </div>
     );
   }
@@ -41,7 +42,7 @@ export default function EnquiryForm() {
       <input
         type="text"
         required
-        placeholder="Your name"
+        placeholder={copy.namePlaceholder}
         value={name}
         onChange={(e) => setName(e.target.value)}
         className="bg-white/5 border border-rule-strong px-5 py-4 text-[14px] text-ink placeholder:text-muted focus:border-signal outline-none transition-colors"
@@ -49,7 +50,7 @@ export default function EnquiryForm() {
       <input
         type="email"
         required
-        placeholder="your@email.com"
+        placeholder={copy.emailPlaceholder}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         className="bg-white/5 border border-rule-strong px-5 py-4 text-[14px] text-ink placeholder:text-muted focus:border-signal outline-none transition-colors"
@@ -57,7 +58,7 @@ export default function EnquiryForm() {
       <input
         type="text"
         required
-        placeholder="Company"
+        placeholder={copy.companyPlaceholder}
         value={company}
         onChange={(e) => setCompany(e.target.value)}
         className="bg-white/5 border border-rule-strong px-5 py-4 text-[14px] text-ink placeholder:text-muted focus:border-signal outline-none transition-colors"
@@ -65,7 +66,7 @@ export default function EnquiryForm() {
       <textarea
         required
         rows={4}
-        placeholder="Tell us what you're building"
+        placeholder={copy.messagePlaceholder}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         className="bg-white/5 border border-rule-strong px-5 py-4 text-[14px] text-ink placeholder:text-muted focus:border-signal outline-none transition-colors resize-none"
@@ -80,11 +81,11 @@ export default function EnquiryForm() {
           className="mt-0.5 w-4 h-4 accent-signal shrink-0 cursor-pointer"
         />
         <span>
-          I agree to the processing of my data as described in the{" "}
+          {copy.consentPrefix}{" "}
           <Link href="/legal/privacy" className="text-signal hover:underline">
-            Privacy Policy
+            {copy.privacyLabel}
           </Link>
-          .
+          {copy.consentSuffix}
         </span>
       </label>
 
@@ -93,10 +94,10 @@ export default function EnquiryForm() {
         disabled={status === "loading" || !consent}
         className="bg-signal hover:bg-signal-dark text-white font-mono text-[12px] tracking-[0.12em] uppercase font-medium px-6 py-[17px] mt-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
-        {status === "loading" ? "Submitting…" : "→  Send Enquiry"}
+        {status === "loading" ? copy.submittingLabel : copy.submitLabel}
       </button>
       {status === "error" && (
-        <p className="font-mono text-[11px] text-signal mt-1">Something went wrong. Please try again.</p>
+        <p className="font-mono text-[11px] text-signal mt-1">{copy.errorMessage}</p>
       )}
     </form>
   );

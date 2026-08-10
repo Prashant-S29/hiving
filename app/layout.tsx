@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import { Cormorant_Garamond, Libre_Baskerville, DM_Mono, Barlow } from "next/font/google";
 import "./globals.css";
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
-import CookieConsent from "@/components/CookieConsent";
+import SiteChrome from "@/components/SiteChrome";
+import { getSiteSettings } from "@/lib/sanity/siteSettings";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -36,23 +35,29 @@ const barlow = Barlow({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://hivig.com"),
-  title: {
-    default: "Hivig — Hi-Tech Vigilance for the Agentic Age",
-    template: "%s | Hivig",
-  },
-  description:
-    "Independent intelligence on agentic AI. Platform verdicts, implementation guides, and fearless analysis — no vendor sponsorships, ever.",
-  openGraph: {
-    title: "Hivig — Hi-Tech Vigilance for the Agentic Age",
-    description:
-      "Independent intelligence on agentic AI. Platform verdicts, implementation guides, and fearless analysis.",
-    url: "https://hivig.com",
-    siteName: "Hivig",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const seo = settings.defaultSeo;
+
+  return {
+    metadataBase: new URL("https://hivig.com"),
+    title: {
+      default: seo.metaTitle,
+      template: `%s | ${settings.siteName}`,
+    },
+    description: seo.metaDescription,
+    alternates: seo.canonicalUrl ? { canonical: seo.canonicalUrl } : undefined,
+    robots: seo.noIndex ? { index: false, follow: false } : undefined,
+    openGraph: {
+      title: seo.openGraphTitle || seo.metaTitle,
+      description: seo.openGraphDescription || seo.metaDescription,
+      url: "https://hivig.com",
+      siteName: settings.siteName,
+      type: "website",
+      images: seo.openGraphImageUrl ? [{ url: seo.openGraphImageUrl }] : undefined,
+    },
+  };
+}
 
 // Runs before paint so the light/dark choice from a prior visit applies
 // immediately — without this, the page would flash dark before switching to
@@ -60,18 +65,17 @@ export const metadata: Metadata = {
 // no preference has been saved yet.
 const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('hivig-theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');}catch(e){}})();`;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const settings = await getSiteSettings();
+  const previewEnabled = draftMode().isEnabled;
+
   return (
     <html lang="en" className={`${cormorant.variable} ${baskerville.variable} ${dmMono.variable} ${barlow.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
-      <body className="font-sans antialiased noise-overlay cursor-enabled">
-        <CustomCursor />
-        <Nav />
-        <main>{children}</main>
-        <Footer />
-        <CookieConsent />
+      <body className="font-sans antialiased">
+        <SiteChrome settings={settings} previewEnabled={previewEnabled}>{children}</SiteChrome>
       </body>
     </html>
   );

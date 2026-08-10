@@ -1,13 +1,15 @@
-const PLATFORMS = [
-  "AWS Bedrock Agents", "Salesforce Agentforce", "Microsoft Copilot Studio",
-  "Google Gemini 2.0", "LangGraph Orchestration", "MCP Protocol",
-  "CrewAI · AutoGen", "Azure AI Foundry", "Anthropic Claude",
-];
+import type { HomepageSectionSpacing, HomepageSectionVariant } from "@/lib/types";
 
-export default function Ticker() {
-  const items = [...PLATFORMS, ...PLATFORMS];
+const spacingClasses: Record<HomepageSectionSpacing, string> = { compact: "py-2", normal: "py-3", large: "py-5" };
+
+export default function Ticker({ items: sourceItems, spacing = "normal", variant = "default" }: {
+  items: string[];
+  spacing?: HomepageSectionSpacing;
+  variant?: HomepageSectionVariant;
+}) {
+  const items = [...sourceItems, ...sourceItems];
   return (
-    <div className="bg-deep border-y border-rule overflow-hidden py-3">
+    <div className={`${variant === "alternate" ? "bg-surface" : "bg-deep"} border-y border-rule overflow-hidden ${spacingClasses[spacing]}`}>
       <div className="flex whitespace-nowrap animate-ticker">
         {items.map((p, i) => (
           <div key={i} className="inline-flex items-center gap-3.5 px-9 font-mono text-[11px] tracking-[0.1em] uppercase text-muted flex-shrink-0">

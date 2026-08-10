@@ -1,42 +1,96 @@
-import Link from "next/link";
-import { client, sanityConfigured } from "@/lib/sanity/client";
+import { PortableText } from "@portabletext/react";
 import { featuredArticlesQuery, homepageHeroQuery } from "@/lib/sanity/queries";
-import { mockArticles } from "@/lib/mockArticles";
-import { mockHero } from "@/lib/mockHero";
 import { urlForImage } from "@/lib/sanity/image";
-import type { Article, HomepageHero } from "@/lib/types";
-import Ticker from "@/components/Ticker";
-import StatsBar from "@/components/StatsBar";
-import { FeaturedArticleCard, ArticleCard, ArticleTag } from "@/components/ArticleCard";
-import RevealOnScroll from "@/components/RevealOnScroll";
+import type { Article, HomepageContent, HomepageSectionControl, HomepageSectionKey } from "@/lib/types";
+import { cmsFallbacksEnabled, fetchCms } from "@/lib/sanity/fetch";
+import { categoryLabels, getEditorialSettings } from "@/lib/sanity/editorialSettings";
+import HomepageSections from "@/components/homepage/HomepageSections";
 import InteractiveHero from "@/components/InteractiveHero";
 import HeroChoiceCards from "@/components/HeroChoiceCards";
+import CmsLink from "@/components/CmsLink";
 
 async function getFeatured(): Promise<Article[]> {
-  if (sanityConfigured && client) {
-    try {
-      const data = await client.fetch(featuredArticlesQuery);
-      if (data?.length) return data;
-    } catch {
-      // fall through to mock
-    }
-  }
-  return mockArticles;
+  const fallback = cmsFallbacksEnabled ? (await import("@/lib/mockArticles")).mockArticles : [];
+  const articles = await fetchCms<Article[]>({
+    query: featuredArticlesQuery,
+    fallback,
+    label: "featured homepage articles",
+    tags: ["sanity:articles", "sanity:page:home"],
+  });
+  return articles;
 }
 
-async function getHomepageHero(): Promise<HomepageHero> {
-  if (sanityConfigured && client) {
-    try {
-      const data = await client.fetch(homepageHeroQuery);
-      if (data?.choices?.length) return data;
-    } catch {
-      // fall through to mock
-    }
-  }
-  return mockHero;
+const defaultHomepageSectionLayout: HomepageSectionControl[] = [
+  { sectionKey: "ticker", enabled: true, spacing: "normal", variant: "default" },
+  { sectionKey: "stats", enabled: true, spacing: "normal", variant: "default" },
+  { sectionKey: "latestIntel", enabled: true, spacing: "normal", variant: "default" },
+  { sectionKey: "manifesto", enabled: true, spacing: "normal", variant: "default" },
+  { sectionKey: "subscribe", enabled: true, spacing: "normal", variant: "default" },
+];
+const approvedHomepageSections = new Set<HomepageSectionKey>(["ticker", "stats", "latestIntel", "manifesto", "subscribe"]);
+
+function normalizeSectionLayout(layout: HomepageSectionControl[] | undefined) {
+  if (!layout?.length) return defaultHomepageSectionLayout;
+  const seen = new Set<HomepageSectionKey>();
+  const normalized = layout.filter((control) => {
+    if (!approvedHomepageSections.has(control.sectionKey) || seen.has(control.sectionKey)) return false;
+    seen.add(control.sectionKey);
+    return true;
+  }).map((control) => ({
+    ...control,
+    enabled: control.enabled !== false,
+    spacing: ["compact", "normal", "large"].includes(control.spacing) ? control.spacing : "normal" as const,
+    variant: ["default", "alternate"].includes(control.variant) ? control.variant : "default" as const,
+  }));
+  return normalized.length ? normalized : defaultHomepageSectionLayout;
 }
 
-function HeroPicker({ hero }: { hero: HomepageHero }) {
+async function getHomepage(): Promise<HomepageContent> {
+  const content = await fetchCms<Partial<HomepageContent> | null>({
+    query: homepageHeroQuery,
+    fallback: null,
+    label: "homepage",
+    tags: ["sanity:page:home"],
+    required: true,
+  });
+
+  if (!content) {
+    if (!cmsFallbacksEnabled) throw new Error("[Sanity] Homepage: required content is missing");
+    return (await import("@/lib/mockHero")).mockHero;
+  }
+  if (!cmsFallbacksEnabled) {
+    return { ...(content as HomepageContent), sectionLayout: normalizeSectionLayout(content.sectionLayout) };
+  }
+
+  const { mockHero } = await import("@/lib/mockHero");
+  return {
+    ...mockHero,
+    ...content,
+    statusBar: { ...mockHero.statusBar, ...content.statusBar },
+    heading: { ...mockHero.heading, ...content.heading },
+    primaryAction: { ...mockHero.primaryAction, ...content.primaryAction },
+    secondaryAction: { ...mockHero.secondaryAction, ...content.secondaryAction },
+    introduction: content.introduction?.length ? content.introduction : mockHero.introduction,
+    choices: content.choices?.length ? content.choices : mockHero.choices,
+    sectionLayout: normalizeSectionLayout(content.sectionLayout),
+    etymology: content.etymology?.length ? content.etymology : mockHero.etymology,
+    tickerItems: content.tickerItems?.length ? content.tickerItems : mockHero.tickerItems,
+    stats: content.stats?.length ? content.stats : mockHero.stats,
+    latestIntel: { ...mockHero.latestIntel, ...content.latestIntel },
+    manifestoPromotion: {
+      ...mockHero.manifestoPromotion,
+      ...content.manifestoPromotion,
+      action: { ...mockHero.manifestoPromotion.action, ...content.manifestoPromotion?.action },
+    },
+    subscribePromotion: {
+      ...mockHero.subscribePromotion,
+      ...content.subscribePromotion,
+      action: { ...mockHero.subscribePromotion.action, ...content.subscribePromotion?.action },
+    },
+  };
+}
+
+function HeroPicker({ hero }: { hero: HomepageContent }) {
   if (hero.mediaType === "image" && hero.heroImage) {
     return (
       <div className="relative min-h-[340px] overflow-hidden py-10">
@@ -46,7 +100,7 @@ function HeroPicker({ hero }: { hero: HomepageHero }) {
           className="absolute inset-0 h-full w-full object-cover opacity-40"
         />
         <div className="relative z-10">
-          <HeroChoiceCards choices={hero.choices} />
+          <HeroChoiceCards choices={hero.choices} eyebrowLabel={hero.choiceEyebrowLabel} actionLabel={hero.choiceActionLabel} />
         </div>
       </div>
     );
@@ -56,6 +110,7 @@ function HeroPicker({ hero }: { hero: HomepageHero }) {
       <div className="relative min-h-[340px] overflow-hidden py-10">
         <video
           src={hero.heroVideoUrl}
+          aria-hidden="true"
           autoPlay
           muted
           loop
@@ -63,19 +118,25 @@ function HeroPicker({ hero }: { hero: HomepageHero }) {
           className="absolute inset-0 h-full w-full object-cover opacity-40"
         />
         <div className="relative z-10">
-          <HeroChoiceCards choices={hero.choices} />
+          <HeroChoiceCards choices={hero.choices} eyebrowLabel={hero.choiceEyebrowLabel} actionLabel={hero.choiceActionLabel} />
         </div>
       </div>
     );
   }
-  return <InteractiveHero choices={hero.choices} />;
+  return <InteractiveHero choices={hero.choices} eyebrowLabel={hero.choiceEyebrowLabel} actionLabel={hero.choiceActionLabel} />;
 }
 
 export default async function HomePage() {
-  const articles = await getFeatured();
-  const hero = await getHomepageHero();
-  const [lead, ...rest] = articles;
-  const sideArticles = rest.slice(0, 3);
+  const [articles, hero, editorial] = await Promise.all([
+    getFeatured(),
+    getHomepage(),
+    getEditorialSettings(),
+  ]);
+  const articleCopy = {
+    categoryLabels: categoryLabels(editorial),
+    minuteShortLabel: editorial.minuteShortLabel,
+    minuteReadLabel: editorial.minuteReadLabel,
+  };
 
   return (
     <>
@@ -92,132 +153,71 @@ export default async function HomePage() {
         />
         <div className="max-w-content mx-auto relative">
           <div className="flex items-center justify-between pb-6 border-b border-rule mb-14 font-mono text-[11px] tracking-[0.1em] uppercase text-muted flex-wrap gap-3">
-            <span>Hi-Tech Vigilance · Est. 2025</span>
+            <span>{hero.statusBar.leftLabel}</span>
             <span className="flex items-center gap-2 text-signal">
               <span className="w-1.5 h-1.5 rounded-full bg-signal animate-blink" />
-              Live Intelligence Feed Active
+              {hero.statusBar.liveLabel}
             </span>
-            <span>™ Type 42 · India · hivig.com</span>
+            <span>{hero.statusBar.rightLabel}</span>
           </div>
 
           <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-signal mb-7 flex items-center gap-4">
-            <span className="w-8 h-px bg-signal" /> Hi-Tech Vigilance · Est. 2025
+            <span className="w-8 h-px bg-signal" /> {hero.mainEyebrow}
           </div>
 
           <h1 className="font-serif text-[52px] md:text-[100px] font-bold leading-[0.92] tracking-tight mb-0">
-            The <span className="italic text-signal">vigilant</span>
+            {hero.heading.lead} <span className="italic text-signal">{hero.heading.emphasis}</span>
             <br />
-            voice of
+            {hero.heading.middleLine}
             <br />
             <span style={{ WebkitTextStroke: "1px rgba(var(--color-ink), 0.2)", color: "transparent" }}>
-              agentic AI
+              {hero.heading.outlineLine}
             </span>
           </h1>
 
           <div className="grid md:grid-cols-2 gap-16 mt-14 pt-10 border-t border-rule">
-            <p className="font-body text-[17px] leading-[1.85] text-ink/75">
-              The agentic AI space moves fast and talks loudly. Hivig cuts
-              through both. <em className="text-ink not-italic font-bold">Technically rigorous</em> enough
-              for engineers and architects. <em className="text-ink not-italic font-bold">Strategically clear</em> enough
-              for product managers and executives. Independent enough to tell
-              you the truth about every platform.
-            </p>
+            <div className="font-body text-[17px] leading-[1.85] text-ink/75 [&_strong]:text-ink [&_strong]:font-bold">
+              <PortableText value={hero.introduction} />
+            </div>
             <div className="flex flex-col justify-center gap-5">
-              <Link
-                href="/intel"
+              <CmsLink
+                link={hero.primaryAction}
                 className="bg-signal hover:bg-signal-dark text-white font-sans text-[13px] font-bold uppercase tracking-[0.08em] px-9 py-[18px] inline-block w-fit transition-colors"
               >
-                Read the Latest Intel →
-              </Link>
-              <Link href="/manifesto" className="font-mono text-[12px] tracking-[0.1em] uppercase text-muted hover:text-ink transition-colors flex items-center gap-3 w-fit">
-                <span className="text-signal text-[10px]">▶</span> What Hivig stands for
-              </Link>
+                {hero.primaryAction.label}
+              </CmsLink>
+              <CmsLink link={hero.secondaryAction} className="font-mono text-[12px] tracking-[0.1em] uppercase text-muted hover:text-ink transition-colors flex items-center gap-3 w-fit">
+                <span className="text-signal text-[10px]">▶</span> {hero.secondaryAction.label}
+              </CmsLink>
             </div>
           </div>
 
           {/* CHOOSE YOUR PATH — the interactive hero picker, CMS-editable at /studio */}
           <div className="mt-16 pt-10 border-t border-rule">
             <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-signal mb-2 flex items-center gap-4">
-              <span className="w-8 h-px bg-signal" /> {hero.eyebrow}
+              <span className="w-8 h-px bg-signal" /> {hero.pickerEyebrow}
             </div>
             <HeroPicker hero={hero} />
           </div>
 
           {/* Etymology bar */}
           <div className="mt-16 bg-surface border-t border-rule flex flex-wrap items-center gap-6 md:gap-0 py-7 px-6 md:px-12 -mx-6 md:-mx-12">
-            <EtymItem word="Hi" def="Hi-Technology" italic />
-            <Plus />
-            <EtymItem word="Vig" def="Vigilance" />
-            <Plus eq />
-            <EtymItem word="Hivig" def="A mandate, not a name" italic />
+            {hero.etymology.map((item, index) => (
+              <div key={item._key || item.word} className="contents">
+                {index > 0 && <Plus eq={index === hero.etymology.length - 1} />}
+                <EtymItem word={item.word} def={item.definition} italic={item.italic} />
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <Ticker />
-      <StatsBar />
-
-      {/* LATEST INTEL */}
-      <section className="px-6 md:px-12 py-20 max-w-content mx-auto">
-        <RevealOnScroll className="flex items-end justify-between pb-5 border-b border-rule mb-14">
-          <h2 className="font-serif text-[38px] font-bold tracking-tight">
-            Latest <span className="italic text-signal">Intel</span>
-          </h2>
-          <Link href="/intel" className="font-mono text-[11px] tracking-[0.12em] uppercase text-muted hover:text-signal transition-colors">
-            Full Archive →
-          </Link>
-        </RevealOnScroll>
-
-        {lead && (
-          <RevealOnScroll className="grid md:grid-cols-[3fr_2fr] gap-px bg-rule mb-px">
-            <FeaturedArticleCard article={lead} />
-            <div className="bg-void p-9 flex flex-col gap-7">
-              {sideArticles.map((a) => (
-                <div key={a._id} className="pb-7 border-b border-rule last:border-b-0 last:pb-0">
-                  <ArticleTag article={a} />
-                  <Link href={`/intel/${a.slug.current}`}>
-                    <h3 className="font-serif text-[18px] font-bold leading-snug mb-2 hover:text-signal transition-colors">
-                      {a.title}
-                    </h3>
-                  </Link>
-                  <div className="font-mono text-[10px] tracking-[0.1em] uppercase text-muted">
-                    {a.readTimeMinutes} min · {a.platformTags?.[0]}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </RevealOnScroll>
-        )}
-      </section>
-
-      {/* MANIFESTO PREVIEW */}
-      <section className="bg-paper text-void px-6 md:px-12 py-24">
-        <RevealOnScroll className="max-w-content mx-auto text-center">
-          <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-signal mb-6">The Hivig Manifesto</div>
-          <p className="font-serif text-[32px] md:text-[52px] font-bold leading-[1.1] tracking-tight max-w-[760px] mx-auto mb-8">
-            The agentic AI space has enough noise. We bring <span className="italic text-signal">signal.</span>
-          </p>
-          <Link href="/manifesto" className="font-mono text-[12px] tracking-[0.1em] uppercase text-signal hover:text-signal-dark transition-colors">
-            Read the full manifesto →
-          </Link>
-        </RevealOnScroll>
-      </section>
-
-      {/* SUBSCRIBE CTA */}
-      <section className="px-6 md:px-12 py-24 bg-deep border-t border-rule">
-        <RevealOnScroll className="max-w-content mx-auto text-center">
-          <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-signal mb-5">Stay Ahead of the Curve</div>
-          <h2 className="font-serif text-[36px] md:text-[56px] font-bold tracking-tight mb-7">
-            The agentic AI brief that <span className="italic text-signal">matters.</span>
-          </h2>
-          <Link
-            href="/subscribe"
-            className="bg-signal hover:bg-signal-dark text-white font-sans text-[13px] font-bold uppercase tracking-[0.1em] px-10 py-[18px] inline-block transition-colors"
-          >
-            Subscribe Free →
-          </Link>
-        </RevealOnScroll>
-      </section>
+      <HomepageSections
+        hero={hero}
+        articles={articles}
+        articleCopy={articleCopy}
+        minuteShortLabel={editorial.minuteShortLabel}
+      />
     </>
   );
 }

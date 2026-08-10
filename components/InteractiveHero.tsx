@@ -21,7 +21,11 @@ interface Particle {
   r: number;
 }
 
-export default function InteractiveHero({ choices }: { choices: HeroChoice[] }) {
+export default function InteractiveHero({ choices, eyebrowLabel, actionLabel }: {
+  choices: HeroChoice[];
+  eyebrowLabel: string;
+  actionLabel: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const mouseRef = useRef({ x: -9999, y: -9999 });
@@ -146,7 +150,7 @@ export default function InteractiveHero({ choices }: { choices: HeroChoice[] }) 
     <div ref={wrapperRef} className="relative min-h-[340px] py-10">
       <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0" />
       <div className="relative z-10">
-        <HeroChoiceCards choices={choices} />
+        <HeroChoiceCards choices={choices} eyebrowLabel={eyebrowLabel} actionLabel={actionLabel} />
       </div>
     </div>
   );

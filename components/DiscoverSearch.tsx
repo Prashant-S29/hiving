@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { FeasibilityStudy } from "@/lib/feasibility";
 import type { QuoteBreakdown } from "@/lib/pricing-engine";
+import type { DiscoverInterfaceCopy } from "@/lib/sanity/agentPages";
 
 interface DiscoverResult {
   study: FeasibilityStudy;
@@ -12,16 +13,13 @@ interface DiscoverResult {
 
 // Verdict colors map straight onto the brand's semantic tokens — no separate
 // palette needed here (see tailwind.config.ts: verify/amber/signal).
-const VERDICT_STYLE: Record<
-  FeasibilityStudy["feasibility"],
-  { label: string; className: string }
-> = {
-  feasible: { label: "✅ Feasible", className: "bg-verify/10 text-verify border-verify/40" },
-  feasible_with_caveats: { label: "⚠️ Feasible with caveats", className: "bg-amber/10 text-amber border-amber/40" },
-  not_feasible: { label: "✕ Not feasible as described", className: "bg-signal/10 text-signal border-signal/40" },
+const VERDICT_CLASS: Record<FeasibilityStudy["feasibility"], string> = {
+  feasible: "bg-verify/10 text-verify border-verify/40",
+  feasible_with_caveats: "bg-amber/10 text-amber border-amber/40",
+  not_feasible: "bg-signal/10 text-signal border-signal/40",
 };
 
-export default function DiscoverSearch() {
+export default function DiscoverSearch({ copy }: { copy: DiscoverInterfaceCopy }) {
   const [promptText, setPromptText] = useState("");
   const [result, setResult] = useState<DiscoverResult | null>(null);
   const [lastQuery, setLastQuery] = useState<string | null>(null);
@@ -40,14 +38,14 @@ export default function DiscoverSearch() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Something went wrong.");
+        setError(copy.fallbackError);
         setResult(null);
         return;
       }
       setResult(data as DiscoverResult);
       setLastQuery(promptText);
     } catch {
-      setError("Could not reach the feasibility service.");
+      setError(copy.networkError);
       setResult(null);
     } finally {
       setLoading(false);
@@ -66,7 +64,7 @@ export default function DiscoverSearch() {
           onChange={(e) => setPromptText(e.target.value)}
           minLength={10}
           required
-          placeholder="What do you want your AI agent to do?"
+          placeholder={copy.placeholder}
           className="flex-1 bg-deep px-4 py-3 font-body text-sm text-ink placeholder:text-dim focus:outline-none"
         />
         <button
@@ -74,7 +72,7 @@ export default function DiscoverSearch() {
           disabled={loading || promptText.trim().length < 10}
           className="bg-signal hover:bg-signal-dark px-6 py-3 font-sans text-[11px] font-bold uppercase tracking-[0.1em] text-white transition-colors disabled:opacity-40"
         >
-          {loading ? "Building…" : "Search"}
+          {loading ? copy.loadingLabel : copy.submitLabel}
         </button>
       </form>
 
@@ -86,7 +84,7 @@ export default function DiscoverSearch() {
 
       {loading && (
         <div className="mt-10 animate-pulse text-center font-mono text-[11px] uppercase tracking-wider text-muted">
-          Generating your feasibility study…
+          {copy.loadingMessage}
         </div>
       )}
 
@@ -94,15 +92,15 @@ export default function DiscoverSearch() {
         <div className="mt-10">
           {/* Breadcrumb */}
           <p className="font-mono text-[11px] uppercase tracking-wider text-muted">
-            <Link href="/agents" className="hover:text-ink transition-colors">Agent Store</Link>
+            <Link href="/agents" className="hover:text-ink transition-colors">{copy.agentStoreLabel}</Link>
             {" / "}
-            <span>Discover</span>
+            <span>{copy.discoverLabel}</span>
             {" / "}
             <span className="text-ink normal-case tracking-normal">{result.study.agentName}</span>
           </p>
 
           <p className="mt-2 font-mono text-[11px] text-dim">
-            Generated for: &ldquo;{lastQuery}&rdquo;
+            {copy.generatedForLabel} &ldquo;{lastQuery}&rdquo;
           </p>
 
           <div className="mt-6 grid gap-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
@@ -113,7 +111,7 @@ export default function DiscoverSearch() {
                   {result.study.agentName.slice(0, 1).toUpperCase()}
                 </div>
                 <p className="mt-3 font-sans text-sm font-medium text-ink">{result.study.agentName}</p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted">Concept preview — not a real screenshot</p>
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted">{copy.conceptPreviewLabel}</p>
               </div>
             </div>
 
@@ -122,9 +120,13 @@ export default function DiscoverSearch() {
               <h1 className="font-serif text-2xl font-bold text-ink tracking-tight">{result.study.agentName}</h1>
 
               <span
-                className={`mt-3 inline-block border px-3 py-1 font-mono text-[11px] uppercase tracking-wider ${VERDICT_STYLE[result.study.feasibility].className}`}
+                className={`mt-3 inline-block border px-3 py-1 font-mono text-[11px] uppercase tracking-wider ${VERDICT_CLASS[result.study.feasibility]}`}
               >
-                {VERDICT_STYLE[result.study.feasibility].label}
+                {{
+                  feasible: copy.feasibleLabel,
+                  feasible_with_caveats: copy.caveatsLabel,
+                  not_feasible: copy.notFeasibleLabel,
+                }[result.study.feasibility]}
               </span>
 
               <p className="mt-4 font-body text-[15px] leading-[1.75] text-ink/75">{result.study.verdictSummary}</p>
@@ -132,14 +134,13 @@ export default function DiscoverSearch() {
               <div className="mt-6 border border-rule bg-surface p-4">
                 <p className="font-serif text-3xl font-bold text-ink">${result.quote.quotedPriceUSD.toFixed(2)}</p>
                 <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-muted">
-                  Region: {result.quote.geoRegion} · {result.quote.breakdown.expertiseTier} tier ·{" "}
-                  {result.quote.breakdown.estimatedHumanHours}hr estimated oversight
+                  {copy.regionLabel}: {result.quote.geoRegion} · {result.quote.breakdown.expertiseTier} {copy.tierLabel} ·{" "}
+                  {result.quote.breakdown.estimatedHumanHours}hr {copy.oversightLabel}
                 </p>
                 <p className="mt-3 font-mono text-[11px] leading-relaxed text-dim">
-                  This is a feasibility study and price estimate only — no order has
-                  been placed.{" "}
+                  {copy.estimateDisclaimer}{" "}
                   <Link href="/agents/pricing" className="text-signal hover:text-ink transition-colors">
-                    See how this is calculated
+                    {copy.pricingLinkLabel}
                   </Link>
                   .
                 </p>
@@ -147,7 +148,7 @@ export default function DiscoverSearch() {
 
               {result.study.capabilities.length > 0 && (
                 <div className="mt-6">
-                  <h2 className="font-mono text-[11px] uppercase tracking-wider text-muted">About this agent</h2>
+                  <h2 className="font-mono text-[11px] uppercase tracking-wider text-muted">{copy.capabilitiesHeading}</h2>
                   <ul className="mt-3 list-disc space-y-1.5 pl-5 font-body text-sm text-ink/80">
                     {result.study.capabilities.map((c, i) => (
                       <li key={i}>{c}</li>
@@ -158,7 +159,7 @@ export default function DiscoverSearch() {
 
               {result.study.risks.length > 0 && (
                 <div className="mt-6 border border-amber/40 bg-amber/10 p-4">
-                  <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber">Risks &amp; open questions</h2>
+                  <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber">{copy.risksHeading}</h2>
                   <ul className="mt-3 list-disc space-y-1.5 pl-5 font-body text-sm text-ink/80">
                     {result.study.risks.map((r, i) => (
                       <li key={i}>{r}</li>
@@ -169,7 +170,7 @@ export default function DiscoverSearch() {
 
               {result.study.assumptions.length > 0 && (
                 <div className="mt-5">
-                  <h2 className="font-mono text-[10px] uppercase tracking-wider text-dim">Assumptions made</h2>
+                  <h2 className="font-mono text-[10px] uppercase tracking-wider text-dim">{copy.assumptionsHeading}</h2>
                   <ul className="mt-2 list-disc space-y-1 pl-5 font-mono text-[11px] text-dim">
                     {result.study.assumptions.map((a, i) => (
                       <li key={i}>{a}</li>
