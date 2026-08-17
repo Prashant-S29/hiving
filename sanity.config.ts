@@ -1,5 +1,6 @@
 "use client";
 
+import "./components/stl-table/register"; 
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { presentationTool } from "sanity/presentation";

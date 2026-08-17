@@ -115,6 +115,7 @@ export const article = defineType({
           type: "code",
           title: "Code Block",
         },
+        { type: "stlTableBlock" },
       ],
     }),
     defineField({

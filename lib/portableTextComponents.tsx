@@ -1,6 +1,8 @@
 import type { PortableTextComponents } from "@portabletext/react";
 import Image from "next/image";
 import { urlForImage } from "@/lib/sanity/image";
+import { STLReact } from "@/components/stl-table";
+import { STL, type SanityTable } from "structured-table";
 
 export const portableTextComponents: PortableTextComponents = {
   block: {
@@ -22,11 +24,6 @@ export const portableTextComponents: PortableTextComponents = {
   },
   types: {
     image: ({ value }) => {
-      // Real Sanity-uploaded images carry an `asset` ref — go through the
-      // CDN URL builder as before. Locally-added images (e.g. article
-      // infographics shipped as static files in public/) instead carry a
-      // plain `src` string and render as-is, unrecropped, since they're
-      // often diagrams where cropping to 16:9 would cut off content.
       if (value?.asset) {
         const url = urlForImage(value).width(1200).url();
         return (
@@ -47,5 +44,34 @@ export const portableTextComponents: PortableTextComponents = {
         <code>{value?.code}</code>
       </pre>
     ),
+    stlTableBlock: ({ value }) => {
+      const tableValue = value as {
+        _key: string;
+        _type: string;
+        stlString?: string;
+        stlParsed?: string;
+        caption?: string;
+      };
+
+      let tableData: SanityTable | null = null;
+      try {
+        if (tableValue.stlParsed) {
+          tableData = JSON.parse(tableValue.stlParsed) as SanityTable;
+        } else if (tableValue.stlString) {
+          tableData = STL.parse(tableValue.stlString);
+        }
+      } catch {
+        return null;
+      }
+
+      if (!tableData) return null;
+      if (tableValue.caption) tableData.caption = tableValue.caption;
+
+      return (
+        <div className="overflow-x-auto my-8">
+          <STLReact.Table data={tableData} className="border" />
+        </div>
+      );
+    },
   },
 };
