@@ -36,6 +36,9 @@ export interface AiModel {
   model_type: ModelType;
   benchmark_scores: BenchmarkScore;
   market_status: MarketStatus;
+  race_score?: number | null; // Hivig Velocity Index, 0-100 — undefined/null if no
+                               // scoring signal exists yet for this model. See
+                               // RANKING_METHODOLOGY.md.
   rank_current: number; // computed — see RANKING_METHODOLOGY.md
   rank_previous_period: number | null;
   last_updated: string; // ISO timestamp — drives the 72h refresh badge

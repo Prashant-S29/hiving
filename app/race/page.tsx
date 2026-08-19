@@ -1,10 +1,21 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import CmsLink from "@/components/CmsLink";
+import RaceHero from "@/components/RaceHero";
 import RaceTrack from "@/components/RaceTrack";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { DEFAULT_THEME_ID } from "@/lib/geo-theme";
 import { applyTemplate, getRaceModels, getRaceSettings, type RaceModel, type RaceSettingsContent } from "@/lib/sanity/race";
+
+// ISO 8601 week number, for the hero's "Tracking Week" badge.
+function isoWeekLabel(date: Date): string {
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  return `W${weekNo} · ${d.getUTCFullYear()}`;
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = await getRaceSettings();
@@ -99,15 +110,11 @@ export default async function RacePage() {
 
       <div className="max-w-content mx-auto">
         <RevealOnScroll>
-          <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-signal mb-5 flex items-center gap-4">
-            <span className="w-8 h-px bg-signal" /> {settings.eyebrow}
-          </div>
+          <RaceHero topModels={models} weekLabel={isoWeekLabel(new Date(dateModified))} copy={settings} />
+        </RevealOnScroll>
 
-          <h1 className="font-serif text-[40px] md:text-[58px] font-bold tracking-tight leading-[1.05] text-ink">
-            {settings.headingPrefix} <span className="italic text-signal">{settings.headingEmphasis}</span> {settings.headingSuffix}
-          </h1>
-
-          <p className="mt-6 max-w-2xl font-body text-[16px] leading-[1.85] text-ink/75">{definition}</p>
+        <RevealOnScroll className="mt-10">
+          <p className="max-w-2xl font-body text-[16px] leading-[1.85] text-ink/75">{definition}</p>
 
           <p className="mt-3 font-mono text-[11px] uppercase tracking-wider text-muted">
             {settings.lastUpdatedLabel}: <time dateTime={dateModified}>{dateLabel}</time> · {settings.themeLabel}: {themeId} ·{" "}

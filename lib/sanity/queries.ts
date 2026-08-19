@@ -133,6 +133,19 @@ export const notFoundPageQuery = `*[_type == "notFoundPage" && _id == "notFoundP
 
 export const raceSettingsQuery = `*[_type == "raceSettings" && _id == "raceSettings"][0]{
   eyebrow,
+  heroEyebrow,
+  heroHeadingLead,
+  heroHeadingEmphasis,
+  heroSubhead,
+  heroTrackingWeekLabel,
+  heroNextUpdateLabel,
+  heroLeaderboardLabel,
+  heroScoreUnitLabel,
+  heroEmptyStateLabel,
+  heroDisclaimerButtonLabel,
+  heroDisclaimerTitle,
+  heroDisclaimerBody,
+  heroDisclaimerLinkLabel,
   headingPrefix,
   headingEmphasis,
   headingSuffix,
@@ -222,6 +235,12 @@ export const raceModelsQuery = `*[_type == "aiModel" && active != false] | order
   "slug": slug.current,
   releaseDate,
   modelType,
+  openrouterId,
+  raceScore,
+  previousRaceScore,
+  tokensProxy,
+  downloads,
+  scoreUpdatedAt,
   summary,
   reviewedAt,
   verificationStatus,
@@ -433,7 +452,7 @@ export const articleBySlugQuery = `*[_type == "article" && slug.current == $slug
   "noIndex": seo.noIndex
 }`;
 
-export const allSlugsQuery = `*[_type == "article"]{ "slug": slug.current }`;
+export const allSlugsQuery = `*[_type == "article"]{ "slug": slug.current, publishedAt }`;
 
 export const homepageHeroQuery = `*[_type == "homepageHero" && _id == "homepageHero"][0]{
   statusBar,

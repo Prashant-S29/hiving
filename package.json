@@ -18,7 +18,8 @@
     "sanity:seed:legal-pages": "tsx scripts/sanity/seed-legal-pages.ts",
     "sanity:migrate:articles": "tsx scripts/sanity/migrate-mock-articles.ts",
     "sanity:migrate:editorial": "tsx scripts/sanity/normalize-editorial-data.ts",
-    "sanity:migrate:race": "tsx scripts/sanity/migrate-race-data.ts"
+    "sanity:migrate:race": "tsx scripts/sanity/migrate-race-data.ts",
+    "fetch:race-metrics": "tsx scripts/fetch-race-metrics.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",

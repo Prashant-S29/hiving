@@ -7,6 +7,19 @@ import type { CmsLink } from "@/lib/sanity/siteSettings";
 
 export interface RaceSettingsContent {
   eyebrow: string;
+  heroEyebrow: string;
+  heroHeadingLead: string;
+  heroHeadingEmphasis: string;
+  heroSubhead: string;
+  heroTrackingWeekLabel: string;
+  heroNextUpdateLabel: string;
+  heroLeaderboardLabel: string;
+  heroScoreUnitLabel: string;
+  heroEmptyStateLabel: string;
+  heroDisclaimerButtonLabel: string;
+  heroDisclaimerTitle: string;
+  heroDisclaimerBody: string;
+  heroDisclaimerLinkLabel: string;
   headingPrefix: string;
   headingEmphasis: string;
   headingSuffix: string;
@@ -97,6 +110,20 @@ export interface RaceModel extends AiModel {
 
 export const DEFAULT_RACE_SETTINGS: RaceSettingsContent = {
   eyebrow: "Live · refreshed every 72h",
+  heroEyebrow: "Hivig Velocity Index · Live",
+  heroHeadingLead: "The global AI race,",
+  heroHeadingEmphasis: "real time",
+  heroSubhead: "One index across real token volume and open-weight adoption — recalculated every Sunday from two official public APIs.",
+  heroTrackingWeekLabel: "Tracking Week",
+  heroNextUpdateLabel: "Next update Sun 00:00 UTC",
+  heroLeaderboardLabel: "Live Leaderboard",
+  heroScoreUnitLabel: "Score / 100",
+  heroEmptyStateLabel: "No ranked models yet — check back after the next weekly run.",
+  heroDisclaimerButtonLabel: "Disclaimer — an independent index from public metadata.",
+  heroDisclaimerTitle: "Disclaimer",
+  heroDisclaimerBody:
+    "The Hivig Velocity Index (HVI) is an independent tracking score, out of 100 — not a quality, safety, or capability rating. It's recalculated every Sunday from two real, official public APIs, weighted 70/30: token volume from OpenRouter and download counts from the Hugging Face Hub. No LMSYS/Arena data is included yet — no free public API exists for it. All product names, logos, and brands are the property of their respective owners.",
+  heroDisclaimerLinkLabel: "Full methodology",
   headingPrefix: "The",
   headingEmphasis: "Race",
   headingSuffix: "— Live Global AI Model Rankings",
@@ -142,16 +169,15 @@ export const DEFAULT_RACE_SETTINGS: RaceSettingsContent = {
   methodologyBackAction: { label: "← Back to The Race", href: "/race" },
   methodologyHeading: "Ranking methodology",
   methodologyNotice: {
-    label: "Current status: placeholder",
-    body: "Rankings are sorted by release date (newest first) so the field is well-defined, not because that is a credible ranking signal. Treat every rank shown on Hivig as illustrative until this page describes a real, sourced formula.",
-    tone: "warning",
+    label: "Current status: Hivig Velocity Index (partial rollout)",
+    body: "Rankings are led by the Hivig Velocity Index — a 0–100 score weighted 70/30 between real OpenRouter token volume and Hugging Face downloads — for any model an editor has opted into automated scoring. Models without that opt-in fall back to sorting by release date (newest first) until they're added. No LMSYS/Arena data is included yet — no free public API exists for it.",
+    tone: "information",
   },
-  methodologyNeedsHeading: "What the real methodology needs to define",
+  methodologyNeedsHeading: "What a fuller methodology still needs to define",
   methodologyNeeds: [
-    "Which benchmarks count, and how they’re weighted (e.g. LMSYS Chatbot Arena Elo, Artificial Analysis quality index, task-specific evals).",
-    "How ties and missing benchmark data are handled.",
-    "Refresh cadence and a staleness rule, matched to the 72-hour data refresh.",
-    "What counts as the “same model” across dated snapshot releases, so a rank delta means something consistent.",
+    "Whether/how to fold in a benchmark-based signal (e.g. LMSYS Chatbot Arena Elo, Artificial Analysis quality index) once a licensed or official data source exists.",
+    "A documented process for editors to opt new models into automated scoring, so the release-date fallback ranking shrinks over time.",
+    "What counts as the “same model” across dated snapshot releases, so a rank delta means something consistent as OpenRouter's own listings change.",
   ],
   methodologySourceNote: "Full detail lives in RANKING_METHODOLOGY.md in the project source.",
   methodologySeo: {
@@ -178,6 +204,12 @@ interface CmsRaceRecord {
   slug?: string;
   releaseDate?: string;
   modelType?: ModelType;
+  openrouterId?: string;
+  raceScore?: number | null;
+  previousRaceScore?: number | null;
+  tokensProxy?: number | null;
+  downloads?: number | null;
+  scoreUpdatedAt?: string;
   summary?: string;
   reviewedAt?: string;
   verificationStatus?: RaceModel["verificationStatus"];
@@ -230,9 +262,45 @@ function mapCmsModels(records: CmsRaceRecord[]): RaceModel[] {
     ...(record.benchmarkRecords || []).flatMap((benchmark) => [benchmark._updatedAt, benchmark.source?._updatedAt]),
     ...(record.sources || []).map((source) => source._updatedAt),
   ]).filter((value): value is string => Boolean(value));
-  const latestUpdate = updateTimes.sort().at(-1) || new Date().toISOString();
+  const scoreUpdateTimes = valid.map((r) => r.scoreUpdatedAt).filter((v): v is string => Boolean(v));
+  const latestUpdate = [...updateTimes, ...scoreUpdateTimes].sort().at(-1) || new Date().toISOString();
+
+  // Primary rank is by Velocity Index score (desc) when a model has one —
+  // real signal from openrouterId-matched automation (see
+  // scripts/fetch-race-metrics.ts). Models with no score yet (no
+  // openrouterId, or not yet picked up by a pipeline run) sort after every
+  // scored model, tie-broken by release date so the field stays a
+  // well-defined function of the data rather than arbitrary — see
+  // RANKING_METHODOLOGY.md. Every model still gets a dense rank_current
+  // (never a null/0 "unranked" state), matching how the rest of this codebase
+  // (RaceTrack's CSS `order`) expects rank_current to behave.
+  const byVelocityThenRelease = (a: CmsRaceRecord, b: CmsRaceRecord) => {
+    const scoreA = typeof a.raceScore === "number" ? a.raceScore : -Infinity;
+    const scoreB = typeof b.raceScore === "number" ? b.raceScore : -Infinity;
+    if (scoreA !== scoreB) return scoreB - scoreA;
+    return new Date(b.releaseDate!).getTime() - new Date(a.releaseDate!).getTime();
+  };
+
+  // Approximates each model's rank as of the prior automated run by
+  // re-deriving it from previousRaceScore over the subset of models that
+  // actually had one — not a stored snapshot, so a roster change (a model
+  // added/removed from tracking) can shift these slightly, but it's
+  // self-consistent and needs no extra CMS field. Models with no
+  // previousRaceScore are deliberately left out of this map entirely, so
+  // they fall through to rank_previous_period: null ("new") below, rather
+  // than getting a fabricated previous rank from an -Infinity sort key.
+  const previousRankBySlug = new Map(
+    valid
+      .filter((r): r is CmsRaceRecord & { previousRaceScore: number } => typeof r.previousRaceScore === "number")
+      .sort((a, b) => {
+        if (a.previousRaceScore !== b.previousRaceScore) return b.previousRaceScore - a.previousRaceScore;
+        return new Date(b.releaseDate!).getTime() - new Date(a.releaseDate!).getTime();
+      })
+      .map((record, index) => [record.slug!, index + 1] as const)
+  );
+
   return [...valid]
-    .sort((a, b) => new Date(b.releaseDate!).getTime() - new Date(a.releaseDate!).getTime())
+    .sort(byVelocityThenRelease)
     .map((record, index) => {
       const organization = record.organization!;
       const benchmark = record.benchmarkRecords?.[0];
@@ -257,8 +325,9 @@ function mapCmsModels(records: CmsRaceRecord[]): RaceModel[] {
           last_funding_round: organization.fundingSummary || null,
           funding_source_url: organization.fundingSource?.url || null,
         },
+        race_score: typeof record.raceScore === "number" ? record.raceScore : null,
         rank_current: index + 1,
-        rank_previous_period: null,
+        rank_previous_period: previousRankBySlug.get(record.slug!) ?? null,
         last_updated: latestUpdate,
         summary: record.summary,
         reviewedAt: record.reviewedAt,
