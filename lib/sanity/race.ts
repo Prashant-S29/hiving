@@ -396,19 +396,32 @@ type PartialSettings = Partial<Omit<RaceSettingsContent, "methodologyNotice" | "
 };
 const cachePage = typeof reactCache === "function" ? reactCache : <T>(loader: () => Promise<T>) => loader;
 
+// GROQ returns an explicit `null` (not an absent key) for any projected field
+// the document doesn't have set — e.g. every new hero* field before an editor
+// fills them in. A plain `{...DEFAULT, ...value}` spread copies those `null`s
+// over the defaults verbatim (spread only skips genuinely ABSENT keys, not
+// null-valued ones), silently blanking out copy that was supposed to fall
+// back gracefully. Stripping null/undefined values before merging is what
+// makes "leave a field empty in Studio" actually mean "use the code default"
+// instead of "render nothing".
+function stripNullish<T extends object>(obj: T): Partial<T> {
+  return Object.fromEntries(Object.entries(obj).filter(([, v]) => v != null)) as Partial<T>;
+}
+
 export const getRaceSettings = cachePage(async (): Promise<RaceSettingsContent> => {
-  const value = await fetchCms<PartialSettings | null>({ query: raceSettingsQuery, fallback: null, label: "Race settings", tags: ["sanity:page:race"], required: true });
-  if (!value) return DEFAULT_RACE_SETTINGS;
+  const raw = await fetchCms<PartialSettings | null>({ query: raceSettingsQuery, fallback: null, label: "Race settings", tags: ["sanity:page:race"], required: true });
+  if (!raw) return DEFAULT_RACE_SETTINGS;
+  const value = stripNullish(raw);
   return {
     ...DEFAULT_RACE_SETTINGS,
     ...value,
-    methodologyAction: { ...DEFAULT_RACE_SETTINGS.methodologyAction, ...value.methodologyAction },
-    modelBackAction: { ...DEFAULT_RACE_SETTINGS.modelBackAction, ...value.modelBackAction },
-    methodologyBackAction: { ...DEFAULT_RACE_SETTINGS.methodologyBackAction, ...value.methodologyBackAction },
-    methodologyNotice: { ...DEFAULT_RACE_SETTINGS.methodologyNotice, ...value.methodologyNotice },
+    methodologyAction: { ...DEFAULT_RACE_SETTINGS.methodologyAction, ...stripNullish(value.methodologyAction ?? {}) },
+    modelBackAction: { ...DEFAULT_RACE_SETTINGS.modelBackAction, ...stripNullish(value.modelBackAction ?? {}) },
+    methodologyBackAction: { ...DEFAULT_RACE_SETTINGS.methodologyBackAction, ...stripNullish(value.methodologyBackAction ?? {}) },
+    methodologyNotice: { ...DEFAULT_RACE_SETTINGS.methodologyNotice, ...stripNullish(value.methodologyNotice ?? {}) },
     methodologyNeeds: value.methodologyNeeds?.length ? value.methodologyNeeds : DEFAULT_RACE_SETTINGS.methodologyNeeds,
-    methodologySeo: { ...DEFAULT_RACE_SETTINGS.methodologySeo, ...value.methodologySeo },
-    seo: { ...DEFAULT_RACE_SETTINGS.seo, ...value.seo },
+    methodologySeo: { ...DEFAULT_RACE_SETTINGS.methodologySeo, ...stripNullish(value.methodologySeo ?? {}) },
+    seo: { ...DEFAULT_RACE_SETTINGS.seo, ...stripNullish(value.seo ?? {}) },
   };
 });
 
