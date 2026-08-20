@@ -6,6 +6,7 @@ export const raceSettings = defineType({
   type: "document",
   groups: [
     { name: "landing", title: "Leaderboard", default: true },
+    { name: "hero", title: "Hero (Track Visual)" },
     { name: "table", title: "Leaderboard Labels" },
     { name: "model", title: "Model Pages" },
     { name: "methodology", title: "Methodology" },
@@ -14,6 +15,20 @@ export const raceSettings = defineType({
   ],
   fields: [
     defineField({ name: "eyebrow", title: "Status eyebrow", type: "string", group: "landing", validation: (Rule) => Rule.required() }),
+
+    defineField({ name: "heroEyebrow", title: "Hero eyebrow", type: "string", group: "hero", description: "Optional — falls back to a sensible default if left empty." }),
+    defineField({ name: "heroHeadingLead", title: "Hero heading, line 1", type: "string", group: "hero" }),
+    defineField({ name: "heroHeadingEmphasis", title: "Hero heading, italic emphasis", type: "string", group: "hero" }),
+    defineField({ name: "heroSubhead", title: "Hero subhead", type: "text", rows: 3, group: "hero" }),
+    defineField({ name: "heroTrackingWeekLabel", title: "\"Tracking Week\" label", type: "string", group: "hero" }),
+    defineField({ name: "heroNextUpdateLabel", title: "Next-update label", type: "string", group: "hero" }),
+    defineField({ name: "heroLeaderboardLabel", title: "Live leaderboard panel label", type: "string", group: "hero" }),
+    defineField({ name: "heroScoreUnitLabel", title: "Score column unit label", type: "string", group: "hero", description: "e.g. \"Score / 100\"." }),
+    defineField({ name: "heroEmptyStateLabel", title: "Empty-state label", type: "string", group: "hero", description: "Shown when no models have a Velocity Index score yet." }),
+    defineField({ name: "heroDisclaimerButtonLabel", title: "Disclaimer button text", type: "string", group: "hero" }),
+    defineField({ name: "heroDisclaimerTitle", title: "Disclaimer drawer title", type: "string", group: "hero" }),
+    defineField({ name: "heroDisclaimerBody", title: "Disclaimer drawer body", type: "text", rows: 6, group: "hero" }),
+    defineField({ name: "heroDisclaimerLinkLabel", title: "Disclaimer \"full methodology\" link text", type: "string", group: "hero" }),
     defineField({ name: "headingPrefix", title: "Heading before emphasis", type: "string", group: "landing", validation: (Rule) => Rule.required() }),
     defineField({ name: "headingEmphasis", title: "Italic emphasis", type: "string", group: "landing", validation: (Rule) => Rule.required() }),
     defineField({ name: "headingSuffix", title: "Heading after emphasis", type: "string", group: "landing", validation: (Rule) => Rule.required() }),

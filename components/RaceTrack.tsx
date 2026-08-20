@@ -2,6 +2,7 @@
 // are supplied by Sanity through the server page.
 
 import { applyTemplate, type RaceModel, type RaceSettingsContent } from "@/lib/sanity/race";
+import { rankDelta } from "@/lib/race-rank-delta";
 
 interface RaceTrackProps {
   models: RaceModel[];
@@ -19,14 +20,6 @@ function getThemeRenderer(themeId: string) {
     default:
       return renderF1Track;
   }
-}
-
-function rankDelta(m: RaceModel, newRankLabel: string) {
-  if (m.rank_previous_period == null) return { symbol: "•", label: newRankLabel, className: "text-muted" };
-  const delta = m.rank_previous_period - m.rank_current;
-  if (delta > 0) return { symbol: "▲", label: `+${delta}`, className: "text-verify" };
-  if (delta < 0) return { symbol: "▼", label: `${delta}`, className: "text-signal" };
-  return { symbol: "—", label: "0", className: "text-muted" };
 }
 
 function logoAlt(model: RaceModel, copy: RaceSettingsContent) {
