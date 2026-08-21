@@ -19,10 +19,12 @@
     "sanity:migrate:articles": "tsx scripts/sanity/migrate-mock-articles.ts",
     "sanity:migrate:editorial": "tsx scripts/sanity/normalize-editorial-data.ts",
     "sanity:migrate:race": "tsx scripts/sanity/migrate-race-data.ts",
-    "fetch:race-metrics": "tsx scripts/fetch-race-metrics.ts"
+    "fetch:race-metrics": "tsx scripts/fetch-race-metrics.ts",
+    "postinstall": "npm --prefix components/ui install && npm --prefix components/ui run build"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
+    "@hivig/design-system": "file:./components/ui",
     "@portabletext/react": "^3.1.0",
     "@portabletext/types": "^2.0.15",
     "@sanity/client": "^7.26.2",

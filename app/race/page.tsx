@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import CmsLink from "@/components/CmsLink";
-import RaceHero from "@/components/RaceHero";
+import SignalRaceHero from "@/components/race-signal/SignalRaceHero";
 import RaceTrack from "@/components/RaceTrack";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { DEFAULT_THEME_ID } from "@/lib/geo-theme";
@@ -110,7 +110,7 @@ export default async function RacePage() {
 
       <div className="max-w-content mx-auto">
         <RevealOnScroll>
-          <RaceHero topModels={models} weekLabel={isoWeekLabel(new Date(dateModified))} copy={settings} />
+          <SignalRaceHero topModels={models} weekLabel={isoWeekLabel(new Date(dateModified))} copy={settings} />
         </RevealOnScroll>
 
         <RevealOnScroll className="mt-10">

@@ -19,6 +19,12 @@ const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    // components/ui is @hivig/design-system — a standalone nested package
+    // with its own node_modules and its own plain-CSS styling (no Tailwind
+    // at all, see components/ui/.design-sync/NOTES.md). Without this
+    // exclusion the glob above also matches components/ui/node_modules/**,
+    // which Tailwind flags as an accidental full node_modules scan.
+    "!./components/ui/**",
   ],
   theme: {
     extend: {
