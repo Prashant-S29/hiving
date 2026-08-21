@@ -19,9 +19,8 @@ description: >
 
 This is a **pilot rollout, not a site-wide redesign**. As of 2026-08-22:
 
-- **Migrated**: the Race Hero (`components/race-signal/SignalRaceHero.tsx`, wired into `app/race/page.tsx`).
-- **Next**: Agent Store (`app/agents/`, `app/agents/pricing/`, `app/agents/discover/`).
-- **Untouched, staying on the old dark-editorial theme**: the global Nav/Footer (`components/SiteChrome.tsx`), Intel, Manifesto, About, Consultancy, Subscribe, legal pages, and `components/RaceHero.tsx` (left in place, unused, for comparison).
+- **Migrated**: the full Race page (`app/race/page.tsx` — hero via `components/race-signal/SignalRaceHero.tsx`, leaderboard via `components/race-signal/SignalRaceTrack.tsx`) and the full Agent Store (`app/agents/page.tsx`, `app/agents/pricing/page.tsx`, `app/agents/discover/page.tsx`, plus `components/agent-signal/SignalAgentIntakeForm.tsx` and `SignalDiscoverSearch.tsx`). All wrapped in the shared `components/signal/SignalPageShell.tsx`.
+- **Untouched, staying on the old dark-editorial theme**: the global Nav/Footer (`components/SiteChrome.tsx`), Intel, Manifesto, About, Consultancy, Subscribe, legal pages, `/race/methodology`, `/race/models/[slug]`, and the old `components/RaceHero.tsx`/`components/RaceTrack.tsx`/`components/AgentIntakeForm.tsx`/`components/DiscoverSearch.tsx` (left in place, unused, for comparison). If the next task is either of the two Race sub-pages, treat them as **not yet migrated** even though their parent `/race` is.
 
 **Before touching anything, confirm scope.** If a request could plausibly mean "restyle this one page" or "redesign the whole site," ask — don't assume site-wide. `components/RaceHero.tsx` (old, dark) and `components/race-signal/SignalRaceHero.tsx` (new, light) both exist in this repo right now; it's easy to edit the wrong one. If you're not sure whether an area is in scope for the migration yet, treat it as **not** migrated and ask.
 
@@ -100,4 +99,4 @@ import { Button, Badge, Input, Card, LeaderboardCard, QuoteCard, StatCard, Nav }
 - `components/ui/.design-sync/NOTES.md` — build setup, what's out of scope for v0.1, re-sync risks.
 - `components/ui/src/tokens.css` — the actual token values, source of truth over the table above if they ever diverge.
 - `components/ui/src/index.ts` — the exact current export list; check this if a component might have been added/renamed since this skill was written.
-- `components/race-signal/SignalRaceHero.tsx` — the one real, shipped example of composing this system against live Sanity data end to end. Read it before building the next piece (Agent Store) rather than starting from scratch.
+- `components/signal/SignalPageShell.tsx`, `components/race-signal/*`, `components/agent-signal/*` — real, shipped examples of composing this system against live Sanity/API data end to end (the Race page and the whole Agent Store). Read the closest analog before building the next piece rather than starting from scratch — e.g. `SignalAgentIntakeForm.tsx` for any new form, `SignalRaceTrack.tsx` for any new data grid.
