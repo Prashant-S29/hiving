@@ -1,0 +1,65 @@
+.hvg-btn {
+  font-family: var(--hvg-font-display);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--hvg-radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.hvg-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.hvg-btn--sm {
+  font-size: 12.5px;
+  padding: 7px 14px;
+}
+.hvg-btn--md {
+  font-size: 14px;
+  padding: 10px 18px;
+}
+
+.hvg-btn--primary {
+  background: var(--hvg-ember);
+  color: #fff8f1;
+}
+.hvg-btn--primary:hover:not(:disabled) {
+  background: var(--hvg-ember-strong);
+  box-shadow: 0 3px 10px rgba(143, 67, 21, 0.32);
+  transform: translateY(-1px);
+}
+.hvg-btn--primary:active:not(:disabled) {
+  box-shadow: inset 0 1px 3px rgba(43, 29, 18, 0.3);
+  transform: scale(0.98);
+}
+
+.hvg-btn--secondary {
+  background: transparent;
+  color: var(--hvg-text-primary);
+  border-color: var(--hvg-border-strong);
+}
+.hvg-btn--secondary:hover:not(:disabled) {
+  background: var(--hvg-ember-soft);
+  color: var(--hvg-ember-strong);
+  border-color: var(--hvg-ember);
+}
+
+.hvg-btn--ghost {
+  background: transparent;
+  color: var(--hvg-text-secondary);
+}
+.hvg-btn--ghost:hover:not(:disabled) {
+  color: var(--hvg-text-primary);
+}
+
+.hvg-btn--destructive {
+  background: var(--hvg-danger-soft);
+  color: var(--hvg-danger);
+  border-color: rgba(178, 58, 46, 0.45);
+}
+.hvg-btn--destructive:hover:not(:disabled) {
+  background: rgba(178, 58, 46, 0.18);
+}

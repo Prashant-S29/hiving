@@ -1,0 +1,17 @@
+.hvg-card {
+  background: var(--hvg-surface);
+  border: 1px solid var(--hvg-border);
+  border-radius: var(--hvg-radius-lg);
+  box-shadow: var(--hvg-shadow-card);
+  font-family: var(--hvg-font-display);
+  color: var(--hvg-text-primary);
+}
+.hvg-card--pad-sm {
+  padding: 12px;
+}
+.hvg-card--pad-md {
+  padding: 16px;
+}
+.hvg-card--pad-lg {
+  padding: 20px;
+}
