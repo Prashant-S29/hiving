@@ -1,0 +1,110 @@
+.hvg-lbcard {
+  border-radius: var(--hvg-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--hvg-border-strong);
+  box-shadow: var(--hvg-shadow-card);
+  font-family: var(--hvg-font-display);
+  background: var(--hvg-surface);
+}
+.hvg-lbcard__banner {
+  position: relative;
+  padding: 20px 16px 22px;
+  background: linear-gradient(135deg, #f3dec8, #e9cbaa);
+}
+.hvg-lbcard__chip {
+  position: absolute;
+  top: 10px;
+  font-family: var(--hvg-font-mono);
+  font-size: 10px;
+  color: var(--hvg-text-secondary);
+  padding: 4px 9px 4px 7px;
+  border-radius: var(--hvg-radius-full);
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+.hvg-lbcard__chip:first-child {
+  left: 10px;
+}
+.hvg-lbcard__chip:not(:first-child) {
+  right: 10px;
+}
+.hvg-lbcard__chip--live {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--hvg-ember-strong);
+  letter-spacing: 0.05em;
+}
+.hvg-lbcard__pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hvg-ember);
+  box-shadow: 0 0 6px 2px rgba(196, 97, 31, 0.6);
+}
+.hvg-lbcard__identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 26px;
+}
+.hvg-lbcard__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--hvg-surface);
+  border: 1.5px solid var(--hvg-border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--hvg-font-mono);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--hvg-text-primary);
+  flex-shrink: 0;
+}
+.hvg-lbcard__rank {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--hvg-text-primary);
+  line-height: 1.1;
+}
+.hvg-lbcard__delta {
+  font-family: var(--hvg-font-mono);
+  font-size: 10px;
+  color: var(--hvg-text-secondary);
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+.hvg-lbcard__delta--up {
+  color: var(--hvg-sage);
+}
+.hvg-lbcard__delta--down {
+  color: var(--hvg-clay);
+}
+.hvg-lbcard__body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hvg-lbcard__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hvg-lbcard__model {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--hvg-text-primary);
+}
+.hvg-lbcard__country {
+  font-family: var(--hvg-font-mono);
+  font-size: 11px;
+  color: var(--hvg-text-dim);
+}
+.hvg-lbcard__org {
+  font-size: 12.5px;
+  color: var(--hvg-text-muted);
+}

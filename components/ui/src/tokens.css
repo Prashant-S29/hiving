@@ -1,0 +1,56 @@
+/* Hivig Signal Room — design tokens. Single source of truth for every component in this package. */
+:root {
+  --hvg-paper: #fbf3ec;
+  --hvg-paper-dim: #f3e4d6;
+  --hvg-surface: #ffffff;
+  --hvg-surface-container: #f7eae0;
+  --hvg-surface-container-high: #efdccb;
+  --hvg-border: #d9c2ac;
+  --hvg-border-strong: #b89a7d;
+
+  --hvg-text-primary: #2b1d12;
+  --hvg-text-secondary: #5c4933;
+  --hvg-text-muted: #8c7860;
+  --hvg-text-dim: #b0a08a;
+
+  --hvg-ember: #c4611f;
+  --hvg-ember-strong: #8f4315;
+  --hvg-ember-vivid: #e2760c;
+  --hvg-ember-soft: rgba(196, 97, 31, 0.12);
+
+  --hvg-clay: #a85c3e;
+  --hvg-sage: #5b7a4e;
+
+  --hvg-danger: #b23a2e;
+  --hvg-danger-soft: rgba(178, 58, 46, 0.1);
+  --hvg-warning: #d9a441;
+  --hvg-warning-soft: rgba(217, 164, 65, 0.15);
+  --hvg-success-soft: rgba(91, 122, 78, 0.12);
+
+  --hvg-font-display: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --hvg-font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --hvg-radius-sm: 4px;
+  --hvg-radius-md: 8px;
+  --hvg-radius-lg: 12px;
+  --hvg-radius-full: 9999px;
+
+  --hvg-shadow-card: 0 1px 2px rgba(139, 90, 50, 0.06), 0 8px 24px rgba(139, 90, 50, 0.1);
+}
+
+[data-hvg-theme="dark"] {
+  --hvg-paper: #16110b;
+  --hvg-paper-dim: #1f1811;
+  --hvg-surface: #1f1811;
+  --hvg-surface-container: #2a2118;
+  --hvg-surface-container-high: #3d3021;
+  --hvg-border: #3d3021;
+  --hvg-border-strong: #55442f;
+
+  --hvg-text-primary: #f2e6d8;
+  --hvg-text-secondary: #c9b79e;
+  --hvg-text-muted: #8c7860;
+  --hvg-text-dim: #6b5c48;
+
+  --hvg-ember-vivid: #e2760c;
+}

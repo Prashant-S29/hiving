@@ -1,0 +1,11 @@
+{
+  "projectId": "53626d69-3609-4b9c-9ed9-0884f3449c80",
+  "shape": "package",
+  "pkg": "@hivig/design-system",
+  "globalName": "HivigUI",
+  "cssEntry": "dist/index.css",
+  "overrides": {
+    "Nav": { "cardMode": "column" }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}

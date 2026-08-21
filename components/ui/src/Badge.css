@@ -1,0 +1,38 @@
+.hvg-badge {
+  font-family: var(--hvg-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px 6px 10px;
+  border-radius: var(--hvg-radius-full);
+  border: 1.5px solid transparent;
+}
+.hvg-badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.hvg-badge--verified {
+  background: var(--hvg-success-soft);
+  border-color: rgba(91, 122, 78, 0.45);
+  color: var(--hvg-sage);
+}
+.hvg-badge--in-review {
+  background: var(--hvg-warning-soft);
+  border-color: rgba(217, 164, 65, 0.5);
+  color: #8a6a1f;
+}
+.hvg-badge--unverified {
+  background: var(--hvg-surface);
+  border-color: var(--hvg-border-strong);
+  color: var(--hvg-text-muted);
+}
+.hvg-badge--disputed {
+  background: var(--hvg-danger-soft);
+  border-color: rgba(178, 58, 46, 0.45);
+  color: var(--hvg-danger);
+}
