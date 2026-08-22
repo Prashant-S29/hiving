@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import DiscoverSearch from "@/components/DiscoverSearch";
+import SignalPageShell from "@/components/signal/SignalPageShell";
+import SignalDiscoverSearch from "@/components/agent-signal/SignalDiscoverSearch";
 import { getAgentDiscoverPage } from "@/lib/sanity/agentPages";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -20,19 +21,19 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function DiscoverPage() {
   const page = await getAgentDiscoverPage();
   return (
-    <section className="pt-32 pb-24 px-6 md:px-12">
+    <SignalPageShell>
       <div className="mx-auto max-w-4xl">
-        <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-signal mb-5 flex items-center gap-4">
-          <span className="w-8 h-px bg-signal" /> {page.eyebrow}
+        <div className="mb-5 flex items-center gap-4 text-[11px] uppercase tracking-[0.25em]" style={{ color: "var(--hvg-ember-strong)", fontFamily: "var(--hvg-font-mono)" }}>
+          <span className="h-px w-8" style={{ background: "var(--hvg-ember)" }} /> {page.eyebrow}
         </div>
 
-        <h1 className="font-serif text-4xl font-bold text-ink tracking-tight">{page.heading}</h1>
-        <p className="mt-4 max-w-2xl font-body text-[16px] leading-[1.8] text-ink/75">{page.introduction}</p>
+        <h1 className="text-4xl font-bold tracking-tight" style={{ color: "var(--hvg-text-primary)" }}>{page.heading}</h1>
+        <p className="mt-4 max-w-2xl text-[16px] leading-[1.8]" style={{ color: "var(--hvg-text-secondary)" }}>{page.introduction}</p>
 
         <div className="mt-10">
-          <DiscoverSearch copy={page.interfaceCopy} />
+          <SignalDiscoverSearch copy={page.interfaceCopy} />
         </div>
       </div>
-    </section>
+    </SignalPageShell>
   );
 }

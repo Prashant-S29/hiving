@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import CmsLink from "@/components/CmsLink";
-import RaceHero from "@/components/RaceHero";
-import RaceTrack from "@/components/RaceTrack";
+import SignalPageShell from "@/components/signal/SignalPageShell";
+import SignalRaceHero from "@/components/race-signal/SignalRaceHero";
+import SignalRaceTrack from "@/components/race-signal/SignalRaceTrack";
 import RevealOnScroll from "@/components/RevealOnScroll";
-import { DEFAULT_THEME_ID } from "@/lib/geo-theme";
 import { applyTemplate, getRaceModels, getRaceSettings, type RaceModel, type RaceSettingsContent } from "@/lib/sanity/race";
 
 // ISO 8601 week number, for the hero's "Tracking Week" badge.
@@ -85,7 +84,6 @@ function displayDate(value: string, locale: string) {
 
 export default async function RacePage() {
   const [models, settings] = await Promise.all([getRaceModels(), getRaceSettings()]);
-  const themeId = headers().get("x-race-theme") ?? DEFAULT_THEME_ID;
   const top = models[0];
   const top10 = models.slice(0, 10);
   const usCount = top10.filter((model) => model.org_country === "US").length;
@@ -104,28 +102,33 @@ export default async function RacePage() {
   });
 
   return (
-    <section className="pt-32 pb-24 px-6 md:px-12">
+    <SignalPageShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(itemListJsonLd(models, settings, dateModified)) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqJsonLd(models, settings)) }} />
 
       <div className="max-w-content mx-auto">
         <RevealOnScroll>
-          <RaceHero topModels={models} weekLabel={isoWeekLabel(new Date(dateModified))} copy={settings} />
+          <SignalRaceHero topModels={models} weekLabel={isoWeekLabel(new Date(dateModified))} copy={settings} />
         </RevealOnScroll>
 
         <RevealOnScroll className="mt-10">
-          <p className="max-w-2xl font-body text-[16px] leading-[1.85] text-ink/75">{definition}</p>
+          <p className="max-w-2xl text-[16px] leading-[1.85]" style={{ color: "var(--hvg-text-secondary)" }}>{definition}</p>
 
-          <p className="mt-3 font-mono text-[11px] uppercase tracking-wider text-muted">
-            {settings.lastUpdatedLabel}: <time dateTime={dateModified}>{dateLabel}</time> · {settings.themeLabel}: {themeId} ·{" "}
-            <CmsLink link={settings.methodologyAction} className="text-signal hover:text-ink transition-colors normal-case tracking-normal">
+          <p className="mt-3 text-[11px] uppercase tracking-wider" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>
+            {settings.lastUpdatedLabel}: <time dateTime={dateModified}>{dateLabel}</time> ·{" "}
+            <CmsLink
+              link={settings.methodologyAction}
+              className="normal-case tracking-normal text-[color:var(--hvg-ember)] transition-colors hover:text-[color:var(--hvg-ember-strong)]"
+            >
               {settings.methodologyAction.label}
             </CmsLink>
           </p>
         </RevealOnScroll>
 
-        <div className="mt-10"><RaceTrack models={models} themeId={themeId} copy={settings} /></div>
+        <div className="mt-10">
+          <SignalRaceTrack models={models} copy={settings} />
+        </div>
       </div>
-    </section>
+    </SignalPageShell>
   );
 }

@@ -13,8 +13,13 @@ export interface LeaderboardCardProps {
   /** ISO alpha-2 country code, e.g. "US", "CN", "IN". */
   country: string;
   modelType: ModelType;
-  /** Hivig Velocity Index, 0–100. */
-  hviScore: number;
+  /**
+   * Hivig Velocity Index, 0–100. `null` when this model hasn't been opted
+   * into automated scoring yet (see the real `aiModel.openrouterId` field in
+   * the main app's Sanity schema) — renders "HVI —" rather than a
+   * misleading 0.0.
+   */
+  hviScore: number | null;
   live?: boolean;
 }
 
@@ -29,7 +34,7 @@ export function LeaderboardCard({ rank, rankDelta, modelName, orgName, orgInitia
             Tracking live
           </div>
         ) : null}
-        <div className="hvg-lbcard__chip">HVI {hviScore.toFixed(1)}</div>
+        <div className="hvg-lbcard__chip">HVI {hviScore != null ? hviScore.toFixed(1) : "—"}</div>
         <div className="hvg-lbcard__identity">
           <div className="hvg-lbcard__avatar">{orgInitials}</div>
           <div>
