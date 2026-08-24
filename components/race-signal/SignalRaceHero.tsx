@@ -120,11 +120,15 @@ export default function SignalRaceHero({ topModels, weekLabel, copy }: SignalRac
       }}
     >
       {/* Subtle world-map line art, sitting behind the track — reinforces the
-          "global" framing without competing with the animation. Source:
-          @svg-maps/world (CC-BY-4.0, https://github.com/VictorCazanave/svg-maps),
-          country borders dissolved into continent outlines and simplified. */}
+          "global" framing without competing with the animation. Source: Natural
+          Earth's public-domain 110m land data (via world-atlas, ISC-licensed
+          redistribution — https://github.com/topojson/world-atlas), no
+          attribution required. Clipped to +65/-58 latitude (the dense Arctic
+          archipelago band above ~70N compresses into unrecognizable clutter
+          under this projection at this scale) and simplified to continent-
+          level detail. */}
       <svg
-        viewBox="0 0 800 529"
+        viewBox="0 0 800 304"
         preserveAspectRatio="xMidYMid slice"
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0 h-full w-full"
