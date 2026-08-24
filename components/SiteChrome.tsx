@@ -20,13 +20,17 @@ export default function SiteChrome({
 }) {
   const pathname = usePathname();
   const isStudio = pathname.startsWith("/studio");
+  // The "Orbit" homepage brings its own nav/hero/footer (different brand
+  // direction, still under review) — same bypass pattern as /studio so it
+  // doesn't get double nav/footer from the site-wide dark-editorial chrome.
+  const isBareChrome = isStudio || pathname === "/";
 
   useEffect(() => {
-    document.body.classList.toggle("cursor-enabled", !isStudio);
+    document.body.classList.toggle("cursor-enabled", !isBareChrome);
     return () => document.body.classList.remove("cursor-enabled");
-  }, [isStudio]);
+  }, [isBareChrome]);
 
-  if (isStudio) return <main>{children}</main>;
+  if (isBareChrome) return <main>{children}</main>;
 
   return (
     <div className="noise-overlay">
