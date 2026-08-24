@@ -21,8 +21,8 @@
   --color-lift: 34,34,46;
   --color-paper: 246,243,237;
   --color-cream: 238,233,223;
-  --color-signal: 214,59,47;
-  --color-signal-dark: 143,35,24;
+  --color-signal: 255,140,0;
+  --color-signal-dark: 144,77,0;
   --color-amber: 201,125,16;
   --color-verify: 30,158,86;
   --color-ink: 236,234,228;
@@ -42,8 +42,8 @@
   --color-lift: 236,233,227;
   --color-paper: 255,255,255;
   --color-cream: 250,247,241;
-  --color-signal: 214,59,47;
-  --color-signal-dark: 143,35,24;
+  --color-signal: 255,140,0;
+  --color-signal-dark: 144,77,0;
   --color-amber: 176,108,10;
   --color-verify: 21,120,64;
   --color-ink: 20,20,24;

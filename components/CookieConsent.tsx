@@ -84,19 +84,19 @@ export default function CookieConsent({ copy }: { copy: SiteSettings["cookieCons
             <div className="flex flex-wrap gap-3 shrink-0">
               <button
                 onClick={openPreferences}
-                className="font-mono text-[11px] tracking-[0.1em] uppercase text-muted hover:text-ink border border-rule-strong px-5 py-3 transition-colors"
+                className="rounded-lg font-cta text-[13px] font-bold text-muted hover:text-ink border border-rule-strong px-5 py-3 transition-colors"
               >
                 {copy.manageLabel}
               </button>
               <button
                 onClick={rejectNonEssential}
-                className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink border border-rule-strong hover:border-ink px-5 py-3 transition-colors"
+                className="rounded-lg font-cta text-[13px] font-bold text-ink border border-rule-strong hover:border-ink px-5 py-3 transition-colors"
               >
                 {copy.rejectLabel}
               </button>
               <button
                 onClick={acceptAll}
-                className="bg-signal hover:bg-signal-dark text-white font-mono text-[11px] tracking-[0.1em] uppercase font-medium px-5 py-3 transition-colors"
+                className="rounded-lg bg-signal hover:bg-signal-dark text-[#241912] hover:text-white font-cta text-[13px] font-bold px-5 py-3 transition-colors"
               >
                 {copy.acceptLabel}
               </button>
@@ -150,19 +150,19 @@ export default function CookieConsent({ copy }: { copy: SiteSettings["cookieCons
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={savePreferences}
-                className="bg-signal hover:bg-signal-dark text-white font-mono text-[11px] tracking-[0.1em] uppercase font-medium px-6 py-3 transition-colors"
+                className="rounded-lg bg-signal hover:bg-signal-dark text-[#241912] hover:text-white font-cta text-[13px] font-bold px-6 py-3 transition-colors"
               >
                 {copy.saveLabel}
               </button>
               <button
                 onClick={rejectNonEssential}
-                className="font-mono text-[11px] tracking-[0.1em] uppercase text-ink border border-rule-strong hover:border-ink px-6 py-3 transition-colors"
+                className="rounded-lg font-cta text-[13px] font-bold text-ink border border-rule-strong hover:border-ink px-6 py-3 transition-colors"
               >
                 {copy.rejectLabel}
               </button>
               <button
                 onClick={acceptAll}
-                className="font-mono text-[11px] tracking-[0.1em] uppercase text-muted hover:text-ink border border-rule-strong px-6 py-3 transition-colors"
+                className="rounded-lg font-cta text-[13px] font-bold text-muted hover:text-ink border border-rule-strong px-6 py-3 transition-colors"
               >
                 {copy.acceptLabel}
               </button>

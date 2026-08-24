@@ -9,10 +9,10 @@ export default async function NotFound() {
       <h1 className="font-serif text-[28px] font-bold mb-4">{page.heading}</h1>
       <p className="font-body text-ink/60 mb-8 max-w-[400px]">{page.body}</p>
       <div className="flex gap-4">
-        <CmsLink link={page.primaryAction} className="bg-signal hover:bg-signal-dark text-white font-sans text-[12px] font-bold uppercase tracking-[0.1em] px-7 py-3.5 transition-colors">
+        <CmsLink link={page.primaryAction} className="rounded-lg bg-signal hover:bg-signal-dark text-[#241912] hover:text-white font-cta text-[14px] font-bold px-7 py-3.5 transition-colors">
           {page.primaryAction.label}
         </CmsLink>
-        <CmsLink link={page.secondaryAction} className="border border-rule-strong text-ink font-sans text-[12px] font-bold uppercase tracking-[0.1em] px-7 py-3.5 transition-colors hover:border-signal">
+        <CmsLink link={page.secondaryAction} className="rounded-lg border border-rule-strong text-ink font-cta text-[14px] font-bold px-7 py-3.5 transition-colors hover:border-signal">
           {page.secondaryAction.label}
         </CmsLink>
       </div>

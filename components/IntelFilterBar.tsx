@@ -13,9 +13,9 @@ function Pill({ href, active, children }: { href: string; active: boolean; child
   return (
     <Link
       href={href}
-      className={`font-mono text-[11px] tracking-[0.1em] uppercase px-4 py-2 border transition-colors ${
+      className={`rounded-full font-mono text-[11px] tracking-[0.1em] uppercase px-4 py-2 border transition-colors ${
         active
-          ? "bg-signal border-signal text-white"
+          ? "bg-signal border-signal text-[#241912]"
           : "border-rule-strong text-muted hover:text-ink hover:border-ink"
       }`}
     >

@@ -43,7 +43,7 @@ export default function InteractiveHero({ choices, eyebrowLabel, actionLabel }: 
     // than hardcoding it, so this canvas stays in sync with
     // tailwind.config.ts / globals.css even though Canvas 2D can't consume
     // var() directly.
-    const signalRgb = getComputedStyle(document.documentElement).getPropertyValue("--color-signal").trim() || "214,59,47";
+    const signalRgb = getComputedStyle(document.documentElement).getPropertyValue("--color-signal").trim() || "255,140,0";
 
     let particles: Particle[] = [];
     let raf = 0;

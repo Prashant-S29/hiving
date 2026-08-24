@@ -9,7 +9,7 @@ export const ACCENT_STYLES: Record<HeroChoice["accent"], { border: string; text:
   signal: {
     border: "hover:border-signal focus-visible:border-signal",
     text: "text-signal",
-    glow: "hover:shadow-[0_0_40px_-12px_rgba(214,59,47,0.6)]",
+    glow: "hover:shadow-[0_0_40px_-12px_rgba(var(--color-signal),0.6)]",
   },
   verify: {
     border: "hover:border-verify focus-visible:border-verify",

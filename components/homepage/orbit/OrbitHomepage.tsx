@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { JetBrains_Mono } from "next/font/google";
+import Nav from "@/components/Nav";
+import type { SiteSettings } from "@/lib/sanity/siteSettings";
 import { OrbitalHero } from "./OrbitalHero";
 import "./orbit-hero.css";
 
-// This Next.js version's next/font/google list predates Geist, so it loads
-// as a regular Google Fonts stylesheet instead (JetBrains Mono still goes
-// through next/font for its usual preload/self-hosting benefits).
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--hv-orbit-mono" });
+// Geist and JetBrains Mono are loaded once, globally, in app/layout.tsx —
+// this page just references them ('Geist' / var(--font-jetbrains-mono)).
 
 const marqueeNames = ["NORTHWIND", "Arclight", "MERIDIAN", "Foundry AI", "Halcyon", "BRIGHTPATH", "Kestrel", "OMNICORE"];
 
@@ -48,62 +47,10 @@ const stats = [
  * copy and the original Solar Kinetic palette (this predates the Signal
  * Room adaptation and intentionally isn't reconciled with it here).
  */
-export function OrbitHomepage() {
+export function OrbitHomepage({ settings }: { settings: SiteSettings }) {
   return (
-    <div className={`hv-orbit-root hv-orbit-grain ${jetbrainsMono.variable}`} style={{ fontFamily: "'Geist', system-ui, sans-serif", color: "#241912", background: "#fff8f5" }}>
-      {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap"
-      />
-
-      {/* ============ NAV ============ */}
-      <div style={{ position: "sticky", top: 0, zIndex: 40, background: "rgba(255,248,245,0.72)", backdropFilter: "blur(20px)", borderBottom: "1px solid #ddc1ae" }}>
-        <div style={{ maxWidth: 1440, margin: "0 auto", padding: "0 32px", height: 66, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logos/hivig-logo.png" alt="Hivig" style={{ height: 30, width: "auto", borderRadius: 6, display: "block" }} />
-            <span
-              style={{
-                fontFamily: "var(--hv-orbit-mono), monospace",
-                fontSize: 10,
-                color: "#904d00",
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                paddingLeft: 6,
-                borderLeft: "1px solid #ddc1ae",
-              }}
-            >
-              Hi-Tech
-              <br />
-              Vigilance
-            </span>
-          </Link>
-          <div style={{ display: "flex", alignItems: "center", gap: 26 }}>
-            <Link href="/race" style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#904d00", fontWeight: 700 }}>
-              The Race
-            </Link>
-            <Link href="/agents" style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#904d00", fontWeight: 700 }}>
-              Agent Store
-            </Link>
-            <Link href="/intel" style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#564334" }}>
-              Intel
-            </Link>
-            <Link href="/intel" style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#564334" }}>
-              Reviews
-            </Link>
-            <Link href="/manifesto" style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#564334" }}>
-              Manifesto
-            </Link>
-            <Link
-              href="/subscribe"
-              style={{ background: "#ff8c00", color: "#241912", fontWeight: 700, fontSize: 13, padding: "10px 16px", borderRadius: 8, border: "1px solid #904d00" }}
-            >
-              Subscribe →
-            </Link>
-          </div>
-        </div>
-      </div>
+    <div className="hv-orbit-root hv-orbit-grain" style={{ fontFamily: "'Geist', system-ui, sans-serif", color: "#241912", background: "#fff8f5" }}>
+      <Nav settings={settings} />
 
       {/* ============ ORBITAL HERO ============ */}
       <div
@@ -161,7 +108,7 @@ export function OrbitHomepage() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 9,
-                fontFamily: "var(--hv-orbit-mono), monospace",
+                fontFamily: "var(--font-jetbrains-mono), monospace",
                 fontSize: 12,
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
@@ -246,7 +193,7 @@ export function OrbitHomepage() {
             {stats.map((s, i) => (
               <div key={s.label} style={{ padding: "22px 24px", borderLeft: i > 0 ? "1px solid #ddc1ae" : undefined }}>
                 <div style={{ fontWeight: 800, fontSize: 36, color: s.color, letterSpacing: "-0.03em" }}>{s.value}</div>
-                <div style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase", color: "#897362", marginTop: 6 }}>
+                <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase", color: "#897362", marginTop: 6 }}>
                   {s.label}
                 </div>
               </div>
@@ -259,7 +206,7 @@ export function OrbitHomepage() {
       <div style={{ background: "#fff1e9", borderBottom: "1px solid #ddc1ae", overflow: "hidden", padding: "24px 0" }}>
         <div
           style={{
-            fontFamily: "var(--hv-orbit-mono), monospace",
+            fontFamily: "var(--font-jetbrains-mono), monospace",
             fontSize: 11,
             letterSpacing: "0.14em",
             textTransform: "uppercase",
@@ -284,10 +231,10 @@ export function OrbitHomepage() {
       {/* ============ FEATURED DEEP DIVE ============ */}
       <div style={{ maxWidth: 1440, margin: "0 auto", padding: "80px 32px 0" }}>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", borderBottom: "2px solid #241912", paddingBottom: 14, marginBottom: 32 }}>
-          <div style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", color: "#904d00" }}>
+          <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", color: "#904d00" }}>
             // This week's dispatch
           </div>
-          <div style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#897362" }}>Vol. 12 · Aug 2026</div>
+          <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, color: "#897362" }}>Vol. 12 · Aug 2026</div>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1.35fr 1fr", gap: 0, border: "1px solid #ddc1ae", borderRadius: 4, overflow: "hidden" }}>
@@ -297,7 +244,7 @@ export function OrbitHomepage() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 8,
-                fontFamily: "var(--hv-orbit-mono), monospace",
+                fontFamily: "var(--font-jetbrains-mono), monospace",
                 fontSize: 11,
                 fontWeight: 700,
                 letterSpacing: "0.06em",
@@ -320,7 +267,7 @@ export function OrbitHomepage() {
               Enterprise AI crossed a threshold this quarter. Agents are signing contracts, shipping code to production, and closing tickets without a human
               in the loop. We stress-tested eight of them so you don&apos;t have to.
             </p>
-            <div style={{ display: "flex", alignItems: "center", gap: 16, fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#897362" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 16, fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, color: "#897362" }}>
               <span style={{ color: "#904d00", fontWeight: 700 }}>Read the analysis →</span>
               <span>14 min read</span>
             </div>
@@ -335,7 +282,7 @@ export function OrbitHomepage() {
               color: "#ffede3",
             }}
           >
-            <div style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: "#ffb77d" }}>
+            <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: "#ffb77d" }}>
               Verdict scorecard
             </div>
             <div>
@@ -351,11 +298,11 @@ export function OrbitHomepage() {
                   }}
                 >
                   <span style={{ fontSize: 14 }}>{row.label}</span>
-                  <span style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontWeight: 700, color: row.color }}>{row.value}</span>
+                  <span style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontWeight: 700, color: row.color }}>{row.value}</span>
                 </div>
               ))}
             </div>
-            <div style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 11, color: "#ffb77d" }}>Independently scored · no vendor input</div>
+            <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, color: "#ffb77d" }}>Independently scored · no vendor input</div>
           </div>
         </div>
       </div>
@@ -364,7 +311,7 @@ export function OrbitHomepage() {
       <div style={{ maxWidth: 1440, margin: "0 auto", padding: "64px 32px 0" }}>
         <div
           style={{
-            fontFamily: "var(--hv-orbit-mono), monospace",
+            fontFamily: "var(--font-jetbrains-mono), monospace",
             fontSize: 12,
             letterSpacing: "0.06em",
             textTransform: "uppercase",
@@ -382,7 +329,7 @@ export function OrbitHomepage() {
               href="/intel"
               style={{ display: "block", padding: "30px 30px 34px", borderRight: i < articles.length - 1 ? "1px solid #ddc1ae" : undefined, background: "#ffffff" }}
             >
-              <div style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 11, color: "#904d00", marginBottom: 14, letterSpacing: "0.05em" }}>{a.kicker}</div>
+              <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, color: "#904d00", marginBottom: 14, letterSpacing: "0.05em" }}>{a.kicker}</div>
               <h3 style={{ fontWeight: 600, fontSize: 22, lineHeight: 1.14, letterSpacing: "-0.02em", margin: "0 0 10px" }}>{a.title}</h3>
               <p style={{ fontSize: 14, lineHeight: 1.6, color: "#564334", margin: 0 }}>{a.deck}</p>
             </Link>
@@ -414,7 +361,7 @@ export function OrbitHomepage() {
             }}
           />
           <div style={{ position: "relative", maxWidth: 660 }}>
-            <div style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "#ffdcc3", marginBottom: 20 }}>
+            <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "#ffdcc3", marginBottom: 20 }}>
               The Hivig promise
             </div>
             <div style={{ fontWeight: 800, fontSize: 46, lineHeight: 1.06, letterSpacing: "-0.03em", color: "#fffaf7" }}>
@@ -482,7 +429,7 @@ export function OrbitHomepage() {
               padding: "20px 32px",
               display: "flex",
               justifyContent: "space-between",
-              fontFamily: "var(--hv-orbit-mono), monospace",
+              fontFamily: "var(--font-jetbrains-mono), monospace",
               fontSize: 11,
               color: "#a58b78",
             }}
@@ -499,7 +446,7 @@ export function OrbitHomepage() {
 function FooterCol({ title, items }: { title: string; items: { label: string; href?: string }[] }) {
   return (
     <div>
-      <div style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: "#ffb77d", marginBottom: 14 }}>
+      <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: "#ffb77d", marginBottom: 14 }}>
         {title}
       </div>
       <div style={{ fontSize: 13, lineHeight: 2.2 }}>
