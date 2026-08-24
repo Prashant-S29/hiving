@@ -107,7 +107,7 @@ function SubscribePromotion({ hero, control }: { hero: HomepageContent; control:
         <h2 className="font-serif text-[36px] md:text-[56px] font-bold tracking-tight mb-7">
           {hero.subscribePromotion.heading} <span className="italic text-signal">{hero.subscribePromotion.emphasis}</span>
         </h2>
-        <CmsLink link={hero.subscribePromotion.action} className="bg-signal hover:bg-signal-dark text-white font-sans text-[13px] font-bold uppercase tracking-[0.1em] px-10 py-[18px] inline-block transition-colors">
+        <CmsLink link={hero.subscribePromotion.action} className="rounded-lg bg-signal hover:bg-signal-dark text-[#241912] hover:text-white font-cta text-[15px] font-bold px-10 py-[18px] inline-block transition-colors">
           {hero.subscribePromotion.action.label}
         </CmsLink>
       </RevealOnScroll>

@@ -46,7 +46,7 @@ const ACCENT_BORDER: Record<Accent, string> = {
   amber: "border-amber/50",
 };
 const ACCENT_GLOW: Record<Accent, string> = {
-  signal: "0 0 16px 4px rgba(214,59,47,.55)",
+  signal: "0 0 16px 4px rgba(var(--color-signal),.55)",
   verify: "0 0 16px 4px rgba(30,158,86,.55)",
   amber: "0 0 16px 4px rgba(201,125,16,.55)",
 };
@@ -271,7 +271,7 @@ export default function RaceHero({ topModels, weekLabel, copy }: RaceHeroProps) 
           onClick={() => setOpen(true)}
           className="inline-flex items-center gap-3 border border-rule-strong bg-surface/60 px-4 py-3 text-left font-body text-[13px] text-ink/80 backdrop-blur-sm transition-colors hover:border-signal/50 hover:text-ink"
         >
-          <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center bg-signal font-mono text-xs font-bold text-white">i</span>
+          <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center bg-signal font-mono text-xs font-bold text-[#241912]">i</span>
           <span>{copy.heroDisclaimerButtonLabel}</span>
           <span className="text-signal">→</span>
         </button>
@@ -284,14 +284,14 @@ export default function RaceHero({ topModels, weekLabel, copy }: RaceHeroProps) 
           <aside className="fixed right-6 top-6 z-50 flex max-h-[calc(100vh-3rem)] w-full max-w-[380px] flex-col overflow-hidden border border-rule-strong bg-deep shadow-2xl">
             <div className="flex items-center justify-between gap-4 border-b border-rule px-5 py-4">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center bg-signal font-mono text-xs font-bold text-white">i</span>
+                <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center bg-signal font-mono text-xs font-bold text-[#241912]">i</span>
                 <h2 className="font-serif text-base font-bold text-ink">{copy.heroDisclaimerTitle}</h2>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close"
-                className="flex h-8 w-8 flex-shrink-0 items-center justify-center border border-rule-strong text-muted transition-colors hover:border-signal hover:bg-signal hover:text-white"
+                className="flex h-8 w-8 flex-shrink-0 items-center justify-center border border-rule-strong text-muted transition-colors hover:border-signal hover:bg-signal hover:text-[#241912]"
               >
                 ✕
               </button>

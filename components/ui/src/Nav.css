@@ -55,7 +55,7 @@
   gap: 6px;
   padding: 5px 10px;
   background: var(--hvg-ember-soft);
-  border: 1.5px solid rgba(196, 97, 31, 0.4);
+  border: 1.5px solid rgba(255, 140, 0, 0.4);
   border-radius: var(--hvg-radius-full);
   font-family: var(--hvg-font-mono);
   font-size: 10.5px;
@@ -66,7 +66,7 @@
   height: 6px;
   border-radius: 50%;
   background: var(--hvg-ember);
-  box-shadow: 0 0 6px 2px rgba(196, 97, 31, 0.6);
+  box-shadow: 0 0 6px 2px rgba(255, 140, 0, 0.6);
 }
 .hvg-nav__avatar {
   width: 32px;

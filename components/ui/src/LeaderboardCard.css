@@ -41,7 +41,7 @@
   height: 6px;
   border-radius: 50%;
   background: var(--hvg-ember);
-  box-shadow: 0 0 6px 2px rgba(196, 97, 31, 0.6);
+  box-shadow: 0 0 6px 2px rgba(255, 140, 0, 0.6);
 }
 .hvg-lbcard__identity {
   display: flex;

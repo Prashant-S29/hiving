@@ -70,7 +70,7 @@ export default function DiscoverSearch({ copy }: { copy: DiscoverInterfaceCopy }
         <button
           type="submit"
           disabled={loading || promptText.trim().length < 10}
-          className="bg-signal hover:bg-signal-dark px-6 py-3 font-sans text-[11px] font-bold uppercase tracking-[0.1em] text-white transition-colors disabled:opacity-40"
+          className="rounded-lg bg-signal hover:bg-signal-dark px-6 py-3 font-cta text-[13px] font-bold text-[#241912] hover:text-white transition-colors disabled:opacity-40"
         >
           {loading ? copy.loadingLabel : copy.submitLabel}
         </button>

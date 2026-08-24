@@ -49,8 +49,8 @@ export default function Pagination({
           key={p}
           href={buildHref({ category, platform, page: p })}
           aria-current={p === page ? "page" : undefined}
-          className={`w-9 h-9 flex items-center justify-center border transition-colors ${
-            p === page ? "bg-signal border-signal text-white" : "border-rule-strong text-muted hover:text-ink hover:border-ink"
+          className={`w-9 h-9 flex items-center justify-center rounded-lg border transition-colors ${
+            p === page ? "bg-signal border-signal text-[#241912]" : "border-rule-strong text-muted hover:text-ink hover:border-ink"
           }`}
         >
           {p}

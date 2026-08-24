@@ -92,7 +92,7 @@ export default function EnquiryForm({ copy }: { copy: EnquiryFormCopy }) {
       <button
         type="submit"
         disabled={status === "loading" || !consent}
-        className="bg-signal hover:bg-signal-dark text-white font-mono text-[12px] tracking-[0.12em] uppercase font-medium px-6 py-[17px] mt-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        className="rounded-lg bg-signal hover:bg-signal-dark text-[#241912] hover:text-white font-cta text-[13px] font-bold px-6 py-[17px] mt-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
         {status === "loading" ? copy.submittingLabel : copy.submitLabel}
       </button>

@@ -50,6 +50,10 @@ const config: Config = {
         body: ["var(--font-baskerville)", "Georgia", "serif"], // long-form copy
         mono: ["var(--font-dmmono)", "monospace"], // labels, timestamps, data
         sans: ["var(--font-barlow)", "system-ui", "sans-serif"], // UI chrome, buttons
+        // Geist — CTA buttons and the shared Nav only, matching the "Orbit"
+        // homepage's look (loaded as a stylesheet in app/layout.tsx; not in
+        // this Next.js version's next/font/google list yet).
+        cta: ["Geist", "system-ui", "sans-serif"],
       },
       maxWidth: {
         content: "1280px",

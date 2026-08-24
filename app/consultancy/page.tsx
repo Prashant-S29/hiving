@@ -46,7 +46,7 @@ export default async function ConsultancyPage() {
           <p className="font-body text-[14px] text-muted mb-8 max-w-[480px] mx-auto">{page.ctaBody}</p>
           <CmsLink
             link={page.ctaAction}
-            className="bg-signal hover:bg-signal-dark text-white font-sans text-[13px] font-bold uppercase tracking-[0.1em] px-9 py-[16px] inline-block transition-colors"
+            className="rounded-lg bg-signal hover:bg-signal-dark text-[#241912] hover:text-white font-cta text-[15px] font-bold px-9 py-[16px] inline-block transition-colors"
           >
             {page.ctaAction.label}
           </CmsLink>

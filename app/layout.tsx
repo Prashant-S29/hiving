@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
-import { Cormorant_Garamond, Libre_Baskerville, DM_Mono, Barlow } from "next/font/google";
+import { Cormorant_Garamond, Libre_Baskerville, DM_Mono, Barlow, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 import { getSiteSettings } from "@/lib/sanity/siteSettings";
@@ -32,6 +32,15 @@ const barlow = Barlow({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-barlow",
+  display: "swap",
+});
+
+// Used by the shared Nav (and the "Orbit" homepage) for technical/mono text —
+// timestamps, nav labels, badges.
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-jetbrains-mono",
   display: "swap",
 });
 
@@ -70,8 +79,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const previewEnabled = draftMode().isEnabled;
 
   return (
-    <html lang="en" className={`${cormorant.variable} ${baskerville.variable} ${dmMono.variable} ${barlow.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${baskerville.variable} ${dmMono.variable} ${barlow.variable} ${jetbrainsMono.variable}`}>
       <head>
+        {/* Geist isn't in this Next.js version's next/font/google list yet — loaded
+            as a regular stylesheet instead. Used by the shared Nav (and the "Orbit"
+            homepage) for its display type. */}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap" />
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className="font-sans antialiased">
