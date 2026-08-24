@@ -119,6 +119,20 @@ export default function SignalRaceHero({ topModels, weekLabel, copy }: SignalRac
         fontFamily: "var(--hvg-font-display)",
       }}
     >
+      {/* Subtle world-map line art, sitting behind the track — reinforces the
+          "global" framing without competing with the animation. Source:
+          @svg-maps/world (CC-BY-4.0, https://github.com/VictorCazanave/svg-maps),
+          country borders dissolved into continent outlines and simplified. */}
+      <svg
+        viewBox="0 0 800 529"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full"
+        style={{ opacity: 0.07 }}
+      >
+        <use href="/maps/world-outline.svg#worldOutline" fill="none" stroke="var(--hvg-text-primary)" strokeWidth={1} />
+      </svg>
+
       {/* Full-bleed track background */}
       <div
         ref={markersContainerRef}
