@@ -1,5 +1,6 @@
 import { OrbitHomepage } from "@/components/homepage/orbit/OrbitHomepage";
 import { getSiteSettings } from "@/lib/sanity/siteSettings";
+import { getRaceModels } from "@/lib/sanity/race";
 
 // Homepage — "Orbit" direction, ported from Claude Design. The previous
 // CMS-driven homepage (Sanity-backed hero/sections) is still intact as
@@ -12,6 +13,6 @@ import { getSiteSettings } from "@/lib/sanity/siteSettings";
 // it's wrapped in React's cache(), so this is a free request-memoized call,
 // not a duplicate fetch.
 export default async function HomePage() {
-  const settings = await getSiteSettings();
-  return <OrbitHomepage settings={settings} />;
+  const [settings, raceModels] = await Promise.all([getSiteSettings(), getRaceModels()]);
+  return <OrbitHomepage settings={settings} raceModels={raceModels} />;
 }

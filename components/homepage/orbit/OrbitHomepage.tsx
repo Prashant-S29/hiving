@@ -1,7 +1,9 @@
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import type { SiteSettings } from "@/lib/sanity/siteSettings";
+import type { RaceModel } from "@/lib/sanity/race";
 import { OrbitalHero } from "./OrbitalHero";
+import { RaceScoreStrip } from "./RaceScoreStrip";
 import "./orbit-hero.css";
 
 // Geist and JetBrains Mono are loaded once, globally, in app/layout.tsx —
@@ -47,7 +49,7 @@ const stats = [
  * copy and the original Solar Kinetic palette (this predates the Signal
  * Room adaptation and intentionally isn't reconciled with it here).
  */
-export function OrbitHomepage({ settings }: { settings: SiteSettings }) {
+export function OrbitHomepage({ settings, raceModels }: { settings: SiteSettings; raceModels: RaceModel[] }) {
   return (
     <div className="hv-orbit-root hv-orbit-grain" style={{ fontFamily: "'Geist', system-ui, sans-serif", color: "#241912", background: "#fff8f5" }}>
       <Nav settings={settings} />
@@ -201,6 +203,8 @@ export function OrbitHomepage({ settings }: { settings: SiteSettings }) {
           </div>
         </div>
       </div>
+
+      <RaceScoreStrip models={raceModels} />
 
       {/* ============ LOGO MARQUEE ============ */}
       <div style={{ background: "#fff1e9", borderBottom: "1px solid #ddc1ae", overflow: "hidden", padding: "24px 0" }}>

@@ -32,6 +32,14 @@ interface SignalRaceHeroProps {
 // LeaderboardCard itself is accent-neutral (ember-only), this rotation is
 // just to keep the 4 track pins visually distinct at a glance.
 const ACCENT_VARS = ["--hvg-ember", "--hvg-clay", "--hvg-sage", "--hvg-ember"];
+// Ember is Orbit's orange — too light for white text to clear WCAG contrast
+// (~2.3:1, needs 4.5:1). Clay and sage are dark/muted enough that white text
+// still clears it.
+const ACCENT_SCORE_TEXT: Record<string, string> = {
+  "--hvg-ember": "#241912",
+  "--hvg-clay": "#fff8f1",
+  "--hvg-sage": "#fff8f1",
+};
 
 const START_PROGRESS = [0.585, 0.54, 0.495, 0.45];
 const LAP_MS = 52000;
@@ -169,8 +177,8 @@ export default function SignalRaceHero({ topModels, weekLabel, copy }: SignalRac
                   <span className="text-[10px] tracking-wide" style={{ color: "var(--hvg-text-muted)" }}>{m.org_name}</span>
                 </span>
                 <span
-                  className="rounded-[var(--hvg-radius-sm)] px-2 py-0.5 text-[13px] font-semibold text-white"
-                  style={{ background: `var(${accentVar})`, fontFamily: "var(--hvg-font-mono)" }}
+                  className="rounded-[var(--hvg-radius-sm)] px-2 py-0.5 text-[13px] font-semibold"
+                  style={{ background: `var(${accentVar})`, color: ACCENT_SCORE_TEXT[accentVar], fontFamily: "var(--hvg-font-mono)" }}
                 >
                   {m.race_score != null ? m.race_score.toFixed(1) : "—"}
                 </span>

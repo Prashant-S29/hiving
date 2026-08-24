@@ -13,10 +13,14 @@
   --hvg-text-muted: #8c7860;
   --hvg-text-dim: #b0a08a;
 
-  --hvg-ember: #c4611f;
-  --hvg-ember-strong: #8f4315;
-  --hvg-ember-vivid: #e2760c;
-  --hvg-ember-soft: rgba(196, 97, 31, 0.12);
+  /* Orbit palette — matches the site-wide --color-signal / --color-signal-dark
+     tokens in app/globals.css. Kept as a separate token set (not literally
+     shared) because this package ships standalone to Claude Design, but the
+     values are the same by design: change one, change the other to match. */
+  --hvg-ember: #ff8c00;
+  --hvg-ember-strong: #904d00;
+  --hvg-ember-vivid: #ffa030;
+  --hvg-ember-soft: rgba(255, 140, 0, 0.12);
 
   --hvg-clay: #a85c3e;
   --hvg-sage: #5b7a4e;
@@ -52,5 +56,5 @@
   --hvg-text-muted: #8c7860;
   --hvg-text-dim: #6b5c48;
 
-  --hvg-ember-vivid: #e2760c;
+  --hvg-ember-vivid: #ffa030;
 }

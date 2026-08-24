@@ -23,12 +23,16 @@
 }
 
 .hvg-btn--primary {
+  /* #ff8c00 is too light for white text to clear WCAG contrast (~2.3:1,
+     needs 4.5:1) — dark text by default, white once the darker hover/press
+     shade (which does clear contrast) is under the cursor. */
   background: var(--hvg-ember);
-  color: #fff8f1;
+  color: #241912;
 }
 .hvg-btn--primary:hover:not(:disabled) {
   background: var(--hvg-ember-strong);
-  box-shadow: 0 3px 10px rgba(143, 67, 21, 0.32);
+  color: #fff8f1;
+  box-shadow: 0 3px 10px rgba(144, 77, 0, 0.32);
   transform: translateY(-1px);
 }
 .hvg-btn--primary:active:not(:disabled) {
