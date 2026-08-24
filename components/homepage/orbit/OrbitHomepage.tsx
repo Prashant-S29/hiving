@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { JetBrains_Mono } from "next/font/google";
 import { OrbitalHero } from "./OrbitalHero";
 import "./orbit-hero.css";
@@ -49,7 +50,7 @@ const stats = [
  */
 export function OrbitHomepage() {
   return (
-    <div className={`hv-orbit-grain ${jetbrainsMono.variable}`} style={{ fontFamily: "'Geist', system-ui, sans-serif", color: "#241912", background: "#fff8f5" }}>
+    <div className={`hv-orbit-root hv-orbit-grain ${jetbrainsMono.variable}`} style={{ fontFamily: "'Geist', system-ui, sans-serif", color: "#241912", background: "#fff8f5" }}>
       {/* eslint-disable-next-line @next/next/no-page-custom-font */}
       <link
         rel="stylesheet"
@@ -59,7 +60,7 @@ export function OrbitHomepage() {
       {/* ============ NAV ============ */}
       <div style={{ position: "sticky", top: 0, zIndex: 40, background: "rgba(255,248,245,0.72)", backdropFilter: "blur(20px)", borderBottom: "1px solid #ddc1ae" }}>
         <div style={{ maxWidth: 1440, margin: "0 auto", padding: "0 32px", height: 66, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logos/hivig-logo.png" alt="Hivig" style={{ height: 30, width: "auto", borderRadius: 6, display: "block" }} />
             <span
@@ -77,14 +78,29 @@ export function OrbitHomepage() {
               <br />
               Vigilance
             </span>
-          </div>
+          </Link>
           <div style={{ display: "flex", alignItems: "center", gap: 26 }}>
-            <span style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#564334" }}>Intel</span>
-            <span style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#564334" }}>Reviews</span>
-            <span style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#564334" }}>Manifesto</span>
-            <span style={{ background: "#ff8c00", color: "#241912", fontWeight: 700, fontSize: 13, padding: "10px 16px", borderRadius: 8, border: "1px solid #904d00" }}>
+            <Link href="/race" style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#904d00", fontWeight: 700 }}>
+              The Race
+            </Link>
+            <Link href="/agents" style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#904d00", fontWeight: 700 }}>
+              Agent Store
+            </Link>
+            <Link href="/intel" style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#564334" }}>
+              Intel
+            </Link>
+            <Link href="/intel" style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#564334" }}>
+              Reviews
+            </Link>
+            <Link href="/manifesto" style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 12, color: "#564334" }}>
+              Manifesto
+            </Link>
+            <Link
+              href="/subscribe"
+              style={{ background: "#ff8c00", color: "#241912", fontWeight: 700, fontSize: 13, padding: "10px 16px", borderRadius: 8, border: "1px solid #904d00" }}
+            >
               Subscribe →
-            </span>
+            </Link>
           </div>
         </div>
       </div>
@@ -180,7 +196,8 @@ export function OrbitHomepage() {
               them.
             </p>
             <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
-              <span
+              <Link
+                href="/intel"
                 style={{
                   background: "#ff8c00",
                   color: "#241912",
@@ -193,8 +210,9 @@ export function OrbitHomepage() {
                 }}
               >
                 Read the Latest Intel →
-              </span>
-              <span
+              </Link>
+              <Link
+                href="/manifesto"
                 style={{
                   background: "rgba(255,255,255,0.55)",
                   backdropFilter: "blur(8px)",
@@ -207,7 +225,7 @@ export function OrbitHomepage() {
                 }}
               >
                 ▶ Read the Manifesto
-              </span>
+              </Link>
             </div>
           </div>
 
@@ -273,7 +291,7 @@ export function OrbitHomepage() {
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1.35fr 1fr", gap: 0, border: "1px solid #ddc1ae", borderRadius: 4, overflow: "hidden" }}>
-          <div style={{ padding: 46, borderRight: "1px solid #ddc1ae", background: "#ffffff" }}>
+          <Link href="/intel" style={{ display: "block", padding: 46, borderRight: "1px solid #ddc1ae", background: "#ffffff" }}>
             <span
               style={{
                 display: "inline-flex",
@@ -306,7 +324,7 @@ export function OrbitHomepage() {
               <span style={{ color: "#904d00", fontWeight: 700 }}>Read the analysis →</span>
               <span>14 min read</span>
             </div>
-          </div>
+          </Link>
           <div
             style={{
               background: "linear-gradient(155deg,#2f1500 0%,#3a2e25 60%,#2c0051 130%)",
@@ -359,11 +377,15 @@ export function OrbitHomepage() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 0, border: "1px solid #ddc1ae", borderTop: "none", borderRadius: "0 0 4px 4px", overflow: "hidden" }}>
           {articles.map((a, i) => (
-            <div key={a.title} style={{ padding: "30px 30px 34px", borderRight: i < articles.length - 1 ? "1px solid #ddc1ae" : undefined, background: "#ffffff" }}>
+            <Link
+              key={a.title}
+              href="/intel"
+              style={{ display: "block", padding: "30px 30px 34px", borderRight: i < articles.length - 1 ? "1px solid #ddc1ae" : undefined, background: "#ffffff" }}
+            >
               <div style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 11, color: "#904d00", marginBottom: 14, letterSpacing: "0.05em" }}>{a.kicker}</div>
               <h3 style={{ fontWeight: 600, fontSize: 22, lineHeight: 1.14, letterSpacing: "-0.02em", margin: "0 0 10px" }}>{a.title}</h3>
               <p style={{ fontSize: 14, lineHeight: 1.6, color: "#564334", margin: 0 }}>{a.deck}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -399,12 +421,12 @@ export function OrbitHomepage() {
               No vendor pays us. No hype survives us. Every verdict is one we&apos;d stake our own deploy on.
             </div>
             <div style={{ display: "flex", gap: 14, marginTop: 36, flexWrap: "wrap" }}>
-              <span style={{ background: "#fffaf7", color: "#241912", fontWeight: 700, fontSize: 15, padding: "14px 26px", borderRadius: 8 }}>
+              <Link href="/subscribe" style={{ background: "#fffaf7", color: "#241912", fontWeight: 700, fontSize: 15, padding: "14px 26px", borderRadius: 8 }}>
                 Subscribe to the dispatch →
-              </span>
-              <span style={{ border: "1px solid rgba(255,255,255,0.7)", color: "#fffaf7", fontWeight: 700, fontSize: 15, padding: "13px 24px", borderRadius: 8 }}>
+              </Link>
+              <Link href="/manifesto" style={{ border: "1px solid rgba(255,255,255,0.7)", color: "#fffaf7", fontWeight: 700, fontSize: 15, padding: "13px 24px", borderRadius: 8 }}>
                 See how we score
-              </span>
+              </Link>
             </div>
           </div>
         </div>
@@ -414,15 +436,43 @@ export function OrbitHomepage() {
       <div style={{ background: "#241912", marginTop: 72, color: "#e7d3c5" }}>
         <div style={{ maxWidth: 1440, margin: "0 auto", padding: "56px 32px 40px", display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 32 }}>
           <div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logos/hivig-logo.png" alt="Hivig" style={{ height: 30, width: "auto", borderRadius: 6, display: "block", marginBottom: 16 }} />
+            <Link href="/" style={{ display: "inline-block" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logos/hivig-logo.png" alt="Hivig" style={{ height: 30, width: "auto", borderRadius: 6, display: "block", marginBottom: 16 }} />
+            </Link>
             <p style={{ fontSize: 13, lineHeight: 1.6, color: "#a58b78", maxWidth: "34ch", margin: 0 }}>
               Independent intelligence on agentic AI. Written for the people who build it and the people who buy it.
             </p>
           </div>
-          <FooterCol title="Read" items={["Intel", "Reviews", "Briefings", "Field notes"]} />
-          <FooterCol title="Hivig" items={["Manifesto", "How we score", "Contact", "Ethics"]} />
-          <FooterCol title="Follow" items={["Newsletter", "RSS", "LinkedIn", "X"]} />
+          <FooterCol
+            title="Read"
+            items={[
+              { label: "Intel", href: "/intel" },
+              { label: "Reviews", href: "/intel" },
+              { label: "The Race", href: "/race" },
+              { label: "Agent Store", href: "/agents" },
+            ]}
+          />
+          <FooterCol
+            title="Hivig"
+            items={[
+              { label: "Manifesto", href: "/manifesto" },
+              { label: "How we score", href: "/manifesto" },
+              { label: "About", href: "/about" },
+              { label: "Consultancy", href: "/consultancy" },
+            ]}
+          />
+          <FooterCol
+            title="Follow"
+            items={[
+              { label: "Newsletter", href: "/subscribe" },
+              // No real RSS feed or social handles exist yet — left as plain
+              // text rather than fabricated links.
+              { label: "RSS" },
+              { label: "LinkedIn" },
+              { label: "X" },
+            ]}
+          />
         </div>
         <div style={{ borderTop: "1px solid #564334" }}>
           <div
@@ -446,7 +496,7 @@ export function OrbitHomepage() {
   );
 }
 
-function FooterCol({ title, items }: { title: string; items: string[] }) {
+function FooterCol({ title, items }: { title: string; items: { label: string; href?: string }[] }) {
   return (
     <div>
       <div style={{ fontFamily: "var(--hv-orbit-mono), monospace", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: "#ffb77d", marginBottom: 14 }}>
@@ -454,8 +504,8 @@ function FooterCol({ title, items }: { title: string; items: string[] }) {
       </div>
       <div style={{ fontSize: 13, lineHeight: 2.2 }}>
         {items.map((item, i) => (
-          <span key={item}>
-            {item}
+          <span key={item.label}>
+            {item.href ? <Link href={item.href}>{item.label}</Link> : item.label}
             {i < items.length - 1 ? <br /> : null}
           </span>
         ))}
