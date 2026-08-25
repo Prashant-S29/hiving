@@ -22,8 +22,7 @@ import { seo } from "./objects/seo";
 import { ctaSection } from "./objects/sections/ctaSection";
 import { heroSection } from "./objects/sections/heroSection";
 import { richTextSection } from "./objects/sections/richTextSection";
-import { stlTableBlock } from "sanity-plugin-stl-table";
-
+import { stlTableBlock } from "./objects/stlTableBlock";
 
 export const schemaTypes = [
   // Documents
@@ -52,7 +51,6 @@ export const schemaTypes = [
   termsPage,
   siteSettings,
   stlTableBlock,
-
 
   // Shared objects
   callToAction,

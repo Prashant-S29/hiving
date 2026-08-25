@@ -2,7 +2,8 @@ import type { PortableTextComponents } from "@portabletext/react";
 import Image from "next/image";
 import { urlForImage } from "@/lib/sanity/image";
 import { STLReact } from "@/components/stl-table";
-import { STL, type SanityTable } from "structured-table";
+import { parseStructuredTable } from "@/components/stl-table/parse";
+import type { SanityTable } from "structured-table";
 
 export const portableTextComponents: PortableTextComponents = {
   block: {
@@ -55,10 +56,10 @@ export const portableTextComponents: PortableTextComponents = {
 
       let tableData: SanityTable | null = null;
       try {
-        if (tableValue.stlParsed) {
+        if (tableValue.stlString) {
+          tableData = parseStructuredTable(tableValue.stlString);
+        } else if (tableValue.stlParsed) {
           tableData = JSON.parse(tableValue.stlParsed) as SanityTable;
-        } else if (tableValue.stlString) {
-          tableData = STL.parse(tableValue.stlString);
         }
       } catch {
         return null;
