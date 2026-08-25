@@ -4,8 +4,9 @@ import { LinkIcon } from "@sanity/icons";
 import { Box, Button, Card, Checkbox, Dialog, Flex, Label, Stack, Text, TextArea, TextInput } from "@sanity/ui";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { ObjectInputProps, PatchEvent, set, unset } from "sanity";
-import { STL, type SanityTable } from "structured-table";
+import type { SanityTable } from "structured-table";
 import { normalizeTableLinkHref } from "./link";
+import { parseStructuredTable } from "./parse";
 import TableView from "./table/TableView";
 
 type TableBlockValue = {
@@ -36,8 +37,9 @@ export function StlTableInput(props: ObjectInputProps<TableBlockValue>) {
 
   const tableData = useMemo<SanityTable | null>(() => {
     try {
+      if (stlString) return parseStructuredTable(stlString);
       if (value?.stlParsed) return JSON.parse(value.stlParsed) as SanityTable;
-      return stlString ? STL.parse(stlString) : null;
+      return null;
     } catch {
       return null;
     }
@@ -53,7 +55,7 @@ export function StlTableInput(props: ObjectInputProps<TableBlockValue>) {
 
       let parsedJson: string | undefined;
       try {
-        parsedJson = JSON.stringify(STL.parse(nextValue));
+        parsedJson = JSON.stringify(parseStructuredTable(nextValue));
       } catch {
         parsedJson = undefined;
       }
@@ -100,7 +102,7 @@ export function StlTableInput(props: ObjectInputProps<TableBlockValue>) {
     const end = Math.min(Math.max(selectionRef.current.end, start), stlString.length);
     const link = `[link text="${escapeAttribute(label)}" href="${escapeAttribute(normalizedHref)}"${openInNewTab ? ' newTab="true"' : ""}]`;
     const nextValue = `${stlString.slice(0, start)}${link}${stlString.slice(end)}`;
-    const parsedJson = JSON.stringify(STL.parse(nextValue));
+    const parsedJson = JSON.stringify(parseStructuredTable(nextValue));
 
     onChange(
       PatchEvent.from([
@@ -131,7 +133,7 @@ export function StlTableInput(props: ObjectInputProps<TableBlockValue>) {
               Hyperlinks
             </Text>
             <Text muted size={1} style={{ marginTop: 6 }}>
-              Place the cursor in an empty cell, or select all of the cell text, then add a hyperlink.
+              Place the cursor where the link should appear, or select text to turn it into a hyperlink.
             </Text>
           </Box>
           <Button
