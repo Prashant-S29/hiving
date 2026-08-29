@@ -43,7 +43,7 @@ const siteSettings = {
   brand: { primaryText: "Hi", accentText: "vig" },
   navigation: [
     { _key: "intel", label: "Intel", link: internalLink("/intel"), accent: "default" },
-    { _key: "manifesto", label: "Manifesto", link: internalLink("/manifesto"), accent: "default" },
+    { _key: "compare", label: "Compare", link: internalLink("/compare"), accent: "default" },
     { _key: "about", label: "About", link: internalLink("/about"), accent: "default" },
     { _key: "consultancy", label: "Consultancy", link: internalLink("/consultancy"), accent: "default" },
     { _key: "race", label: "The Race", link: internalLink("/race"), accent: "signal" },
