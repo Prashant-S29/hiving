@@ -75,6 +75,19 @@ export const benchmarkRecord = defineType({
   preview: { select: { title: "title", score: "score", status: "verificationStatus" }, prepare: ({ title, score, status }) => ({ title, subtitle: `${score ?? "No score"} · ${status || "unverified"}` }) },
 });
 
+const jobFitOptions = { list: ["Strong", "Moderate", "Weak"] };
+const jobFitCategories = [
+  { name: "marketing", title: "Marketing (content, social, email)" },
+  { name: "customerSupport", title: "Customer Support" },
+  { name: "sales", title: "Sales (outreach, summarization, CRM)" },
+  { name: "accountingFinance", title: "Accounting & Finance" },
+  { name: "supplyChain", title: "Supply Chain Monitoring" },
+  { name: "opsMonitoring", title: "Operations Monitoring" },
+  { name: "coding", title: "Coding & Engineering" },
+  { name: "legalCompliance", title: "Legal & Compliance Analysis" },
+  { name: "researchAnalysis", title: "Research & Data Analysis" },
+];
+
 export const aiModel = defineType({
   name: "aiModel",
   title: "AI Model",
@@ -82,6 +95,11 @@ export const aiModel = defineType({
   groups: [
     { name: "facts", title: "Facts", default: true },
     { name: "velocity", title: "Velocity Index" },
+    { name: "cost", title: "Compare: Cost" },
+    { name: "capability", title: "Compare: Capability" },
+    { name: "operations", title: "Compare: Operations" },
+    { name: "integration", title: "Compare: Integration" },
+    { name: "governance", title: "Compare: Governance" },
     { name: "editorial", title: "Editorial" },
     { name: "seo", title: "SEO" },
   ],
@@ -144,7 +162,47 @@ export const aiModel = defineType({
     defineField({ name: "reviewedAt", title: "Last reviewed", type: "date", group: "editorial" }),
     defineField({ name: "verificationStatus", title: "Verification status", type: "string", group: "editorial", options: verificationOptions, initialValue: "unverified", validation: (Rule) => Rule.required() }),
     defineField({ name: "active", title: "Show in The Race", type: "boolean", group: "editorial", initialValue: true, validation: (Rule) => Rule.required() }),
+    defineField({
+      name: "jobFit",
+      title: "Job fit (for /compare)",
+      type: "object",
+      group: "editorial",
+      description: "Editorial rating of how well this model suits each job category — drives the Hivig Verdict badges on /compare. Leave a category blank rather than guess.",
+      fields: jobFitCategories.map((c) => defineField({ name: c.name, title: c.title, type: "string", options: jobFitOptions })),
+    }),
     defineField({ name: "seo", title: "SEO override", type: "seo", group: "seo" }),
+
+    // --- Compare tool fields (sanity/schemaTypes/documents/raceData.ts) ---
+    // Hand-curated, updated on a monthly-or-model-release cadence — not fetched
+    // live from vendor APIs. See lib/compare-verdicts.ts for how these roll up
+    // into the /compare page's Hivig Verdict badges (computed, not hand-tagged).
+    defineField({ name: "inputCostPer1M", title: "Input cost / 1M tokens (USD)", type: "number", group: "cost" }),
+    defineField({ name: "outputCostPer1M", title: "Output cost / 1M tokens (USD)", type: "number", group: "cost" }),
+    defineField({ name: "cachingSupported", title: "Prompt/context caching available", type: "boolean", group: "cost" }),
+    defineField({ name: "cachingDiscountPct", title: "Caching discount %", type: "number", group: "cost", hidden: ({ parent }) => !parent?.cachingSupported }),
+    defineField({ name: "batchDiscountPct", title: "Batch inference discount %", type: "number", group: "cost" }),
+
+    defineField({ name: "capabilityTier", title: "Hivig capability tier", type: "string", group: "capability", options: { list: ["Frontier", "Strong", "Efficient"] }, description: "Editorial call — distinct from Model type above, which is a technical classification, not a quality tier." }),
+    defineField({ name: "contextWindow", title: "Context window (tokens)", type: "number", group: "capability" }),
+    defineField({ name: "multimodal", title: "Multimodal support", type: "array", group: "capability", of: [defineArrayMember({ type: "string" })], options: { list: ["text", "image", "video", "audio"] } }),
+    defineField({ name: "agenticToolUseMaturity", title: "Agentic tool-use maturity", type: "string", group: "capability", options: { list: ["Strong", "Moderate", "Limited"] } }),
+
+    defineField({ name: "latencyProfile", title: "Latency profile", type: "string", group: "operations", options: { list: ["Real-time-friendly", "Batch-friendly", "Both"] } }),
+    defineField({ name: "rateLimitNotes", title: "Rate limits / throughput notes", type: "text", group: "operations", rows: 2, description: "Free text — a single number is misleading across plans/tiers." }),
+    defineField({ name: "provisionedCapacityAvailable", title: "Provisioned/reserved capacity option", type: "boolean", group: "operations" }),
+    defineField({ name: "publishedSLA", title: "Published uptime SLA", type: "boolean", group: "operations" }),
+
+    defineField({ name: "mcpSupport", title: "MCP support", type: "string", group: "integration", options: { list: ["Native", "Partial", "None"] } }),
+    defineField({ name: "requiresRouting", title: "Requires specialized routing/orchestration layer", type: "boolean", group: "integration" }),
+    defineField({ name: "requiresRoutingNotes", title: "Routing layer notes", type: "string", group: "integration", hidden: ({ parent }) => !parent?.requiresRouting }),
+    defineField({ name: "openAICompatible", title: "OpenAI-compatible endpoint", type: "boolean", group: "integration" }),
+    defineField({ name: "availableVia", title: "Available via", type: "array", group: "integration", of: [defineArrayMember({ type: "string" })], options: { list: ["Bedrock", "Vertex AI", "Azure", "Direct API", "Self-hostable"] } }),
+    defineField({ name: "openWeight", title: "Open-weight", type: "boolean", group: "integration" }),
+    defineField({ name: "lockInRisk", title: "Hivig lock-in risk rating", type: "string", group: "integration", options: { list: ["Low", "Medium", "High"] }, description: "Editorial call — a real differentiator vs. a vendor-run comparison tool." }),
+
+    defineField({ name: "trainsOnDataByDefault", title: "Trains on your data by default", type: "boolean", group: "governance" }),
+    defineField({ name: "certifications", title: "Compliance certifications", type: "array", group: "governance", of: [defineArrayMember({ type: "string" })], options: { list: ["SOC2", "HIPAA-eligible", "FedRAMP", "GDPR", "ISO27001"] } }),
+    defineField({ name: "guardrailsMaturity", title: "Guardrails / content moderation maturity", type: "text", group: "governance", rows: 2 }),
   ],
   preview: { select: { title: "name", organization: "organization.name", releaseDate: "releaseDate", status: "verificationStatus" }, prepare: ({ title, organization, releaseDate, status }) => ({ title, subtitle: `${organization || "No organization"} · ${releaseDate || "No date"} · ${status || "unverified"}` }) },
 });

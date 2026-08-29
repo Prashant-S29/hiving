@@ -13,6 +13,7 @@ const SINGLETON_TYPES = new Set([
   "agentDiscoverPage",
   "agentPricingPage",
   "agentStorePage",
+  "compareSettings",
   "consultancyPage",
   "editorialSettings",
   "homepageHero",
@@ -91,6 +92,10 @@ export default defineConfig({
                       .title("The Race")
                       .id("raceSettings")
                       .child(S.document().schemaType("raceSettings").documentId("raceSettings")),
+                    S.listItem()
+                      .title("Compare")
+                      .id("compareSettings")
+                      .child(S.document().schemaType("compareSettings").documentId("compareSettings")),
                     S.listItem()
                       .title("Consultancy")
                       .id("consultancyPage")
