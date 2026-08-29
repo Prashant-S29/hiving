@@ -151,6 +151,22 @@ export const aiModel = defineType({
       description: "From the Hugging Face Hub models API, for open-weight models only.",
     }),
     defineField({
+      name: "liveBenchId",
+      title: "LiveBench model ID",
+      type: "string",
+      group: "velocity",
+      description:
+        "e.g. \"deepseek-v4-pro-0813\" — the exact model column name from livebench.ai's results table (github.com/livebench/livebench, no API key needed). The weekly Velocity Index automation matches on this field; leave blank to exclude this model from the quality signal. LiveBench only tracks current frontier-tier releases, so many models won't have a match — that's expected, not an error.",
+    }),
+    defineField({
+      name: "liveBenchScore",
+      title: "LiveBench quality score",
+      type: "number",
+      group: "velocity",
+      readOnly: true,
+      description: "Average across LiveBench's task categories for this model, 0–100. Written automatically alongside the Velocity Index score. Not hand-edited.",
+    }),
+    defineField({
       name: "scoreUpdatedAt",
       title: "Velocity Index last updated",
       type: "datetime",

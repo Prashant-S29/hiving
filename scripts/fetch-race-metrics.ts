@@ -12,6 +12,13 @@
 //     Public, no auth needed.
 //   - Hugging Face's models API: `downloads` for models that have a
 //     hugging_face_id (i.e. open-weight models). Public, no auth needed.
+//   - LiveBench's own published results table (github.com/livebench/livebench,
+//     Apache 2.0, ICLR 2025 spotlight): a quality/capability signal, average
+//     score across its task categories. Fetched directly as CSV from
+//     livebench.ai — a genuinely open, self-published primary source, not a
+//     scrape of someone else's site, and no API key needed. Only tracks
+//     current frontier-tier releases (~50 models at a time), so most models
+//     in this dataset won't have a match — that's expected, not an error.
 //
 // Unlike an earlier version of this script (in a retired scaffold), this one
 // does NOT write to a local JSON file and does NOT auto-create new model/
@@ -20,23 +27,30 @@
 // every aiModel document has a verificationStatus and goes through review).
 // Auto-creating documents from an unattended pipeline would bypass that
 // review entirely. So instead:
-//   - Only EXISTING aiModel documents that have an `openrouterId` field set
-//     (in Studio, by an editor) are eligible for automated scoring.
+//   - Only EXISTING aiModel documents that have an `openrouterId` and/or
+//     `liveBenchId` field set (in Studio, by an editor) are eligible for
+//     automated scoring on that signal.
 //   - This script only PATCHES those documents' velocity-index fields
-//     (raceScore, previousRaceScore, tokensProxy, downloads, scoreUpdatedAt)
-//     — it never touches curated fields (name, organization, benchmarks, etc).
-//   - A model discovered in the live OpenRouter data with no matching
-//     openrouterId in Sanity is logged and skipped, not auto-created.
+//     (raceScore, previousRaceScore, tokensProxy, downloads, liveBenchScore,
+//     scoreUpdatedAt) — it never touches curated fields (name, organization,
+//     benchmarks, etc).
+//   - A model discovered in live source data with no matching id in Sanity
+//     is logged and skipped, not auto-created.
 //
 // What this deliberately does NOT do:
-//   - Fabricate a score for a model with no real signal. A model with
-//     neither a token-volume figure nor an HF downloads figure gets
-//     raceScore: null rather than an invented number.
-//   - Penalize closed models for lacking an HF repo. The score is computed
-//     only from whichever signals actually exist per model, reweighted
-//     proportionally — see computeRaceScores().
-//   - Include LMSYS/Arena data. No free official API exists for that as of
-//     when this was written. See RANKING_METHODOLOGY.md.
+//   - Fabricate a score for a model with no real signal. A model with none
+//     of the three signals gets raceScore: null rather than an invented
+//     number.
+//   - Penalize a model for lacking a signal that structurally doesn't apply
+//     to it (e.g. a closed model with no Hugging Face repo, or a model too
+//     old to still be on LiveBench's current tracked set). The score is
+//     computed only from whichever signals actually exist per model,
+//     reweighted proportionally — see computeRaceScores().
+//   - Include LMSYS/Chatbot Arena (now "LMArena") data. Still no free,
+//     official public API for that as of when this was written — only
+//     unofficial third-party scrapes of their site, which isn't a source
+//     this pipeline treats as legitimate. LiveBench is an independent
+//     benchmark, not a re-publish of Arena's data. See RANKING_METHODOLOGY.md.
 
 import fs from "node:fs";
 import { createClient } from "@sanity/client";
@@ -79,10 +93,12 @@ if (!projectId || !dataset || !writeToken) {
 
 const sanity = createClient({ projectId, dataset, apiVersion, token: writeToken, useCdn: false });
 
-// LMSYS's 30% (see RANKING_METHODOLOGY.md) redistributed proportionally
-// between the remaining two signals, rounded to a clean split.
-const TOKENS_WEIGHT = 0.7;
-const DOWNLOADS_WEIGHT = 0.3;
+// Restores the original 3-way split described in RANKING_METHODOLOGY.md now
+// that LiveBench fills the "quality" slot that was previously unfillable —
+// see the file header for why LMSYS/Arena still isn't used for it.
+const TOKENS_WEIGHT = 0.49;
+const DOWNLOADS_WEIGHT = 0.21;
+const QUALITY_WEIGHT = 0.3;
 
 interface OpenRouterModel {
   id: string;
@@ -150,30 +166,116 @@ async function fetchHfDownloads(hfRepoId: string): Promise<number | null> {
 
 interface TrackedSanityModel {
   _id: string;
-  openrouterId: string;
+  openrouterId: string | null;
+  liveBenchId: string | null;
   raceScore: number | null;
 }
 
 async function fetchTrackedModels(): Promise<TrackedSanityModel[]> {
   return sanity.fetch<TrackedSanityModel[]>(
-    `*[_type == "aiModel" && defined(openrouterId) && openrouterId != ""]{ _id, openrouterId, raceScore }`
+    `*[_type == "aiModel" && ((defined(openrouterId) && openrouterId != "") || (defined(liveBenchId) && liveBenchId != ""))]{ _id, openrouterId, liveBenchId, raceScore }`
   );
 }
 
+// Minimal CSV line splitter — handles double-quoted fields (with escaped ""
+// inside), which is all LiveBench's export actually needs; not a general
+// RFC 4180 parser.
+function splitCsvLine(line: string): string[] {
+  const cells: string[] = [];
+  let cur = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQuotes) {
+      if (ch === '"' && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else if (ch === '"') {
+        inQuotes = false;
+      } else {
+        cur += ch;
+      }
+    } else if (ch === '"') {
+      inQuotes = true;
+    } else if (ch === ",") {
+      cells.push(cur);
+      cur = "";
+    } else {
+      cur += ch;
+    }
+  }
+  cells.push(cur);
+  return cells;
+}
+
+function dateStringNDaysAgo(n: number): string {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() - n);
+  return `${d.getUTCFullYear()}_${String(d.getUTCMonth() + 1).padStart(2, "0")}_${String(d.getUTCDate()).padStart(2, "0")}`;
+}
+
+// LiveBench's results table is a plain public CSV, but the filename is
+// date-versioned (table_YYYY_MM_DD.csv) with no stable alias and no manifest
+// listing the current date — their own frontend embeds it at build time. The
+// only robust way to find the current file without depending on their
+// internal bundle structure is to check recent plausible dates until one
+// exists; they update roughly monthly, so this rarely needs more than a
+// handful of requests.
+async function findCurrentLiveBenchTableUrl(): Promise<string | null> {
+  for (let daysAgo = 0; daysAgo <= 120; daysAgo++) {
+    const url = `https://livebench.ai/table_${dateStringNDaysAgo(daysAgo)}.csv`;
+    const res = await fetch(url, { method: "HEAD" });
+    if (res.ok) return url;
+  }
+  return null;
+}
+
+async function fetchLiveBenchScores(): Promise<Map<string, number>> {
+  const url = await findCurrentLiveBenchTableUrl();
+  if (!url) {
+    console.warn("  ! Could not find a current LiveBench table (checked the last 120 days) — quality signal skipped this run.");
+    return new Map();
+  }
+  console.log(`  Using LiveBench table: ${url}`);
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`GET ${url} failed: ${res.status} ${res.statusText}`);
+  const text = await res.text();
+  const lines = text.trim().split(/\r?\n/);
+  const header = splitCsvLine(lines[0]);
+
+  const scores = new Map<string, number>();
+  for (const line of lines.slice(1)) {
+    const cells = splitCsvLine(line);
+    const model = cells[0];
+    if (!model) continue;
+    const values: number[] = [];
+    for (let i = 1; i < cells.length; i++) {
+      const n = Number(cells[i]);
+      if (Number.isFinite(n)) values.push(n);
+    }
+    if (values.length === 0) continue;
+    scores.set(model, values.reduce((a, b) => a + b, 0) / values.length);
+  }
+  console.log(`  Parsed ${scores.size} model(s) across ${header.length - 1} LiveBench task columns.`);
+  return scores;
+}
+
 interface EnrichedModel {
-  openrouterId: string;
+  sanityId: string;
   tokensProxy: number | null;
   downloads: number | null;
+  liveBenchScore: number | null;
 }
 
 // Max-Relative Normalization with a fairness fix: a model's score is
 // computed only from the signals that actually exist for it, reweighted
 // proportionally, so a model missing one signal isn't penalized for a metric
 // that structurally doesn't apply to it (e.g. a closed model with no
-// Hugging Face repo).
+// Hugging Face repo, or one too old for LiveBench's current tracked set).
 function computeRaceScores(rows: EnrichedModel[]): Map<string, number | null> {
   const maxTokens = Math.max(0, ...rows.map((r) => r.tokensProxy ?? 0));
   const maxDownloads = Math.max(0, ...rows.map((r) => r.downloads ?? 0));
+  const maxQuality = Math.max(0, ...rows.map((r) => r.liveBenchScore ?? 0));
 
   const scores = new Map<string, number | null>();
   for (const r of rows) {
@@ -184,13 +286,16 @@ function computeRaceScores(rows: EnrichedModel[]): Map<string, number | null> {
     if (r.downloads != null && maxDownloads > 0) {
       parts.push({ weight: DOWNLOADS_WEIGHT, ratio: r.downloads / maxDownloads });
     }
+    if (r.liveBenchScore != null && maxQuality > 0) {
+      parts.push({ weight: QUALITY_WEIGHT, ratio: r.liveBenchScore / maxQuality });
+    }
     if (parts.length === 0) {
-      scores.set(r.openrouterId, null);
+      scores.set(r.sanityId, null);
       continue;
     }
     const weightSum = parts.reduce((s, p) => s + p.weight, 0);
     const raw = parts.reduce((s, p) => s + (p.weight / weightSum) * p.ratio, 0) * 100;
-    scores.set(r.openrouterId, Math.round(raw * 100) / 100);
+    scores.set(r.sanityId, Math.round(raw * 100) / 100);
   }
   return scores;
 }
@@ -199,13 +304,14 @@ async function main() {
   const tracked = await fetchTrackedModels();
   if (tracked.length === 0) {
     console.log(
-      "No aiModel documents have an openrouterId set yet — nothing to score.\n" +
-        "In Studio, open an AI Model document, go to the \"Velocity Index\" tab, and set\n" +
-        "its OpenRouter model ID (e.g. \"deepseek/deepseek-v4-flash-0731\") to opt it in."
+      "No aiModel documents have an openrouterId or liveBenchId set yet — nothing to score.\n" +
+        "In Studio, open an AI Model document, go to the \"Velocity Index\" tab, and set one or\n" +
+        "both of: OpenRouter model ID (e.g. \"deepseek/deepseek-v4-flash-0731\"), LiveBench model\n" +
+        "ID (e.g. \"deepseek-v4-pro-0813\", from livebench.ai's results table)."
     );
     return;
   }
-  console.log(`Tracking ${tracked.length} model(s) with an openrouterId set.`);
+  console.log(`Tracking ${tracked.length} model(s) with an openrouterId and/or liveBenchId set.`);
 
   console.log("Fetching OpenRouter token-volume rankings (trailing 7 days)...");
   const tokenVolume = await fetchTokenVolume();
@@ -213,27 +319,41 @@ async function main() {
   console.log("Fetching OpenRouter model catalog...");
   const catalog = await fetchModelCatalog();
 
+  console.log("Fetching LiveBench's current results table...");
+  const liveBenchScores = await fetchLiveBenchScores();
+
   const enriched: EnrichedModel[] = [];
   for (const model of tracked) {
-    const catalogEntry = catalog.get(model.openrouterId);
-    if (!catalogEntry) {
-      console.warn(`  ! "${model.openrouterId}" not found in OpenRouter's catalog — skipping (score left unchanged).`);
-      continue;
-    }
-
-    const tokensProxy = tokenVolume.get(model.openrouterId) ?? tokenVolume.get(catalogEntry.canonical_slug ?? "") ?? null;
-
+    let tokensProxy: number | null = null;
     let downloads: number | null = null;
-    if (catalogEntry.hugging_face_id) {
-      console.log(`  Fetching Hugging Face downloads for ${catalogEntry.hugging_face_id}...`);
-      downloads = await fetchHfDownloads(catalogEntry.hugging_face_id);
+    let liveBenchScore: number | null = null;
+
+    if (model.openrouterId) {
+      const catalogEntry = catalog.get(model.openrouterId);
+      if (!catalogEntry) {
+        console.warn(`  ! "${model.openrouterId}" not found in OpenRouter's catalog — token/download signals skipped for this model.`);
+      } else {
+        tokensProxy = tokenVolume.get(model.openrouterId) ?? tokenVolume.get(catalogEntry.canonical_slug ?? "") ?? null;
+        if (catalogEntry.hugging_face_id) {
+          console.log(`  Fetching Hugging Face downloads for ${catalogEntry.hugging_face_id}...`);
+          downloads = await fetchHfDownloads(catalogEntry.hugging_face_id);
+        }
+      }
     }
 
-    enriched.push({ openrouterId: model.openrouterId, tokensProxy, downloads });
+    if (model.liveBenchId) {
+      liveBenchScore = liveBenchScores.get(model.liveBenchId) ?? null;
+      if (liveBenchScore == null) {
+        console.warn(`  ! "${model.liveBenchId}" not found in the current LiveBench table — quality signal skipped for this model.`);
+      }
+    }
+
+    if (tokensProxy == null && downloads == null && liveBenchScore == null && !model.openrouterId && !model.liveBenchId) continue;
+    enriched.push({ sanityId: model._id, tokensProxy, downloads, liveBenchScore });
   }
 
   if (enriched.length === 0) {
-    console.log("None of the tracked openrouterId values matched OpenRouter's catalog — nothing to write.");
+    console.log("None of the tracked models matched any live source data — nothing to write.");
     return;
   }
 
@@ -241,9 +361,9 @@ async function main() {
   const scoreUpdatedAt = new Date().toISOString();
 
   for (const model of tracked) {
-    const enrichedRow = enriched.find((r) => r.openrouterId === model.openrouterId);
+    const enrichedRow = enriched.find((r) => r.sanityId === model._id);
     if (!enrichedRow) continue;
-    const newScore = scores.get(model.openrouterId) ?? null;
+    const newScore = scores.get(model._id) ?? null;
 
     await sanity
       .patch(model._id)
@@ -252,10 +372,11 @@ async function main() {
         previousRaceScore: model.raceScore ?? null,
         tokensProxy: enrichedRow.tokensProxy,
         downloads: enrichedRow.downloads,
+        liveBenchScore: enrichedRow.liveBenchScore,
         scoreUpdatedAt,
       })
       .commit();
-    console.log(`  Updated ${model.openrouterId}: raceScore=${newScore ?? "null"} (was ${model.raceScore ?? "null"})`);
+    console.log(`  Updated ${model._id}: raceScore=${newScore ?? "null"} (was ${model.raceScore ?? "null"})`);
   }
 
   console.log(`Done — patched ${enriched.length} model document(s).`);
