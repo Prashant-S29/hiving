@@ -169,15 +169,16 @@ export const DEFAULT_RACE_SETTINGS: RaceSettingsContent = {
   methodologyBackAction: { label: "← Back to The Race", href: "/race" },
   methodologyHeading: "Ranking methodology",
   methodologyNotice: {
-    label: "Current status: Hivig Velocity Index (partial rollout)",
-    body: "Rankings are led by the Hivig Velocity Index — a 0–100 score weighted 70/30 between real OpenRouter token volume and Hugging Face downloads — for any model an editor has opted into automated scoring. Models without that opt-in fall back to sorting by release date (newest first) until they're added. No LMSYS/Arena data is included yet — no free public API exists for it.",
+    label: "Current status: two ranking signals, one still in development",
+    body: "Rankings are currently led by the Hivig Velocity Index — a 0–100 score drawing on real OpenRouter token volume, Hugging Face downloads, and LiveBench quality data — for any model an editor has opted into automated scoring. Models without that opt-in fall back to sorting by release date (newest first) until they're added. A second score, the Hivig Score, is in development — it will assess capability, agentic performance, and economics using Hugging Face, Epoch AI, and Berkeley Function-Calling Leaderboard (BFCL) data. As with the Velocity Index, the exact formula and category weights won't be published once it ships.",
     tone: "information",
   },
   methodologyNeedsHeading: "What a fuller methodology still needs to define",
   methodologyNeeds: [
-    "Whether/how to fold in a benchmark-based signal (e.g. LMSYS Chatbot Arena Elo, Artificial Analysis quality index) once a licensed or official data source exists.",
+    "Building and shipping the Hivig Score itself — the sourcing and process are decided, the formula isn't built yet.",
+    "Whether/when an Artificial Analysis commercial license makes sense, since their free tier doesn't permit redistribution on a public page.",
     "A documented process for editors to opt new models into automated scoring, so the release-date fallback ranking shrinks over time.",
-    "What counts as the “same model” across dated snapshot releases, so a rank delta means something consistent as OpenRouter's own listings change.",
+    "A unified data layer so Race, Compare, and each model's page read one dataset instead of several separate ones.",
   ],
   methodologySourceNote: "Full detail lives in RANKING_METHODOLOGY.md in the project source.",
   methodologySeo: {
