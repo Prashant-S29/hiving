@@ -286,6 +286,76 @@ export const raceModelsQuery = `*[_type == "aiModel" && active != false] | order
   sources[]->{_updatedAt, name, url, publicationDate, accessedDate, sourceType, summary, verificationStatus}
 }`;
 
+// Same shape as raceModelsQuery plus the /compare-only field groups. Kept as
+// its own query (not a raceModelsQuery + extra fields) so /race's projection
+// never has to change shape just because /compare adds a field.
+export const compareModelsQuery = `*[_type == "aiModel" && active != false] | order(releaseDate desc){
+  _id,
+  _updatedAt,
+  name,
+  "slug": slug.current,
+  releaseDate,
+  modelType,
+  raceScore,
+  summary,
+  reviewedAt,
+  verificationStatus,
+  organization->{
+    _id,
+    name,
+    "slug": slug.current,
+    countryCode,
+    "logoUrl": logo.image.asset->url,
+    "logoAlt": select(logo.decorative == true => "", logo.alt)
+  },
+  inputCostPer1M,
+  outputCostPer1M,
+  cachingSupported,
+  cachingDiscountPct,
+  batchDiscountPct,
+  capabilityTier,
+  contextWindow,
+  multimodal,
+  agenticToolUseMaturity,
+  latencyProfile,
+  rateLimitNotes,
+  provisionedCapacityAvailable,
+  publishedSLA,
+  mcpSupport,
+  requiresRouting,
+  requiresRoutingNotes,
+  openAICompatible,
+  availableVia,
+  openWeight,
+  lockInRisk,
+  trainsOnDataByDefault,
+  certifications,
+  guardrailsMaturity,
+  jobFit
+}`;
+
+export const compareSettingsQuery = `*[_type == "compareSettings" && _id == "compareSettings"][0]{
+  heroEyebrow,
+  heroHeading,
+  heroSubhead,
+  addModelLabel,
+  providerLabel,
+  modelLabel,
+  jobLabel,
+  jobOptions[]{value, label},
+  compareButtonLabel,
+  emptyStateLabel,
+  editSelectionLabel,
+  costGroupLabel,
+  capabilityGroupLabel,
+  operationsGroupLabel,
+  integrationGroupLabel,
+  governanceGroupLabel,
+  emptyValueLabel,
+  disclaimerText,
+  ${pageSeoProjection}
+}`;
+
 export const agentStorePageQuery = `*[_type == "agentStorePage" && _id == "agentStorePage"][0]{
   eyebrow,
   heading,

@@ -2,6 +2,7 @@ import { article } from "./article";
 import { homepageHero } from "./homepageHero";
 import { aboutPage } from "./documents/aboutPage";
 import { agentDiscoverPage, agentPricingPage, agentStorePage } from "./documents/agentPages";
+import { compareSettings } from "./documents/compareSettings";
 import { consultancyPage } from "./documents/consultancyPage";
 import { editorialSettings } from "./documents/editorialSettings";
 import { articleType, author, industry, platform } from "./documents/editorialTaxonomy";
@@ -35,6 +36,7 @@ export const schemaTypes = [
   articleType,
   author,
   benchmarkRecord,
+  compareSettings,
   consultancyPage,
   editorialSettings,
   homepageHero,

@@ -71,7 +71,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   brand: { primaryText: "Hi", accentText: "vig" },
   navigation: [
     { label: "Intel", href: "/intel", accent: "default" },
-    { label: "Manifesto", href: "/manifesto", accent: "default" },
+    { label: "Compare", href: "/compare", accent: "default" },
     { label: "About", href: "/about", accent: "default" },
     { label: "Consultancy", href: "/consultancy", accent: "default" },
     { label: "The Race", href: "/race", accent: "signal" },

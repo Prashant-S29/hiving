@@ -161,7 +161,7 @@ export function OrbitHomepage({ settings, raceModels }: { settings: SiteSettings
                 Read the Latest Intel →
               </Link>
               <Link
-                href="/manifesto"
+                href="/compare"
                 style={{
                   background: "rgba(255,255,255,0.55)",
                   backdropFilter: "blur(8px)",
@@ -173,7 +173,7 @@ export function OrbitHomepage({ settings, raceModels }: { settings: SiteSettings
                   borderRadius: 8,
                 }}
               >
-                ▶ Read the Manifesto
+                ▶ Compare Models
               </Link>
             </div>
           </div>
