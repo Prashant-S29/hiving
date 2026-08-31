@@ -11,12 +11,12 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { computeVerdicts, effectiveCost } from "@/lib/compare-verdicts";
-import type { CompareModel } from "@/lib/sanity/compare";
+import type { RaceModel } from "@/lib/sanity/race";
 import { VerdictBadge } from "@/components/compare/VerdictBadge";
 
 interface Row {
   label: string;
-  render: (m: CompareModel) => ReactNode;
+  render: (m: RaceModel) => ReactNode;
 }
 
 interface Group {
@@ -106,7 +106,7 @@ export function CompareResults({
   editSelectionHref,
   labels,
 }: {
-  models: CompareModel[];
+  models: RaceModel[];
   job: string;
   emptyValueLabel: string;
   editSelectionLabel: string;
@@ -120,7 +120,7 @@ export function CompareResults({
     <div className="mx-auto max-w-[1100px]">
       <div className="mb-6 flex items-center justify-between gap-4">
         <h1 className="text-[26px] font-bold md:text-[32px]" style={{ color: "var(--hvg-text-primary)" }}>
-          {models.map((m) => m.modelName).join(" vs ")}
+          {models.map((m) => m.model_name).join(" vs ")}
         </h1>
         <Link
           href={editSelectionHref}
@@ -136,7 +136,7 @@ export function CompareResults({
       <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {models.map((m) => (
           <div key={m.id} className="flex flex-col gap-2 rounded-[var(--hvg-radius-lg)] border p-4" style={{ background: "var(--hvg-surface)", borderColor: "var(--hvg-border)" }}>
-            <div className="text-[15px] font-bold" style={{ color: "var(--hvg-text-primary)" }}>{m.modelName}</div>
+            <div className="text-[15px] font-bold" style={{ color: "var(--hvg-text-primary)" }}>{m.model_name}</div>
             <div className="text-[12px]" style={{ color: "var(--hvg-text-muted)" }}>{m.organization.name}</div>
             <div className="mt-1 flex flex-wrap gap-2">
               {verdicts.get(m.id)?.length ? verdicts.get(m.id)!.map((tag, i) => <VerdictBadge key={i} tag={tag} />) : (
@@ -163,7 +163,7 @@ export function CompareResults({
                   <tr className="border-b text-left" style={{ borderColor: "var(--hvg-border-strong)" }}>
                     <th className="py-2 pr-4 font-semibold" style={{ color: "var(--hvg-text-dim)" }}>Row</th>
                     {models.map((m) => (
-                      <th key={m.id} className="py-2 pr-4 font-semibold" style={{ color: "var(--hvg-text-secondary)" }}>{m.modelName}</th>
+                      <th key={m.id} className="py-2 pr-4 font-semibold" style={{ color: "var(--hvg-text-secondary)" }}>{m.model_name}</th>
                     ))}
                   </tr>
                 </thead>

@@ -79,6 +79,38 @@ export interface RaceSettingsContent {
   seo: PageSeo;
 }
 
+// The /compare-only field groups, unified onto RaceModel in Phase 2 of the
+// Race ranking rebuild — Race, Compare, and the model pillar page all read
+// this one type/query now instead of RaceModel + a separate CompareModel.
+// Every field here is optional: hand-curated on a monthly-or-model-release
+// cadence (see sanity/schemaTypes/documents/raceData.ts), not guaranteed to
+// exist for a given model. See lib/compare-verdicts.ts for how these roll
+// into /compare's badges.
+export type CapabilityTier = "Frontier" | "Strong" | "Efficient";
+export type Maturity = "Strong" | "Moderate" | "Limited";
+export type LatencyProfile = "Real-time-friendly" | "Batch-friendly" | "Both";
+export type McpSupport = "Native" | "Partial" | "None";
+export type AvailableVia = "Bedrock" | "Vertex AI" | "Azure" | "Direct API" | "Self-hostable";
+export type Certification = "SOC2" | "HIPAA-eligible" | "FedRAMP" | "GDPR" | "ISO27001";
+export type LockInRisk = "Low" | "Medium" | "High";
+export type Multimodal = "text" | "image" | "video" | "audio";
+export type JobFitRating = "Strong" | "Moderate" | "Weak";
+
+// Keys must match sanity/schemaTypes/documents/raceData.ts's jobFitCategories
+// and be what compareSettings.jobOptions[].value values resolve to (plus the
+// "general" unweighted default, which isn't a jobFit key).
+export interface JobFit {
+  marketing?: JobFitRating;
+  customerSupport?: JobFitRating;
+  sales?: JobFitRating;
+  accountingFinance?: JobFitRating;
+  supplyChain?: JobFitRating;
+  opsMonitoring?: JobFitRating;
+  coding?: JobFitRating;
+  legalCompliance?: JobFitRating;
+  researchAnalysis?: JobFitRating;
+}
+
 export interface RaceModel extends AiModel {
   summary?: string;
   reviewedAt?: string;
@@ -90,6 +122,7 @@ export interface RaceModel extends AiModel {
     name: string;
     countryCode: string;
     website?: string;
+    logoUrl?: string;
     logoAlt?: string;
     logoSourceUrl?: string;
     logoLicenseNotes?: string;
@@ -106,6 +139,36 @@ export interface RaceModel extends AiModel {
     verificationStatus: "unverified" | "review" | "verified";
     source?: { name: string; url: string };
   };
+
+  inputCostPer1M?: number;
+  outputCostPer1M?: number;
+  cachingSupported?: boolean;
+  cachingDiscountPct?: number;
+  batchDiscountPct?: number;
+
+  capabilityTier?: CapabilityTier;
+  contextWindow?: number;
+  multimodal?: Multimodal[];
+  agenticToolUseMaturity?: Maturity;
+
+  latencyProfile?: LatencyProfile;
+  rateLimitNotes?: string;
+  provisionedCapacityAvailable?: boolean;
+  publishedSLA?: boolean;
+
+  mcpSupport?: McpSupport;
+  requiresRouting?: boolean;
+  requiresRoutingNotes?: string;
+  openAICompatible?: boolean;
+  availableVia?: AvailableVia[];
+  openWeight?: boolean;
+  lockInRisk?: LockInRisk;
+
+  trainsOnDataByDefault?: boolean;
+  certifications?: Certification[];
+  guardrailsMaturity?: string;
+
+  jobFit?: JobFit;
 }
 
 export const DEFAULT_RACE_SETTINGS: RaceSettingsContent = {
@@ -245,6 +308,31 @@ interface CmsRaceRecord {
     verificationStatus?: RaceModel["verificationStatus"];
     source?: { _updatedAt?: string; name?: string; url?: string };
   }>;
+
+  inputCostPer1M?: number;
+  outputCostPer1M?: number;
+  cachingSupported?: boolean;
+  cachingDiscountPct?: number;
+  batchDiscountPct?: number;
+  capabilityTier?: CapabilityTier;
+  contextWindow?: number;
+  multimodal?: Multimodal[];
+  agenticToolUseMaturity?: Maturity;
+  latencyProfile?: LatencyProfile;
+  rateLimitNotes?: string;
+  provisionedCapacityAvailable?: boolean;
+  publishedSLA?: boolean;
+  mcpSupport?: McpSupport;
+  requiresRouting?: boolean;
+  requiresRoutingNotes?: string;
+  openAICompatible?: boolean;
+  availableVia?: AvailableVia[];
+  openWeight?: boolean;
+  lockInRisk?: LockInRisk;
+  trainsOnDataByDefault?: boolean;
+  certifications?: Certification[];
+  guardrailsMaturity?: string;
+  jobFit?: JobFit;
 }
 
 export function applyTemplate(template: string, values: Record<string, string | number>) {
@@ -348,12 +436,37 @@ function mapCmsModels(records: CmsRaceRecord[]): RaceModel[] {
           name: organization.name!,
           countryCode: organization.countryCode!,
           website: organization.website,
+          logoUrl: organization.logoUrl,
           logoAlt: organization.logoAlt,
           logoSourceUrl: organization.logoSourceUrl,
           logoLicenseNotes: organization.logoLicenseNotes,
           verificationStatus: organization.verificationStatus || "unverified",
           reviewedAt: organization.reviewedAt,
         },
+        inputCostPer1M: record.inputCostPer1M,
+        outputCostPer1M: record.outputCostPer1M,
+        cachingSupported: record.cachingSupported,
+        cachingDiscountPct: record.cachingDiscountPct,
+        batchDiscountPct: record.batchDiscountPct,
+        capabilityTier: record.capabilityTier,
+        contextWindow: record.contextWindow,
+        multimodal: record.multimodal,
+        agenticToolUseMaturity: record.agenticToolUseMaturity,
+        latencyProfile: record.latencyProfile,
+        rateLimitNotes: record.rateLimitNotes,
+        provisionedCapacityAvailable: record.provisionedCapacityAvailable,
+        publishedSLA: record.publishedSLA,
+        mcpSupport: record.mcpSupport,
+        requiresRouting: record.requiresRouting,
+        requiresRoutingNotes: record.requiresRoutingNotes,
+        openAICompatible: record.openAICompatible,
+        availableVia: record.availableVia,
+        openWeight: record.openWeight,
+        lockInRisk: record.lockInRisk,
+        trainsOnDataByDefault: record.trainsOnDataByDefault,
+        certifications: record.certifications,
+        guardrailsMaturity: record.guardrailsMaturity,
+        jobFit: record.jobFit,
         benchmark: benchmark ? {
           id: benchmark._id,
           name: benchmark.benchmarkName || "Unspecified benchmark",
