@@ -100,21 +100,27 @@ credible ranking methodologies take.
 - **Publishing exact scoring weights anywhere inspectable.** True for the Velocity
   Index today (see above) and will be true for the Hivig Score once it ships.
 
-## What a fuller methodology would still need to define
+## This is a living methodology
+
+Ranking AI models well is an ongoing process, not a solved problem. The Hivig
+Score and Velocity Index are both still being refined against real-world agentic
+use cases, and the methodology itself — inputs, sourcing, and normalization
+approach alike — is subject to change as a result. What won't change is the
+commitment behind it: we'll keep the guiding principles here current and public,
+even in cases where the exact formula stays undisclosed for the reasons above.
+
+Concretely, still open:
 
 1. Building and shipping the Hivig Score itself — the sourcing and process above
    are decided; the ingestion pipeline and formula aren't built yet.
 2. Whether/how to widen quality-signal coverage beyond LiveBench's current
-   frontier-only tracked set, and separately, whether/when an Artificial Analysis
-   commercial license makes sense for the Hivig Score's economics signal.
+   frontier-only tracked set.
 3. A documented process for editors to opt new models into automated scoring, so
    the "no ids set yet" fallback ranking shrinks over time.
 4. What counts as the same "model" across dated snapshot releases, so a rank delta
    ("+3 this week") means something consistent as sources' own listings change —
    LiveBench in particular ages out older models from its tracked set entirely
    rather than keeping a stale score.
-5. A unified data layer so Race, Compare, and each model's page read one dataset
-   instead of the two (going on more) separate ones that exist today.
 
 ## Why this file exists
 

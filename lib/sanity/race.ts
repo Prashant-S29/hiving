@@ -236,12 +236,11 @@ export const DEFAULT_RACE_SETTINGS: RaceSettingsContent = {
     body: "Rankings are currently led by the Hivig Velocity Index — a 0–100 score drawing on real OpenRouter token volume, Hugging Face downloads, and LiveBench quality data — for any model an editor has opted into automated scoring. Models without that opt-in fall back to sorting by release date (newest first) until they're added. A second score, the Hivig Score, is in development — it will assess capability, agentic performance, and economics using Hugging Face, Epoch AI, and Berkeley Function-Calling Leaderboard (BFCL) data. As with the Velocity Index, the exact formula and category weights won't be published once it ships.",
     tone: "information",
   },
-  methodologyNeedsHeading: "What a fuller methodology still needs to define",
+  methodologyNeedsHeading: "How this methodology evolves",
   methodologyNeeds: [
-    "Building and shipping the Hivig Score itself — the sourcing and process are decided, the formula isn't built yet.",
-    "Whether/when an Artificial Analysis commercial license makes sense, since their free tier doesn't permit redistribution on a public page.",
-    "A documented process for editors to opt new models into automated scoring, so the release-date fallback ranking shrinks over time.",
-    "A unified data layer so Race, Compare, and each model's page read one dataset instead of several separate ones.",
+    "Ranking AI models well is an ongoing process. We're actively refining the Hivig Score and Velocity Index against real-world agentic use cases — this isn't a finished formula, and it shouldn't be treated as one.",
+    "The methodology itself is subject to change as a result, and we'll keep this page current as it does.",
+    "We're committed to giving our users transparent information. The core guiding principles behind how we rank models will always be published here — even in cases where the exact formula stays undisclosed.",
   ],
   methodologySourceNote: "Full detail lives in RANKING_METHODOLOGY.md in the project source.",
   methodologySeo: {
