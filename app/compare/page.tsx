@@ -3,7 +3,8 @@ import "@hivig/design-system/styles.css";
 import SignalPageShell from "@/components/signal/SignalPageShell";
 import { CompareModelPicker } from "@/components/compare/CompareModelPicker";
 import { CompareResults } from "@/components/compare/CompareResults";
-import { getCompareModels, getCompareSettings } from "@/lib/sanity/compare";
+import { getCompareSettings } from "@/lib/sanity/compare";
+import { getRaceModels } from "@/lib/sanity/race";
 
 interface CompareSearchParams {
   models?: string;
@@ -20,13 +21,13 @@ function parseModelSlugs(models?: string): string[] {
 }
 
 export async function generateMetadata({ searchParams }: { searchParams: CompareSearchParams }): Promise<Metadata> {
-  const [settings, allModels] = await Promise.all([getCompareSettings(), getCompareModels()]);
+  const [settings, allModels] = await Promise.all([getCompareSettings(), getRaceModels()]);
   const slugs = parseModelSlugs(searchParams.models);
   const selected = slugs.map((slug) => allModels.find((m) => m.slug === slug)).filter((m): m is NonNullable<typeof m> => Boolean(m));
 
   if (selected.length > 0) {
-    const title = `${selected.map((m) => m.modelName).join(" vs ")} — Compare`;
-    const description = `Hivig's editorial comparison of ${selected.map((m) => m.modelName).join(", ")}: cost, capability, integration risk, and which one actually fits the job.`;
+    const title = `${selected.map((m) => m.model_name).join(" vs ")} — Compare`;
+    const description = `Hivig's editorial comparison of ${selected.map((m) => m.model_name).join(", ")}: cost, capability, integration risk, and which one actually fits the job.`;
     return { title, description, openGraph: { title, description } };
   }
 
@@ -44,7 +45,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Compare
 }
 
 export default async function ComparePage({ searchParams }: { searchParams: CompareSearchParams }) {
-  const [settings, allModels] = await Promise.all([getCompareSettings(), getCompareModels()]);
+  const [settings, allModels] = await Promise.all([getCompareSettings(), getRaceModels()]);
   const slugs = parseModelSlugs(searchParams.models);
   const selected = slugs.length
     ? slugs.map((slug) => allModels.find((m) => m.slug === slug)).filter((m): m is NonNullable<typeof m> => Boolean(m))
@@ -84,7 +85,7 @@ export default async function ComparePage({ searchParams }: { searchParams: Comp
   const modelsByProvider: Record<string, { slug: string; name: string }[]> = {};
   for (const m of allModels) {
     providerMap.set(m.organization.id, { id: m.organization.id, name: m.organization.name });
-    (modelsByProvider[m.organization.id] ||= []).push({ slug: m.slug, name: m.modelName });
+    (modelsByProvider[m.organization.id] ||= []).push({ slug: m.slug, name: m.model_name });
   }
   const providers = Array.from(providerMap.values()).sort((a, b) => a.name.localeCompare(b.name));
 

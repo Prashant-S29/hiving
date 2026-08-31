@@ -9,15 +9,20 @@ readers both discount rankings that can't explain themselves.
 `rank_current` is computed by the **Hivig Velocity Index (HVI)**, a 0–100 score
 weighted across three real, official/self-published public data sources:
 
-- **Token volume (49%)** — trailing 7-day usage, from OpenRouter's `rankings-daily`
-  Data API (requires a free `OPENROUTER_API_KEY`).
-- **Open-weight downloads (21%)** — from the Hugging Face Hub's public models API,
-  for models that have a Hugging Face repo.
-- **Quality (30%)** — average score across [LiveBench](https://livebench.ai)'s task
+- **Token volume** — trailing 7-day usage, from OpenRouter's `rankings-daily`
+  Data API (requires a free `OPENROUTER_API_KEY`). The largest of the three
+  weights.
+- **Open-weight downloads** — from the Hugging Face Hub's public models API,
+  for models that have a Hugging Face repo. The smallest of the three weights.
+- **Quality** — average score across [LiveBench](https://livebench.ai)'s task
   categories (github.com/livebench/livebench, Apache 2.0), fetched directly as a
   public CSV with no API key or account needed. LiveBench only tracks current
   frontier-tier releases (~50 models at a time), so this signal is `null` for most
   older or regional models — expected, not an error.
+
+The exact weighting isn't published here by design — see "What this deliberately
+avoids" below. What's disclosed is the three inputs, the sourcing, and the
+normalization method, not the precise formula.
 
 All three signals are normalized against the highest value in the currently-tracked
 set (Max-Relative Normalization). A model missing one or more signals (e.g. a closed
@@ -46,10 +51,42 @@ fields (`raceScore`, `previousRaceScore`, `tokensProxy`, `downloads`,
 — it never creates or deletes documents, and never touches curated fields like name,
 organization, or benchmark records.
 
+## In development: the Hivig Score
+
+Alongside the Velocity Index (a real *usage* signal — how much a model is actually
+being run), Hivig is building a second, separate score that assesses *capability,
+agentic performance, and economics* — closer to "how good and how viable is this
+model for agentic work," not "how popular is it." This is **not live yet**; it's
+disclosed here ahead of shipping because the sourcing and process are already
+decided, even though the score itself isn't computed yet.
+
+**Phase 1 sources** (all real, self-published, and used under their own stated
+open licenses — see each source's own terms):
+
+- **Hugging Face** — benchmark leaderboard data (via HF's dataset/leaderboard
+  APIs), not the download-count signal the Velocity Index already uses.
+- **Epoch AI** — their Benchmarking Hub (epoch.ai), covering coding-agent and
+  tool-use benchmarks (SWE-bench, Terminal-Bench, OSWorld, Aider, The Agent
+  Company, and others), CC BY licensed.
+- **Berkeley Function-Calling Leaderboard (BFCL)** — tool-use and agentic
+  evaluation data (gorilla.cs.berkeley.edu), Apache 2.0 licensed.
+
+**Artificial Analysis is explicitly not included yet.** Their free-tier data API
+doesn't permit redistribution on a public page, and Hivig hasn't taken out a
+commercial license — using their data here without one isn't an option. This may
+change if that's resolved later.
+
+As with the Velocity Index, **the exact formula and category weights won't be
+published** once this ships — not on this page, not in an API response, not
+anywhere someone could inspect it. What's disclosed is the inputs and the process;
+what stays undisclosed is the scoring function itself, the same posture most
+credible ranking methodologies take.
+
 ## What this deliberately avoids
 
-- **Fabricating a score.** A model with none of the three signals gets
-  `raceScore: null` rather than an invented number.
+- **Fabricating a score.** A model with none of the three Velocity Index signals
+  gets `raceScore: null` rather than an invented number — the same discipline will
+  apply to the Hivig Score once it ships.
 - **Auto-creating model/organization records.** Every `aiModel` and `organization`
   document in Sanity goes through editorial review (`verificationStatus`). The
   automation only enriches documents an editor has already curated and explicitly
@@ -60,19 +97,30 @@ organization, or benchmark records.
 - **Fuzzy-matching a model to a LiveBench/OpenRouter id.** Every `openrouterId`/
   `liveBenchId` set on a model was verified against an exact row in that source's
   own current catalog/table before being entered — never a "close enough" guess.
+- **Publishing exact scoring weights anywhere inspectable.** True for the Velocity
+  Index today (see above) and will be true for the Hivig Score once it ships.
 
-## What a fuller methodology would still need to define
+## This is a living methodology
 
-1. Whether/how to widen quality-signal coverage beyond LiveBench's current
-   frontier-only tracked set (e.g. Artificial Analysis's free API is a candidate —
-   broader coverage, but account/API-key-gated rather than fully open — if
-   LiveBench's ~50-model coverage proves too narrow in practice).
-2. A documented process for editors to opt new models into automated scoring, so
+Ranking AI models well is an ongoing process, not a solved problem. The Hivig
+Score and Velocity Index are both still being refined against real-world agentic
+use cases, and the methodology itself — inputs, sourcing, and normalization
+approach alike — is subject to change as a result. What won't change is the
+commitment behind it: we'll keep the guiding principles here current and public,
+even in cases where the exact formula stays undisclosed for the reasons above.
+
+Concretely, still open:
+
+1. Building and shipping the Hivig Score itself — the sourcing and process above
+   are decided; the ingestion pipeline and formula aren't built yet.
+2. Whether/how to widen quality-signal coverage beyond LiveBench's current
+   frontier-only tracked set.
+3. A documented process for editors to opt new models into automated scoring, so
    the "no ids set yet" fallback ranking shrinks over time.
-3. What counts as the same "model" across dated snapshot releases, so a rank delta
-   ("+3 this week") means something consistent as OpenRouter's/LiveBench's own
-   listings change — LiveBench in particular ages out older models from its
-   tracked set entirely rather than keeping a stale score.
+4. What counts as the same "model" across dated snapshot releases, so a rank delta
+   ("+3 this week") means something consistent as sources' own listings change —
+   LiveBench in particular ages out older models from its tracked set entirely
+   rather than keeping a stale score.
 
 ## Why this file exists
 

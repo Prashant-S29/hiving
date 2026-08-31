@@ -283,31 +283,7 @@ export const raceModelsQuery = `*[_type == "aiModel" && active != false] | order
     verificationStatus,
     source->{_updatedAt, name, url, publicationDate, accessedDate, sourceType, verificationStatus}
   },
-  sources[]->{_updatedAt, name, url, publicationDate, accessedDate, sourceType, summary, verificationStatus}
-}`;
-
-// Same shape as raceModelsQuery plus the /compare-only field groups. Kept as
-// its own query (not a raceModelsQuery + extra fields) so /race's projection
-// never has to change shape just because /compare adds a field.
-export const compareModelsQuery = `*[_type == "aiModel" && active != false] | order(releaseDate desc){
-  _id,
-  _updatedAt,
-  name,
-  "slug": slug.current,
-  releaseDate,
-  modelType,
-  raceScore,
-  summary,
-  reviewedAt,
-  verificationStatus,
-  organization->{
-    _id,
-    name,
-    "slug": slug.current,
-    countryCode,
-    "logoUrl": logo.image.asset->url,
-    "logoAlt": select(logo.decorative == true => "", logo.alt)
-  },
+  sources[]->{_updatedAt, name, url, publicationDate, accessedDate, sourceType, summary, verificationStatus},
   inputCostPer1M,
   outputCostPer1M,
   cachingSupported,
