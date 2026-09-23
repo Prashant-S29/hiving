@@ -74,6 +74,16 @@ export const raceSettings = defineType({
     defineField({ name: "modelSeoTitleTemplate", title: "Model SEO title", type: "string", group: "model", description: "Available tokens: {model}.", validation: (Rule) => Rule.required() }),
     defineField({ name: "modelSeoDescriptionTemplate", title: "Model SEO description", type: "text", rows: 4, group: "model", description: "Available tokens: {model}, {organization}, {country}, {releaseDate}.", validation: (Rule) => Rule.required() }),
 
+    defineField({ name: "modelCostHeading", title: "Cost section heading", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
+    defineField({ name: "modelCostFallback", title: "Cost section fallback (no cost data yet)", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
+    defineField({ name: "modelTechDebtHeading", title: "Build risk / tech debt section heading", type: "string", group: "model", validation: (Rule) => Rule.required() }),
+    defineField({ name: "modelTechDebtFallback", title: "Build risk section fallback (no data yet)", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
+    defineField({ name: "modelFaqHeading", title: "Model FAQ section heading", type: "string", group: "model", validation: (Rule) => Rule.required() }),
+    defineField({ name: "modelFaqCountryQuestion", title: "FAQ question — country of origin", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
+    defineField({ name: "modelFaqCostQuestion", title: "FAQ question — cost", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
+    defineField({ name: "modelFaqTechDebtQuestion", title: "FAQ question — build risk / tech debt", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
+    defineField({ name: "modelFaqIntegrationQuestion", title: "FAQ question — integration / MCP support", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
+
     defineField({ name: "methodologyBackAction", title: "Back action", type: "callToAction", group: "methodology", validation: (Rule) => Rule.required() }),
     defineField({ name: "methodologyHeading", title: "Heading", type: "string", group: "methodology", validation: (Rule) => Rule.required() }),
     defineField({

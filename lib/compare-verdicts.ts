@@ -10,7 +10,7 @@
 // specific comparison" is computed, the same way rank_current is computed
 // from raceScore elsewhere in this codebase rather than hand-set.
 
-import type { CompareModel, JobFit } from "@/lib/sanity/compare";
+import type { JobFit, RaceModel } from "@/lib/sanity/race";
 
 export interface VerdictTag {
   icon: string;
@@ -20,7 +20,7 @@ export interface VerdictTag {
 const JOB_FIT_RANK: Record<string, number> = { Strong: 2, Moderate: 1, Weak: 0 };
 const LOCK_IN_RANK: Record<string, number> = { Low: 2, Medium: 1, High: 0 };
 
-export function effectiveCost(model: CompareModel): number | null {
+export function effectiveCost(model: RaceModel): number | null {
   if (typeof model.inputCostPer1M !== "number" || typeof model.outputCostPer1M !== "number") return null;
   // A simple, stated heuristic (70/30 input/output weighting) rather than a
   // real per-job token-mix estimate — good enough to rank models against each
@@ -29,7 +29,7 @@ export function effectiveCost(model: CompareModel): number | null {
   return model.inputCostPer1M * 0.7 + model.outputCostPer1M * 0.3;
 }
 
-export function computeVerdicts(models: CompareModel[], job: string): Map<string, VerdictTag[]> {
+export function computeVerdicts(models: RaceModel[], job: string): Map<string, VerdictTag[]> {
   const result = new Map<string, VerdictTag[]>();
   for (const m of models) result.set(m.id, []);
   if (models.length < 2) return result;
@@ -56,7 +56,7 @@ export function computeVerdicts(models: CompareModel[], job: string): Map<string
 
   // 💰 Most Cost-Effective — lowest blended cost, only when at least 2 models
   // have cost data to actually compare.
-  const costed = models.map((m) => ({ model: m, cost: effectiveCost(m) })).filter((c) => c.cost !== null) as { model: CompareModel; cost: number }[];
+  const costed = models.map((m) => ({ model: m, cost: effectiveCost(m) })).filter((c) => c.cost !== null) as { model: RaceModel; cost: number }[];
   if (costed.length >= 2) {
     const cheapest = costed.reduce((a, b) => (b.cost < a.cost ? b : a));
     const isUniqueMin = costed.every((c) => c.model.id === cheapest.model.id || c.cost > cheapest.cost);

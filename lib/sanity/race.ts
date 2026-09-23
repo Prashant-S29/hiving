@@ -62,6 +62,15 @@ export interface RaceSettingsContent {
   modelMethodologyLinkLabel: string;
   modelSeoTitleTemplate: string;
   modelSeoDescriptionTemplate: string;
+  modelCostHeading: string;
+  modelCostFallback: string;
+  modelTechDebtHeading: string;
+  modelTechDebtFallback: string;
+  modelFaqHeading: string;
+  modelFaqCountryQuestion: string;
+  modelFaqCostQuestion: string;
+  modelFaqTechDebtQuestion: string;
+  modelFaqIntegrationQuestion: string;
   methodologyBackAction: CmsLink;
   methodologyHeading: string;
   methodologyNotice: { label: string; body: string; tone: "warning" | "information" };
@@ -79,6 +88,38 @@ export interface RaceSettingsContent {
   seo: PageSeo;
 }
 
+// The /compare-only field groups, unified onto RaceModel in Phase 2 of the
+// Race ranking rebuild — Race, Compare, and the model pillar page all read
+// this one type/query now instead of RaceModel + a separate CompareModel.
+// Every field here is optional: hand-curated on a monthly-or-model-release
+// cadence (see sanity/schemaTypes/documents/raceData.ts), not guaranteed to
+// exist for a given model. See lib/compare-verdicts.ts for how these roll
+// into /compare's badges.
+export type CapabilityTier = "Frontier" | "Strong" | "Efficient";
+export type Maturity = "Strong" | "Moderate" | "Limited";
+export type LatencyProfile = "Real-time-friendly" | "Batch-friendly" | "Both";
+export type McpSupport = "Native" | "Partial" | "None";
+export type AvailableVia = "Bedrock" | "Vertex AI" | "Azure" | "Direct API" | "Self-hostable";
+export type Certification = "SOC2" | "HIPAA-eligible" | "FedRAMP" | "GDPR" | "ISO27001";
+export type LockInRisk = "Low" | "Medium" | "High";
+export type Multimodal = "text" | "image" | "video" | "audio";
+export type JobFitRating = "Strong" | "Moderate" | "Weak";
+
+// Keys must match sanity/schemaTypes/documents/raceData.ts's jobFitCategories
+// and be what compareSettings.jobOptions[].value values resolve to (plus the
+// "general" unweighted default, which isn't a jobFit key).
+export interface JobFit {
+  marketing?: JobFitRating;
+  customerSupport?: JobFitRating;
+  sales?: JobFitRating;
+  accountingFinance?: JobFitRating;
+  supplyChain?: JobFitRating;
+  opsMonitoring?: JobFitRating;
+  coding?: JobFitRating;
+  legalCompliance?: JobFitRating;
+  researchAnalysis?: JobFitRating;
+}
+
 export interface RaceModel extends AiModel {
   summary?: string;
   reviewedAt?: string;
@@ -90,6 +131,7 @@ export interface RaceModel extends AiModel {
     name: string;
     countryCode: string;
     website?: string;
+    logoUrl?: string;
     logoAlt?: string;
     logoSourceUrl?: string;
     logoLicenseNotes?: string;
@@ -106,6 +148,36 @@ export interface RaceModel extends AiModel {
     verificationStatus: "unverified" | "review" | "verified";
     source?: { name: string; url: string };
   };
+
+  inputCostPer1M?: number;
+  outputCostPer1M?: number;
+  cachingSupported?: boolean;
+  cachingDiscountPct?: number;
+  batchDiscountPct?: number;
+
+  capabilityTier?: CapabilityTier;
+  contextWindow?: number;
+  multimodal?: Multimodal[];
+  agenticToolUseMaturity?: Maturity;
+
+  latencyProfile?: LatencyProfile;
+  rateLimitNotes?: string;
+  provisionedCapacityAvailable?: boolean;
+  publishedSLA?: boolean;
+
+  mcpSupport?: McpSupport;
+  requiresRouting?: boolean;
+  requiresRoutingNotes?: string;
+  openAICompatible?: boolean;
+  availableVia?: AvailableVia[];
+  openWeight?: boolean;
+  lockInRisk?: LockInRisk;
+
+  trainsOnDataByDefault?: boolean;
+  certifications?: Certification[];
+  guardrailsMaturity?: string;
+
+  jobFit?: JobFit;
 }
 
 export const DEFAULT_RACE_SETTINGS: RaceSettingsContent = {
@@ -166,18 +238,27 @@ export const DEFAULT_RACE_SETTINGS: RaceSettingsContent = {
   modelMethodologyLinkLabel: "How this ranking is computed",
   modelSeoTitleTemplate: "{model} — Ranking, Benchmarks & Market Data",
   modelSeoDescriptionTemplate: "{model} from {organization} ({country}), released {releaseDate}. Live rank, benchmark sourcing, and market status on Hivig’s AI model race tracker.",
+  modelCostHeading: "Cost to build with {model}",
+  modelCostFallback: "Pricing for {model} hasn't been independently verified yet — check the provider's own pricing page before budgeting an integration.",
+  modelTechDebtHeading: "Build risk & technical debt",
+  modelTechDebtFallback: "We haven't reviewed {model}'s integration or lock-in profile yet.",
+  modelFaqHeading: "Frequently asked questions",
+  modelFaqCountryQuestion: "What country is {model} developed in?",
+  modelFaqCostQuestion: "How much does {model} cost to use?",
+  modelFaqTechDebtQuestion: "What's the lock-in risk of building agents on {model}?",
+  modelFaqIntegrationQuestion: "Does {model} support MCP or an OpenAI-compatible API?",
   methodologyBackAction: { label: "← Back to The Race", href: "/race" },
   methodologyHeading: "Ranking methodology",
   methodologyNotice: {
-    label: "Current status: Hivig Velocity Index (partial rollout)",
-    body: "Rankings are led by the Hivig Velocity Index — a 0–100 score weighted 70/30 between real OpenRouter token volume and Hugging Face downloads — for any model an editor has opted into automated scoring. Models without that opt-in fall back to sorting by release date (newest first) until they're added. No LMSYS/Arena data is included yet — no free public API exists for it.",
+    label: "Current status: two ranking signals, one still in development",
+    body: "Rankings are currently led by the Hivig Velocity Index — a 0–100 score drawing on real OpenRouter token volume, Hugging Face downloads, and LiveBench quality data — for any model an editor has opted into automated scoring. Models without that opt-in fall back to sorting by release date (newest first) until they're added. A second score, the Hivig Score, is in development — it will assess capability, agentic performance, and economics using Hugging Face, Epoch AI, and Berkeley Function-Calling Leaderboard (BFCL) data. As with the Velocity Index, the exact formula and category weights won't be published once it ships.",
     tone: "information",
   },
-  methodologyNeedsHeading: "What a fuller methodology still needs to define",
+  methodologyNeedsHeading: "How this methodology evolves",
   methodologyNeeds: [
-    "Whether/how to fold in a benchmark-based signal (e.g. LMSYS Chatbot Arena Elo, Artificial Analysis quality index) once a licensed or official data source exists.",
-    "A documented process for editors to opt new models into automated scoring, so the release-date fallback ranking shrinks over time.",
-    "What counts as the “same model” across dated snapshot releases, so a rank delta means something consistent as OpenRouter's own listings change.",
+    "Ranking AI models well is an ongoing process. We're actively refining the Hivig Score and Velocity Index against real-world agentic use cases — this isn't a finished formula, and it shouldn't be treated as one.",
+    "The methodology itself is subject to change as a result, and we'll keep this page current as it does.",
+    "We're committed to giving our users transparent information. The core guiding principles behind how we rank models will always be published here — even in cases where the exact formula stays undisclosed.",
   ],
   methodologySourceNote: "Full detail lives in RANKING_METHODOLOGY.md in the project source.",
   methodologySeo: {
@@ -244,6 +325,31 @@ interface CmsRaceRecord {
     verificationStatus?: RaceModel["verificationStatus"];
     source?: { _updatedAt?: string; name?: string; url?: string };
   }>;
+
+  inputCostPer1M?: number;
+  outputCostPer1M?: number;
+  cachingSupported?: boolean;
+  cachingDiscountPct?: number;
+  batchDiscountPct?: number;
+  capabilityTier?: CapabilityTier;
+  contextWindow?: number;
+  multimodal?: Multimodal[];
+  agenticToolUseMaturity?: Maturity;
+  latencyProfile?: LatencyProfile;
+  rateLimitNotes?: string;
+  provisionedCapacityAvailable?: boolean;
+  publishedSLA?: boolean;
+  mcpSupport?: McpSupport;
+  requiresRouting?: boolean;
+  requiresRoutingNotes?: string;
+  openAICompatible?: boolean;
+  availableVia?: AvailableVia[];
+  openWeight?: boolean;
+  lockInRisk?: LockInRisk;
+  trainsOnDataByDefault?: boolean;
+  certifications?: Certification[];
+  guardrailsMaturity?: string;
+  jobFit?: JobFit;
 }
 
 export function applyTemplate(template: string, values: Record<string, string | number>) {
@@ -347,12 +453,37 @@ function mapCmsModels(records: CmsRaceRecord[]): RaceModel[] {
           name: organization.name!,
           countryCode: organization.countryCode!,
           website: organization.website,
+          logoUrl: organization.logoUrl,
           logoAlt: organization.logoAlt,
           logoSourceUrl: organization.logoSourceUrl,
           logoLicenseNotes: organization.logoLicenseNotes,
           verificationStatus: organization.verificationStatus || "unverified",
           reviewedAt: organization.reviewedAt,
         },
+        inputCostPer1M: record.inputCostPer1M,
+        outputCostPer1M: record.outputCostPer1M,
+        cachingSupported: record.cachingSupported,
+        cachingDiscountPct: record.cachingDiscountPct,
+        batchDiscountPct: record.batchDiscountPct,
+        capabilityTier: record.capabilityTier,
+        contextWindow: record.contextWindow,
+        multimodal: record.multimodal,
+        agenticToolUseMaturity: record.agenticToolUseMaturity,
+        latencyProfile: record.latencyProfile,
+        rateLimitNotes: record.rateLimitNotes,
+        provisionedCapacityAvailable: record.provisionedCapacityAvailable,
+        publishedSLA: record.publishedSLA,
+        mcpSupport: record.mcpSupport,
+        requiresRouting: record.requiresRouting,
+        requiresRoutingNotes: record.requiresRoutingNotes,
+        openAICompatible: record.openAICompatible,
+        availableVia: record.availableVia,
+        openWeight: record.openWeight,
+        lockInRisk: record.lockInRisk,
+        trainsOnDataByDefault: record.trainsOnDataByDefault,
+        certifications: record.certifications,
+        guardrailsMaturity: record.guardrailsMaturity,
+        jobFit: record.jobFit,
         benchmark: benchmark ? {
           id: benchmark._id,
           name: benchmark.benchmarkName || "Unspecified benchmark",

@@ -1,150 +1,16 @@
 // lib/sanity/compare.ts
 //
-// Data layer for /compare. Reuses the same aiModel documents as The Race
-// (lib/sanity/race.ts) — the /compare-only fields (cost, capability,
-// operations, integration, governance, jobFit) live on that same schema
-// (sanity/schemaTypes/documents/raceData.ts), hand-curated on a
-// monthly-or-model-release cadence, not fetched live from vendor APIs. See
-// lib/compare-verdicts.ts for how these roll into the page's badges.
+// Page-copy singleton for /compare (hero text, labels, job options, SEO) —
+// mirrors raceSettings.ts's split between "labels singleton" and "model
+// data." The model data itself (cost/capability/operations/integration/
+// governance/jobFit) lives on RaceModel in lib/sanity/race.ts as of Phase 2
+// of the Race ranking rebuild — Race, Compare, and the model pillar page all
+// read that one type/query now, so this file only handles copy.
 
 import { cache as reactCache } from "react";
-import { cmsFallbacksEnabled, fetchCms } from "@/lib/sanity/fetch";
-import { compareModelsQuery, compareSettingsQuery } from "@/lib/sanity/queries";
+import { fetchCms } from "@/lib/sanity/fetch";
+import { compareSettingsQuery } from "@/lib/sanity/queries";
 import type { PageSeo } from "@/lib/sanity/companyPages";
-
-export type VerificationStatus = "unverified" | "review" | "verified";
-export type CapabilityTier = "Frontier" | "Strong" | "Efficient";
-export type Maturity = "Strong" | "Moderate" | "Limited";
-export type LatencyProfile = "Real-time-friendly" | "Batch-friendly" | "Both";
-export type McpSupport = "Native" | "Partial" | "None";
-export type AvailableVia = "Bedrock" | "Vertex AI" | "Azure" | "Direct API" | "Self-hostable";
-export type Certification = "SOC2" | "HIPAA-eligible" | "FedRAMP" | "GDPR" | "ISO27001";
-export type LockInRisk = "Low" | "Medium" | "High";
-export type Multimodal = "text" | "image" | "video" | "audio";
-export type JobFitRating = "Strong" | "Moderate" | "Weak";
-
-// Keys must match sanity/schemaTypes/documents/raceData.ts's jobFitCategories
-// and be what compareSettings.jobOptions[].value values resolve to (plus the
-// "general" unweighted default, which isn't a jobFit key).
-export interface JobFit {
-  marketing?: JobFitRating;
-  customerSupport?: JobFitRating;
-  sales?: JobFitRating;
-  accountingFinance?: JobFitRating;
-  supplyChain?: JobFitRating;
-  opsMonitoring?: JobFitRating;
-  coding?: JobFitRating;
-  legalCompliance?: JobFitRating;
-  researchAnalysis?: JobFitRating;
-}
-
-export interface CompareModel {
-  id: string;
-  slug: string;
-  modelName: string;
-  releaseDate: string;
-  modelType: "frontier" | "open-weight" | "specialized" | "agentic-framework";
-  raceScore: number | null;
-  summary?: string;
-  reviewedAt?: string;
-  verificationStatus: VerificationStatus;
-  organization: {
-    id: string;
-    slug: string;
-    name: string;
-    countryCode: string;
-    logoUrl?: string;
-    logoAlt?: string;
-  };
-
-  inputCostPer1M?: number;
-  outputCostPer1M?: number;
-  cachingSupported?: boolean;
-  cachingDiscountPct?: number;
-  batchDiscountPct?: number;
-
-  capabilityTier?: CapabilityTier;
-  contextWindow?: number;
-  multimodal?: Multimodal[];
-  agenticToolUseMaturity?: Maturity;
-
-  latencyProfile?: LatencyProfile;
-  rateLimitNotes?: string;
-  provisionedCapacityAvailable?: boolean;
-  publishedSLA?: boolean;
-
-  mcpSupport?: McpSupport;
-  requiresRouting?: boolean;
-  requiresRoutingNotes?: string;
-  openAICompatible?: boolean;
-  availableVia?: AvailableVia[];
-  openWeight?: boolean;
-  lockInRisk?: LockInRisk;
-
-  trainsOnDataByDefault?: boolean;
-  certifications?: Certification[];
-  guardrailsMaturity?: string;
-
-  jobFit?: JobFit;
-}
-
-interface CmsCompareRecord extends Omit<CompareModel, "id" | "slug" | "modelName" | "organization"> {
-  _id: string;
-  name: string;
-  slug: string;
-  organization: {
-    _id: string;
-    name: string;
-    slug: string;
-    countryCode: string;
-    logoUrl?: string;
-    logoAlt?: string;
-  } | null;
-}
-
-function mapCompareModels(records: CmsCompareRecord[]): CompareModel[] {
-  return records
-    .filter((r) => r.slug && r.name && r.organization)
-    .map((r) => ({
-      ...r,
-      id: r._id,
-      slug: r.slug,
-      modelName: r.name,
-      raceScore: typeof r.raceScore === "number" ? r.raceScore : null,
-      verificationStatus: r.verificationStatus || "unverified",
-      organization: {
-        id: r.organization!._id,
-        slug: r.organization!.slug || "",
-        name: r.organization!.name,
-        countryCode: r.organization!.countryCode,
-        logoUrl: r.organization!.logoUrl,
-        logoAlt: r.organization!.logoAlt,
-      },
-    }));
-}
-
-async function fallbackModels(): Promise<CompareModel[]> {
-  // Dev-only convenience when Sanity isn't configured — no /compare-specific
-  // fields exist in the static seed data, so every model renders with empty
-  // comparison rows rather than fabricated numbers. Real content always comes
-  // from Sanity; see lib/models-schema.ts / data/seed-models.ts for context.
-  const { SEED_MODELS } = await import("@/data/seed-models");
-  return SEED_MODELS.map((model) => ({
-    id: model.id,
-    slug: model.slug,
-    modelName: model.model_name,
-    releaseDate: model.release_date,
-    modelType: model.model_type,
-    raceScore: model.race_score ?? null,
-    verificationStatus: "unverified" as const,
-    organization: {
-      id: `organization-${model.org_name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
-      slug: model.org_name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
-      name: model.org_name,
-      countryCode: model.org_country,
-    },
-  }));
-}
 
 export interface CompareJobOption {
   value: string;
@@ -232,24 +98,4 @@ export const getCompareSettings = cachePage(async (): Promise<CompareSettingsCon
     jobOptions: value.jobOptions?.length ? value.jobOptions : DEFAULT_COMPARE_SETTINGS.jobOptions,
     seo: { ...DEFAULT_COMPARE_SETTINGS.seo, ...stripNullish(value.seo ?? {}) },
   };
-});
-
-export const getCompareModels = cachePage(async (): Promise<CompareModel[]> => {
-  const records = await fetchCms<CmsCompareRecord[] | null>({
-    query: compareModelsQuery,
-    fallback: null,
-    label: "Compare models",
-    tags: ["sanity:race-models"],
-    required: true,
-  });
-  if (!records?.length) {
-    if (!cmsFallbacksEnabled) throw new Error("[Sanity] Compare models: required collection is empty");
-    return fallbackModels();
-  }
-  const models = mapCompareModels(records);
-  if (!models.length) {
-    if (!cmsFallbacksEnabled) throw new Error("[Sanity] Compare models: no valid model records were returned");
-    return fallbackModels();
-  }
-  return models;
 });
