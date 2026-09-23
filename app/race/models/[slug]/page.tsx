@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import CmsLink from "@/components/CmsLink";
 import { applyTemplate, getRaceModelBySlug, getRaceModels, getRaceSettings, type RaceModel } from "@/lib/sanity/race";
+import { buildCostSummary, buildModelFaq, buildTechDebtSummary, buildIntegrationSummary } from "@/lib/model-faq";
 
 interface PageProps {
   params: { slug: string };
@@ -49,6 +50,18 @@ function softwareApplicationJsonLd(model: RaceModel, applicationCategory: string
   };
 }
 
+function faqPageJsonLd(faq: { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((entry) => ({
+      "@type": "Question",
+      name: entry.question,
+      acceptedAnswer: { "@type": "Answer", text: entry.answer },
+    })),
+  };
+}
+
 export default async function ModelPage({ params }: PageProps) {
   const [model, settings] = await Promise.all([getRaceModelBySlug(params.slug), getRaceSettings()]);
   if (!model) notFound();
@@ -73,10 +86,17 @@ export default async function ModelPage({ params }: PageProps) {
     : model.market_status.last_funding_round || settings.privateMarketFallback;
   const jsonLd = JSON.stringify(softwareApplicationJsonLd(model, settings.applicationCategory)).replace(/</g, "\\u003c");
 
+  const costSummary = buildCostSummary(model);
+  const techDebtSummary = buildTechDebtSummary(model);
+  const integrationSummary = buildIntegrationSummary(model);
+  const faq = buildModelFaq(model, settings);
+  const faqJsonLd = JSON.stringify(faqPageJsonLd(faq)).replace(/</g, "\\u003c");
+
   return (
     <section className="pt-32 pb-24 px-6 md:px-12">
       <div className="mx-auto max-w-3xl">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqJsonLd }} />
 
         <CmsLink link={settings.modelBackAction} className="font-mono text-[11px] uppercase tracking-wider text-signal hover:text-ink transition-colors">
           {settings.modelBackAction.label}
@@ -133,6 +153,38 @@ export default async function ModelPage({ params }: PageProps) {
             </ul>
           </div>
         )}
+
+        <div className="mt-10 border-t border-rule pt-6">
+          <h2 className="font-serif text-xl font-bold text-ink">{applyTemplate(settings.modelCostHeading, { model: model.model_name })}</h2>
+          <p className="mt-3 font-body text-[16px] leading-[1.8] text-ink/75">
+            {costSummary || applyTemplate(settings.modelCostFallback, { model: model.model_name })}
+          </p>
+        </div>
+
+        {(techDebtSummary || integrationSummary) ? (
+          <div className="mt-10 border-t border-rule pt-6">
+            <h2 className="font-serif text-xl font-bold text-ink">{settings.modelTechDebtHeading}</h2>
+            {techDebtSummary && <p className="mt-3 font-body text-[16px] leading-[1.8] text-ink/75">{techDebtSummary}</p>}
+            {integrationSummary && <p className="mt-3 font-body text-[16px] leading-[1.8] text-ink/75">{integrationSummary}</p>}
+          </div>
+        ) : (
+          <div className="mt-10 border-t border-rule pt-6">
+            <h2 className="font-serif text-xl font-bold text-ink">{settings.modelTechDebtHeading}</h2>
+            <p className="mt-3 font-body text-[16px] leading-[1.8] text-ink/75">{applyTemplate(settings.modelTechDebtFallback, { model: model.model_name })}</p>
+          </div>
+        )}
+
+        <div className="mt-10 border-t border-rule pt-6">
+          <h2 className="font-serif text-xl font-bold text-ink">{settings.modelFaqHeading}</h2>
+          <div className="mt-3 space-y-2">
+            {faq.map((entry) => (
+              <details key={entry.question} className="border-b border-rule pb-3">
+                <summary className="cursor-pointer select-none font-body text-[15px] font-semibold text-ink">{entry.question}</summary>
+                <p className="mt-2 font-body text-[15px] leading-[1.8] text-ink/75">{entry.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
 
         <p className="mt-10 font-mono text-[11px] uppercase tracking-wider text-muted">
           <Link href="/race/methodology" className="text-signal hover:text-ink transition-colors">{settings.modelMethodologyLinkLabel}</Link>

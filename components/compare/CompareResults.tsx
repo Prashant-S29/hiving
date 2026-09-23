@@ -11,6 +11,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { computeVerdicts, effectiveCost } from "@/lib/compare-verdicts";
+import { list, money, yesNo } from "@/lib/model-format";
 import type { RaceModel } from "@/lib/sanity/race";
 import { VerdictBadge } from "@/components/compare/VerdictBadge";
 
@@ -22,19 +23,6 @@ interface Row {
 interface Group {
   label: string;
   rows: Row[];
-}
-
-function yesNo(value: boolean | undefined, empty: string): ReactNode {
-  if (value === undefined) return empty;
-  return value ? "Yes" : "No";
-}
-
-function list(values: string[] | undefined, empty: string): ReactNode {
-  return values?.length ? values.join(", ") : empty;
-}
-
-function money(value: number | undefined, empty: string): ReactNode {
-  return typeof value === "number" ? `$${value.toFixed(2)}` : empty;
 }
 
 function buildGroups(job: string, empty: string, labels: Record<string, string>): Group[] {

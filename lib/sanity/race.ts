@@ -62,6 +62,15 @@ export interface RaceSettingsContent {
   modelMethodologyLinkLabel: string;
   modelSeoTitleTemplate: string;
   modelSeoDescriptionTemplate: string;
+  modelCostHeading: string;
+  modelCostFallback: string;
+  modelTechDebtHeading: string;
+  modelTechDebtFallback: string;
+  modelFaqHeading: string;
+  modelFaqCountryQuestion: string;
+  modelFaqCostQuestion: string;
+  modelFaqTechDebtQuestion: string;
+  modelFaqIntegrationQuestion: string;
   methodologyBackAction: CmsLink;
   methodologyHeading: string;
   methodologyNotice: { label: string; body: string; tone: "warning" | "information" };
@@ -229,6 +238,15 @@ export const DEFAULT_RACE_SETTINGS: RaceSettingsContent = {
   modelMethodologyLinkLabel: "How this ranking is computed",
   modelSeoTitleTemplate: "{model} — Ranking, Benchmarks & Market Data",
   modelSeoDescriptionTemplate: "{model} from {organization} ({country}), released {releaseDate}. Live rank, benchmark sourcing, and market status on Hivig’s AI model race tracker.",
+  modelCostHeading: "Cost to build with {model}",
+  modelCostFallback: "Pricing for {model} hasn't been independently verified yet — check the provider's own pricing page before budgeting an integration.",
+  modelTechDebtHeading: "Build risk & technical debt",
+  modelTechDebtFallback: "We haven't reviewed {model}'s integration or lock-in profile yet.",
+  modelFaqHeading: "Frequently asked questions",
+  modelFaqCountryQuestion: "What country is {model} developed in?",
+  modelFaqCostQuestion: "How much does {model} cost to use?",
+  modelFaqTechDebtQuestion: "What's the lock-in risk of building agents on {model}?",
+  modelFaqIntegrationQuestion: "Does {model} support MCP or an OpenAI-compatible API?",
   methodologyBackAction: { label: "← Back to The Race", href: "/race" },
   methodologyHeading: "Ranking methodology",
   methodologyNotice: {
