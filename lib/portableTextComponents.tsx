@@ -27,9 +27,14 @@ export const portableTextComponents: PortableTextComponents = {
     image: ({ value }) => {
       if (value?.asset) {
         const url = urlForImage(value).width(1200).url();
+        // Next's Image Optimization API rejects SVG sources by default (400
+        // response) as an XSS guard — irrelevant here anyway, since resizing
+        // a vector image through a raster pipeline has no benefit. Skip
+        // optimization for SVGs rather than relaxing that guard site-wide.
+        const isSvg = /\.svg(\?|$)/i.test(url);
         return (
           <div className="my-8 relative w-full aspect-[16/9]">
-            <Image src={url} alt={value.alt || ""} fill className="object-cover" />
+            <Image src={url} alt={value.alt || ""} fill className="object-cover" unoptimized={isSvg} />
           </div>
         );
       }
