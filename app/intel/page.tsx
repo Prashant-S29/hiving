@@ -32,7 +32,9 @@ async function getAllArticles(): Promise<Article[]> {
     label: "Intel archive articles",
     tags: ["sanity:articles"],
   });
-  return articles;
+  // Exclude title-only stubs (no body ever written) — a card that leads to a
+  // near-blank article page isn't a real archive entry yet.
+  return articles.filter((article) => article.hasBody);
 }
 
 export default async function IntelPage({

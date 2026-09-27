@@ -14,6 +14,8 @@ export interface Article {
   heroImage?: { asset: { _ref: string } };
   heroImageAlt?: string;
   body?: ArticleBodyBlock[];
+  /** True when the article has real published body content — false/undefined for a title-only stub. Card-list queries project this instead of the (heavy) body itself. */
+  hasBody?: boolean;
   author: string;
   authorDetails?: {
     name: string;

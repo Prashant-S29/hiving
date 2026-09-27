@@ -475,6 +475,7 @@ const articleCardProjection = `
   "tagType": select(tagType._type == "reference" => tagType->value, tagType),
   "industryTag": select(industryTag._type == "reference" => industryTag->value, industryTag),
   deck,
+  "hasBody": defined(body) && count(body) > 0,
   "heroImage": coalesce(heroMedia.image, heroImage),
   "heroImageAlt": heroMedia.alt,
   "author": select(author._type == "reference" => author->name, author),
