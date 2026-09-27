@@ -2,6 +2,7 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import type { SiteSettings } from "@/lib/sanity/siteSettings";
 import type { RaceModel } from "@/lib/sanity/race";
+import type { Article, TagType } from "@/lib/types";
 import { OrbitalHero } from "./OrbitalHero";
 import { RaceScoreStrip } from "./RaceScoreStrip";
 import "./orbit-hero.css";
@@ -10,24 +11,6 @@ import "./orbit-hero.css";
 // this page just references them ('Geist' / var(--font-jetbrains-mono)).
 
 const marqueeNames = ["NORTHWIND", "Arclight", "MERIDIAN", "Foundry AI", "Halcyon", "BRIGHTPATH", "Kestrel", "OMNICORE"];
-
-const articles = [
-  {
-    kicker: "REVIEW · 9 MIN",
-    title: "Six coding agents, one legacy monolith, zero mercy",
-    deck: "We pointed them at 40k lines of undocumented Java. Only two survived.",
-  },
-  {
-    kicker: "BRIEFING · 6 MIN",
-    title: "The new pricing games in agent platforms",
-    deck: "Per-token is out. Per-outcome billing is quietly reshaping budgets.",
-  },
-  {
-    kicker: "FIELD NOTE · 4 MIN",
-    title: "What breaks when an agent runs unattended for 30 days",
-    deck: "Drift, silent failures, and the logging you wish you'd set up.",
-  },
-];
 
 const scorecard = [
   { label: "Reliability", value: "B+", color: "#ffb77d" },
@@ -49,7 +32,18 @@ const stats = [
  * copy and the original Solar Kinetic palette (this predates the Signal
  * Room adaptation and intentionally isn't reconciled with it here).
  */
-export function OrbitHomepage({ settings, raceModels }: { settings: SiteSettings; raceModels: RaceModel[] }) {
+export function OrbitHomepage({
+  settings,
+  raceModels,
+  articles,
+  articleCategoryLabels,
+}: {
+  settings: SiteSettings;
+  raceModels: RaceModel[];
+  articles: Article[];
+  articleCategoryLabels: Record<TagType, string>;
+}) {
+  const spotlight = articles[0];
   return (
     <div className="hv-orbit-root hv-orbit-grain" style={{ fontFamily: "'Geist', system-ui, sans-serif", color: "#241912", background: "#fff8f5" }}>
       <Nav settings={settings} />
@@ -238,11 +232,16 @@ export function OrbitHomepage({ settings, raceModels }: { settings: SiteSettings
           <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", color: "#904d00" }}>
             // This week's dispatch
           </div>
-          <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, color: "#897362" }}>Vol. 12 · Aug 2026</div>
+          {spotlight && (
+            <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, color: "#897362" }}>
+              {new Date(spotlight.publishedAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+            </div>
+          )}
         </div>
 
+        {spotlight && (
         <div style={{ display: "grid", gridTemplateColumns: "1.35fr 1fr", gap: 0, border: "1px solid #ddc1ae", borderRadius: 4, overflow: "hidden" }}>
-          <Link href="/intel" style={{ display: "block", padding: 46, borderRight: "1px solid #ddc1ae", background: "#ffffff" }}>
+          <Link href={`/intel/${spotlight.slug.current}`} style={{ display: "block", padding: 46, borderRight: "1px solid #ddc1ae", background: "#ffffff" }}>
             <span
               style={{
                 display: "inline-flex",
@@ -262,18 +261,17 @@ export function OrbitHomepage({ settings, raceModels }: { settings: SiteSettings
               }}
             >
               <span style={{ width: 6, height: 6, background: "#ff8c00", borderRadius: "50%" }} />
-              Deep Dive
+              {articleCategoryLabels[spotlight.tagType]}
             </span>
             <h2 style={{ fontWeight: 700, fontSize: 42, lineHeight: 1.06, letterSpacing: "-0.03em", margin: "0 0 16px" }}>
-              The Autonomous Agent Is No Longer a Prototype.
+              {spotlight.title}
             </h2>
             <p style={{ fontSize: 16, lineHeight: 1.6, color: "#564334", margin: "0 0 28px", maxWidth: "46ch" }}>
-              Enterprise AI crossed a threshold this quarter. Agents are signing contracts, shipping code to production, and closing tickets without a human
-              in the loop. We stress-tested eight of them so you don&apos;t have to.
+              {spotlight.deck}
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: 16, fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, color: "#897362" }}>
               <span style={{ color: "#904d00", fontWeight: 700 }}>Read the analysis →</span>
-              <span>14 min read</span>
+              <span>{spotlight.readTimeMinutes} min read</span>
             </div>
           </Link>
           <div
@@ -309,6 +307,7 @@ export function OrbitHomepage({ settings, raceModels }: { settings: SiteSettings
             <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, color: "#ffb77d" }}>Independently scored · no vendor input</div>
           </div>
         </div>
+        )}
       </div>
 
       {/* ============ ARTICLE GRID ============ */}
@@ -329,11 +328,13 @@ export function OrbitHomepage({ settings, raceModels }: { settings: SiteSettings
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 0, border: "1px solid #ddc1ae", borderTop: "none", borderRadius: "0 0 4px 4px", overflow: "hidden" }}>
           {articles.map((a, i) => (
             <Link
-              key={a.title}
-              href="/intel"
+              key={a._id}
+              href={`/intel/${a.slug.current}`}
               style={{ display: "block", padding: "30px 30px 34px", borderRight: i < articles.length - 1 ? "1px solid #ddc1ae" : undefined, background: "#ffffff" }}
             >
-              <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, color: "#904d00", marginBottom: 14, letterSpacing: "0.05em" }}>{a.kicker}</div>
+              <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, color: "#904d00", marginBottom: 14, letterSpacing: "0.05em" }}>
+                {articleCategoryLabels[a.tagType].toUpperCase()} · {a.readTimeMinutes} MIN
+              </div>
               <h3 style={{ fontWeight: 600, fontSize: 22, lineHeight: 1.14, letterSpacing: "-0.02em", margin: "0 0 10px" }}>{a.title}</h3>
               <p style={{ fontSize: 14, lineHeight: 1.6, color: "#564334", margin: 0 }}>{a.deck}</p>
             </Link>
