@@ -156,6 +156,7 @@ export default defineConfig({
                     S.documentTypeListItem("aiModel").title("AI Models"),
                     S.documentTypeListItem("organization").title("Organizations"),
                     S.documentTypeListItem("benchmarkRecord").title("Benchmarks"),
+                    S.documentTypeListItem("caseStudy").title("Case Studies"),
                     S.documentTypeListItem("sourceCitation").title("Sources"),
                   ])
               ),

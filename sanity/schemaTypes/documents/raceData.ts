@@ -88,6 +88,35 @@ const jobFitCategories = [
   { name: "researchAnalysis", title: "Research & Data Analysis" },
 ];
 
+export const caseStudy = defineType({
+  name: "caseStudy",
+  title: "Case Study",
+  type: "document",
+  description: "A real, cited example of a developer/company using this model to build agents. Hand-curated only — never scraped or auto-discovered.",
+  fields: [
+    defineField({ name: "headline", title: "Headline", type: "string", validation: (Rule) => Rule.required() }),
+    defineField({ name: "builderName", title: "Company / builder name", type: "string", validation: (Rule) => Rule.required() }),
+    defineField({ name: "builderUrl", title: "Builder website", type: "url" }),
+    defineField({ name: "description", title: "What they built / how the model is used", type: "text", rows: 4, validation: (Rule) => Rule.required() }),
+    defineField({
+      name: "category",
+      title: "Job / use-case category",
+      type: "string",
+      options: { list: jobFitCategories.map((c) => ({ title: c.title, value: c.name })) },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({ name: "model", title: "Model", type: "reference", to: [{ type: "aiModel" }], validation: (Rule) => Rule.required() }),
+    defineField({ name: "source", title: "Source citation", type: "reference", to: [{ type: "sourceCitation" }], validation: (Rule) => Rule.required() }),
+    defineField({ name: "reviewedAt", title: "Last reviewed", type: "date" }),
+    defineField({ name: "verificationStatus", title: "Verification status", type: "string", options: verificationOptions, initialValue: "unverified", validation: (Rule) => Rule.required() }),
+    defineField({ name: "active", title: "Show on model page", type: "boolean", initialValue: true, validation: (Rule) => Rule.required() }),
+  ],
+  preview: {
+    select: { title: "headline", builder: "builderName", status: "verificationStatus" },
+    prepare: ({ title, builder, status }) => ({ title, subtitle: `${builder || "No builder"} · ${status || "unverified"}` }),
+  },
+});
+
 export const aiModel = defineType({
   name: "aiModel",
   title: "AI Model",
@@ -175,6 +204,7 @@ export const aiModel = defineType({
     }),
     defineField({ name: "summary", title: "Editorial summary", type: "text", rows: 5, group: "editorial" }),
     defineField({ name: "sources", title: "General sources", type: "array", group: "editorial", of: [defineArrayMember({ type: "reference", to: [{ type: "sourceCitation" }] })] }),
+    defineField({ name: "caseStudies", title: "Case studies", type: "array", group: "editorial", of: [defineArrayMember({ type: "reference", to: [{ type: "caseStudy" }] })] }),
     defineField({ name: "reviewedAt", title: "Last reviewed", type: "date", group: "editorial" }),
     defineField({ name: "verificationStatus", title: "Verification status", type: "string", group: "editorial", options: verificationOptions, initialValue: "unverified", validation: (Rule) => Rule.required() }),
     defineField({ name: "active", title: "Show in The Race", type: "boolean", group: "editorial", initialValue: true, validation: (Rule) => Rule.required() }),

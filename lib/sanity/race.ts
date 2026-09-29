@@ -71,6 +71,8 @@ export interface RaceSettingsContent {
   modelFaqCostQuestion: string;
   modelFaqTechDebtQuestion: string;
   modelFaqIntegrationQuestion: string;
+  modelFaqCaseStudiesQuestion: string;
+  modelCaseStudiesHeading: string;
   methodologyBackAction: CmsLink;
   methodologyHeading: string;
   methodologyNotice: { label: string; body: string; tone: "warning" | "information" };
@@ -120,6 +122,34 @@ export interface JobFit {
   researchAnalysis?: JobFitRating;
 }
 
+// Human labels for JobFit's keys — must stay in sync with jobFitCategories in
+// sanity/schemaTypes/documents/raceData.ts (also used there for
+// caseStudy.category's option list). Small accepted duplication, same as
+// LockInRisk/CapabilityTier etc. mirroring their Sanity `options.list`.
+export const JOB_CATEGORY_LABELS: Record<keyof JobFit, string> = {
+  marketing: "Marketing (content, social, email)",
+  customerSupport: "Customer Support",
+  sales: "Sales (outreach, summarization, CRM)",
+  accountingFinance: "Accounting & Finance",
+  supplyChain: "Supply Chain Monitoring",
+  opsMonitoring: "Operations Monitoring",
+  coding: "Coding & Engineering",
+  legalCompliance: "Legal & Compliance Analysis",
+  researchAnalysis: "Research & Data Analysis",
+};
+
+export interface CaseStudy {
+  id: string;
+  headline: string;
+  builderName: string;
+  builderUrl?: string;
+  description: string;
+  category: keyof JobFit;
+  reviewedAt?: string;
+  verificationStatus: "unverified" | "review" | "verified";
+  source: { name: string; url: string };
+}
+
 export interface RaceModel extends AiModel {
   summary?: string;
   reviewedAt?: string;
@@ -139,6 +169,7 @@ export interface RaceModel extends AiModel {
     reviewedAt?: string;
   };
   sources: Array<{ name: string; url: string; publicationDate?: string; accessedDate?: string; summary?: string; verificationStatus: "unverified" | "review" | "verified" }>;
+  caseStudies?: CaseStudy[];
   benchmark?: {
     id: string;
     name: string;
@@ -247,6 +278,8 @@ export const DEFAULT_RACE_SETTINGS: RaceSettingsContent = {
   modelFaqCostQuestion: "How much does {model} cost to use?",
   modelFaqTechDebtQuestion: "What's the lock-in risk of building agents on {model}?",
   modelFaqIntegrationQuestion: "Does {model} support MCP or an OpenAI-compatible API?",
+  modelFaqCaseStudiesQuestion: "Which companies use {model} to build agents?",
+  modelCaseStudiesHeading: "Where developers are using {model}",
   methodologyBackAction: { label: "← Back to The Race", href: "/race" },
   methodologyHeading: "Ranking methodology",
   methodologyNotice: {
@@ -315,6 +348,18 @@ interface CmsRaceRecord {
     verificationStatus?: RaceModel["verificationStatus"];
   };
   sources?: Array<{ _updatedAt?: string; name?: string; url?: string; publicationDate?: string; accessedDate?: string; summary?: string; verificationStatus?: RaceModel["verificationStatus"] }>;
+  caseStudies?: Array<{
+    _id: string;
+    _updatedAt?: string;
+    headline?: string;
+    builderName?: string;
+    builderUrl?: string;
+    description?: string;
+    category?: keyof JobFit;
+    reviewedAt?: string;
+    verificationStatus?: RaceModel["verificationStatus"];
+    source?: { _updatedAt?: string; name?: string; url?: string };
+  }>;
   benchmarkRecords?: Array<{
     _id: string;
     _updatedAt?: string;
@@ -367,6 +412,7 @@ function mapCmsModels(records: CmsRaceRecord[]): RaceModel[] {
     record.organization?.fundingSource?._updatedAt,
     ...(record.benchmarkRecords || []).flatMap((benchmark) => [benchmark._updatedAt, benchmark.source?._updatedAt]),
     ...(record.sources || []).map((source) => source._updatedAt),
+    ...(record.caseStudies || []).flatMap((caseStudy) => [caseStudy._updatedAt, caseStudy.source?._updatedAt]),
   ]).filter((value): value is string => Boolean(value));
   const scoreUpdateTimes = valid.map((r) => r.scoreUpdatedAt).filter((v): v is string => Boolean(v));
   const latestUpdate = [...updateTimes, ...scoreUpdateTimes].sort().at(-1) || new Date().toISOString();
@@ -447,6 +493,19 @@ function mapCmsModels(records: CmsRaceRecord[]): RaceModel[] {
           summary: source.summary,
           verificationStatus: source.verificationStatus || "unverified",
         })),
+        caseStudies: (record.caseStudies || [])
+          .filter((cs) => cs.headline && cs.builderName && cs.description && cs.category && cs.source?.name && cs.source?.url)
+          .map((cs) => ({
+            id: cs._id,
+            headline: cs.headline!,
+            builderName: cs.builderName!,
+            builderUrl: cs.builderUrl,
+            description: cs.description!,
+            category: cs.category!,
+            reviewedAt: cs.reviewedAt,
+            verificationStatus: cs.verificationStatus || "unverified",
+            source: { name: cs.source!.name!, url: cs.source!.url! },
+          })),
         organization: {
           id: organization._id,
           slug: organization.slug || "",
