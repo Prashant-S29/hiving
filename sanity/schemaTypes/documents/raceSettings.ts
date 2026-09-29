@@ -83,6 +83,8 @@ export const raceSettings = defineType({
     defineField({ name: "modelFaqCostQuestion", title: "FAQ question — cost", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
     defineField({ name: "modelFaqTechDebtQuestion", title: "FAQ question — build risk / tech debt", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
     defineField({ name: "modelFaqIntegrationQuestion", title: "FAQ question — integration / MCP support", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
+    defineField({ name: "modelFaqCaseStudiesQuestion", title: "FAQ question — who uses this model", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
+    defineField({ name: "modelCaseStudiesHeading", title: "Case studies section heading", type: "string", group: "model", description: "Available token: {model}.", validation: (Rule) => Rule.required() }),
 
     defineField({ name: "methodologyBackAction", title: "Back action", type: "callToAction", group: "methodology", validation: (Rule) => Rule.required() }),
     defineField({ name: "methodologyHeading", title: "Heading", type: "string", group: "methodology", validation: (Rule) => Rule.required() }),

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CmsLink from "@/components/CmsLink";
-import { applyTemplate, getRaceModelBySlug, getRaceModels, getRaceSettings, type RaceModel } from "@/lib/sanity/race";
-import { buildCostSummary, buildModelFaq, buildTechDebtSummary, buildIntegrationSummary } from "@/lib/model-faq";
+import { applyTemplate, getRaceModelBySlug, getRaceModels, getRaceSettings, JOB_CATEGORY_LABELS, type RaceModel } from "@/lib/sanity/race";
+import { buildCaseStudiesSummary, buildCostSummary, buildModelFaq, buildTechDebtSummary, buildIntegrationSummary } from "@/lib/model-faq";
 
 interface PageProps {
   params: { slug: string };
@@ -62,6 +62,20 @@ function faqPageJsonLd(faq: { question: string; answer: string }[]) {
   };
 }
 
+function caseStudiesJsonLd(model: RaceModel, name: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    itemListElement: (model.caseStudies || []).map((cs, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: cs.source.url,
+      name: cs.headline,
+    })),
+  };
+}
+
 export default async function ModelPage({ params }: PageProps) {
   const [model, settings] = await Promise.all([getRaceModelBySlug(params.slug), getRaceSettings()]);
   if (!model) notFound();
@@ -89,14 +103,19 @@ export default async function ModelPage({ params }: PageProps) {
   const costSummary = buildCostSummary(model);
   const techDebtSummary = buildTechDebtSummary(model);
   const integrationSummary = buildIntegrationSummary(model);
+  const caseStudiesSummary = buildCaseStudiesSummary(model);
   const faq = buildModelFaq(model, settings);
   const faqJsonLd = JSON.stringify(faqPageJsonLd(faq)).replace(/</g, "\\u003c");
+  const caseStudiesListJsonLd = model.caseStudies?.length
+    ? JSON.stringify(caseStudiesJsonLd(model, applyTemplate(settings.modelCaseStudiesHeading, { model: model.model_name }))).replace(/</g, "\\u003c")
+    : null;
 
   return (
     <section className="pt-32 pb-24 px-6 md:px-12">
       <div className="mx-auto max-w-3xl">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqJsonLd }} />
+        {caseStudiesListJsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: caseStudiesListJsonLd }} />}
 
         <CmsLink link={settings.modelBackAction} className="font-mono text-[11px] uppercase tracking-wider text-signal hover:text-ink transition-colors">
           {settings.modelBackAction.label}
@@ -185,6 +204,27 @@ export default async function ModelPage({ params }: PageProps) {
             ))}
           </div>
         </div>
+
+        {model.caseStudies && model.caseStudies.length > 0 && (
+          <div className="mt-10 border-t border-rule pt-6">
+            <h2 className="font-serif text-xl font-bold text-ink">{applyTemplate(settings.modelCaseStudiesHeading, { model: model.model_name })}</h2>
+            {caseStudiesSummary && <p className="mt-3 font-body text-[16px] leading-[1.8] text-ink/75">{caseStudiesSummary}</p>}
+            <ul className="mt-4 space-y-4">
+              {model.caseStudies.map((cs) => (
+                <li key={cs.id} className="border-t border-rule pt-4">
+                  <p className="font-body text-[15px] font-semibold text-ink">
+                    {cs.builderName}
+                    <span className="ml-2 font-mono text-[10px] uppercase tracking-wider text-muted">{JOB_CATEGORY_LABELS[cs.category]}</span>
+                  </p>
+                  <p className="mt-1 font-body text-[15px] leading-[1.8] text-ink/75">{cs.description}</p>
+                  <a href={cs.source.url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block font-mono text-xs text-signal hover:text-ink transition-colors">
+                    {settings.sourceLinkLabel}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <p className="mt-10 font-mono text-[11px] uppercase tracking-wider text-muted">
           <Link href="/race/methodology" className="text-signal hover:text-ink transition-colors">{settings.modelMethodologyLinkLabel}</Link>
