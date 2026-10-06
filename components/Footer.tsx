@@ -18,7 +18,7 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
             />
           ) : (
             <div className="font-serif text-3xl mb-4">
-              <span className="italic text-ink">{settings.brand.primaryText}</span>
+              <span className="text-ink">{settings.brand.primaryText}</span>
               <span className="font-bold text-signal">{settings.brand.accentText}</span>
             </div>
           )}
@@ -51,7 +51,7 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
 
       <div className="max-w-content mx-auto flex flex-col md:flex-row justify-between items-center gap-2 pt-6 font-mono text-[11px] text-dim">
         <span>{copyright}</span>
-        <span className="font-serif italic text-[14px] text-dim">{settings.footerTagline}</span>
+        <span className="font-serif text-[14px] text-dim">{settings.footerTagline}</span>
       </div>
     </footer>
   );

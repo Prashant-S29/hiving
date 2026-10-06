@@ -8,7 +8,7 @@ const aboutComponents: PortableTextComponents = {
     normal: ({ children }) => <p>{children}</p>,
     h2: ({ children }) => <h2 className="font-serif text-[26px] font-bold text-ink pt-4">{children}</h2>,
     h3: ({ children }) => <h3 className="font-serif text-[21px] font-bold text-ink pt-3">{children}</h3>,
-    blockquote: ({ children }) => <blockquote className="border-l-2 border-signal pl-5 italic">{children}</blockquote>,
+    blockquote: ({ children }) => <blockquote className="border-l-2 border-signal pl-5">{children}</blockquote>,
   },
   marks: {
     link: ({ children, value }) => {
@@ -41,7 +41,7 @@ export default async function AboutPage() {
     <section className="pt-32 pb-24 px-6 md:px-12 max-w-[760px] mx-auto">
       <RevealOnScroll>
         <h1 className="font-serif text-[40px] md:text-[58px] font-bold tracking-tight leading-[1.05] mb-10">
-          {page.heading} <span className="italic text-signal">{page.headingEmphasis}</span>
+          {page.heading} <span className="text-signal">{page.headingEmphasis}</span>
         </h1>
 
         <div className="font-body text-[16px] leading-[1.9] text-ink/75 space-y-6">
