@@ -40,7 +40,6 @@ export default async function AboutPage() {
   return (
     <section className="pt-32 pb-24 px-6 md:px-12 max-w-[760px] mx-auto">
       <RevealOnScroll>
-        <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-signal mb-5">{page.eyebrow}</div>
         <h1 className="font-serif text-[40px] md:text-[58px] font-bold tracking-tight leading-[1.05] mb-10">
           {page.heading} <span className="italic text-signal">{page.headingEmphasis}</span>
         </h1>

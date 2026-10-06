@@ -106,7 +106,6 @@ export default async function ComparePage({ searchParams }: { searchParams: Comp
         providers={providers}
         modelsByProvider={modelsByProvider}
         jobOptions={settings.jobOptions}
-        heroEyebrow={settings.heroEyebrow}
         heroHeading={settings.heroHeading}
         heroSubhead={settings.heroSubhead}
         addModelLabel={settings.addModelLabel}

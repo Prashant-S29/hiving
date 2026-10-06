@@ -191,13 +191,6 @@ export default function SignalRaceHero({ topModels, weekLabel, copy }: SignalRac
       {/* header row */}
       <div className="relative z-10 flex flex-wrap items-start justify-between gap-6 border-b pb-6" style={{ borderColor: "var(--hvg-border)" }}>
         <div className="max-w-xl">
-          <div
-            className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em]"
-            style={{ color: "var(--hvg-ember-strong)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}
-          >
-            <span className={`h-2 w-2 rounded-full ${reducedMotion ? "" : "animate-blink"}`} style={{ background: "var(--hvg-ember)" }} />
-            {copy.heroEyebrow}
-          </div>
           <h1 className="text-[34px] md:text-[52px] font-bold leading-[1.02] tracking-tight" style={{ color: "var(--hvg-text-primary)" }}>
             {copy.heroHeadingLead}
             <br /> scored in <span style={{ color: "var(--hvg-ember)" }}>{copy.heroHeadingEmphasis}</span>.

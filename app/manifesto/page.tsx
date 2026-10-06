@@ -36,9 +36,6 @@ export default async function ManifestoPage() {
     <div className="pt-32">
       <section className="bg-void px-6 md:px-12 py-20 relative overflow-hidden">
         <RevealOnScroll className="max-w-content mx-auto">
-          <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-signal mb-8 flex items-center gap-4">
-            <span className="w-7 h-px bg-signal" /> {page.eyebrow}
-          </div>
           <p className="font-serif text-[32px] md:text-[60px] font-bold leading-[1.05] tracking-tight max-w-[820px]">
             {page.heading} <span className="italic text-signal">{page.headingEmphasis}</span>
           </p>

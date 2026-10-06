@@ -17,21 +17,6 @@ export function RaceScoreStrip({ models }: { models: RaceModel[] }) {
       style={{ display: "block", background: "#fff8f5", borderBottom: "1px solid #ddc1ae", overflow: "hidden", padding: "20px 0", textDecoration: "none" }}
     >
       <div style={{ maxWidth: 1440, margin: "0 auto", padding: "0 32px", display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 7,
-            fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
-            fontSize: 11,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#904d00",
-          }}
-        >
-          <span className="hv-anim-blink" style={{ width: 6, height: 6, background: "#ff8c00", borderRadius: "50%" }} />
-          Live AI Race · Top 10
-        </span>
         <span style={{ flex: 1, height: 1, background: "#ddc1ae" }} />
         <span style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 11, color: "#904d00", fontWeight: 700, whiteSpace: "nowrap" }}>
           See the full leaderboard →

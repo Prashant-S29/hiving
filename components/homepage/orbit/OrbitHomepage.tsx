@@ -99,27 +99,6 @@ export function OrbitHomepage({
 
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1440, margin: "0 auto", padding: "112px 32px 128px" }}>
           <div className="hv-anim-rise" style={{ maxWidth: 700 }}>
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 9,
-                fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
-                fontSize: 12,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: "#6e3900",
-                background: "rgba(255,255,255,0.6)",
-                backdropFilter: "blur(8px)",
-                border: "1px solid #ddc1ae",
-                padding: "7px 13px",
-                borderRadius: 9999,
-                marginBottom: 28,
-              }}
-            >
-              <span className="hv-anim-blink" style={{ width: 8, height: 8, background: "#ff8c00", borderRadius: "50%", boxShadow: "0 0 0 3px rgba(255,140,0,0.25)" }} />
-              Live Intelligence Feed · Active
-            </div>
             <h1 style={{ fontWeight: 800, fontSize: 74, lineHeight: 1.02, letterSpacing: "-0.04em", color: "#241912", margin: 0 }}>
               The vigilant voice of{" "}
               <span
@@ -202,19 +181,6 @@ export function OrbitHomepage({
 
       {/* ============ LOGO MARQUEE ============ */}
       <div style={{ background: "#fff1e9", borderBottom: "1px solid #ddc1ae", overflow: "hidden", padding: "24px 0" }}>
-        <div
-          style={{
-            fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
-            fontSize: 11,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#897362",
-            textAlign: "center",
-            marginBottom: 16,
-          }}
-        >
-          Read by operators at
-        </div>
         <div className="hv-anim-marquee" style={{ display: "flex", width: "max-content" }}>
           {[0, 1].map((row) => (
             <div key={row} style={{ display: "flex", gap: 56, padding: "0 28px", fontWeight: 800, fontSize: 20, letterSpacing: "-0.01em", color: "#c6ac97" }}>
@@ -228,16 +194,6 @@ export function OrbitHomepage({
 
       {/* ============ FEATURED DEEP DIVE ============ */}
       <div style={{ maxWidth: 1440, margin: "0 auto", padding: "80px 32px 0" }}>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", borderBottom: "2px solid #241912", paddingBottom: 14, marginBottom: 32 }}>
-          <div style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", color: "#904d00" }}>
-            // This week's dispatch
-          </div>
-          {spotlight && (
-            <div style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 12, color: "#897362" }}>
-              {new Date(spotlight.publishedAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
-            </div>
-          )}
-        </div>
 
         {spotlight && (
         <div style={{ display: "grid", gridTemplateColumns: "1.35fr 1fr", gap: 0, border: "1px solid #ddc1ae", borderRadius: 4, overflow: "hidden" }}>
@@ -312,20 +268,7 @@ export function OrbitHomepage({
 
       {/* ============ ARTICLE GRID ============ */}
       <div style={{ maxWidth: 1440, margin: "0 auto", padding: "64px 32px 0" }}>
-        <div
-          style={{
-            fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
-            fontSize: 12,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: "#904d00",
-            borderBottom: "2px solid #241912",
-            paddingBottom: 14,
-          }}
-        >
-          // Latest intel
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 0, border: "1px solid #ddc1ae", borderTop: "none", borderRadius: "0 0 4px 4px", overflow: "hidden" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 0, border: "1px solid #ddc1ae", borderRadius: 4, overflow: "hidden" }}>
           {articles.map((a, i) => (
             <Link
               key={a._id}
@@ -366,9 +309,6 @@ export function OrbitHomepage({
             }}
           />
           <div style={{ position: "relative", maxWidth: 660 }}>
-            <div style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "#ffdcc3", marginBottom: 20 }}>
-              The Hivig promise
-            </div>
             <div style={{ fontWeight: 800, fontSize: 46, lineHeight: 1.06, letterSpacing: "-0.03em", color: "#fffaf7" }}>
               No vendor pays us. No hype survives us. Every verdict is one we&apos;d stake our own deploy on.
             </div>

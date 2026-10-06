@@ -37,7 +37,6 @@ export interface CompareModelPickerProps {
   providers: Provider[];
   modelsByProvider: Record<string, ProviderModel[]>;
   jobOptions: CompareJobOption[];
-  heroEyebrow: string;
   heroHeading: string;
   heroSubhead: string;
   addModelLabel: string;
@@ -54,7 +53,6 @@ export function CompareModelPicker({
   providers,
   modelsByProvider,
   jobOptions,
-  heroEyebrow,
   heroHeading,
   heroSubhead,
   addModelLabel,
@@ -97,12 +95,6 @@ export function CompareModelPicker({
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-[1100px]">
       <div className="mb-8 max-w-2xl">
-        <div
-          className="mb-3 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em]"
-          style={{ color: "var(--hvg-ember-strong)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}
-        >
-          {heroEyebrow}
-        </div>
         <h1 className="text-[32px] font-bold leading-[1.1] md:text-[44px]" style={{ color: "var(--hvg-text-primary)" }}>
           {heroHeading}
         </h1>

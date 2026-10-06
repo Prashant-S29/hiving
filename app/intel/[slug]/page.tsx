@@ -6,7 +6,6 @@ import { articleBySlugQuery } from "@/lib/sanity/queries";
 import { cmsFallbacksEnabled, fetchCms } from "@/lib/sanity/fetch";
 import { categoryLabels, getEditorialSettings } from "@/lib/sanity/editorialSettings";
 import type { Article } from "@/lib/types";
-import { TAG_COLORS } from "@/lib/types";
 import { portableTextComponents } from "@/lib/portableTextComponents";
 import { ArticleCard } from "@/components/ArticleCard";
 
@@ -62,12 +61,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           {settings.backToArchiveLabel}
         </Link>
 
-        <div className={`inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] uppercase border px-3 py-1 mt-8 mb-6 ${TAG_COLORS[article.tagType]}`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          {labels[article.tagType]}
-        </div>
-
-        <h1 className="font-serif text-[34px] md:text-[52px] font-bold leading-[1.08] tracking-tight mb-6">
+        <h1 className="font-serif text-[34px] md:text-[52px] font-bold leading-[1.08] tracking-tight mt-8 mb-6">
           {article.title}
         </h1>
 
