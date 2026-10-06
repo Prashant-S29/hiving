@@ -80,6 +80,14 @@ export function buildIntegrationSummary(model: RaceModel): string | null {
   return sentences.length ? sentences.join(" ") : null;
 }
 
+export function buildCaseStudiesSummary(model: RaceModel): string | null {
+  if (!model.caseStudies?.length) return null;
+  const names = model.caseStudies.map((cs) => cs.builderName);
+  const list = names.length === 1 ? names[0] : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+  const verb = names.length === 1 ? "uses" : "use";
+  return `${list} ${verb} ${model.model_name} to build agents.`;
+}
+
 export function buildModelFaq(model: RaceModel, settings: RaceSettingsContent): FaqEntry[] {
   const entries: FaqEntry[] = [
     {
@@ -109,6 +117,14 @@ export function buildModelFaq(model: RaceModel, settings: RaceSettingsContent): 
     entries.push({
       question: applyTemplate(settings.modelFaqIntegrationQuestion, { model: model.model_name }),
       answer: integrationSummary,
+    });
+  }
+
+  const caseStudiesSummary = buildCaseStudiesSummary(model);
+  if (caseStudiesSummary) {
+    entries.push({
+      question: applyTemplate(settings.modelFaqCaseStudiesQuestion, { model: model.model_name }),
+      answer: caseStudiesSummary,
     });
   }
 

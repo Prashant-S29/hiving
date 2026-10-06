@@ -58,9 +58,8 @@ export default async function IntelPage({
   return (
     <section className="px-6 md:px-12 pt-32 pb-24 max-w-content mx-auto">
       <RevealOnScroll className="mb-16 pb-8 border-b border-rule">
-        <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-signal mb-4">{settings.eyebrow}</div>
         <h1 className="font-serif text-[44px] md:text-[64px] font-bold tracking-tight leading-[1.05] mb-5">
-          {settings.heading} <span className="italic text-signal">{settings.headingEmphasis}</span>
+          {settings.heading} <span className="text-signal">{settings.headingEmphasis}</span>
         </h1>
         <p className="font-body text-[16px] text-ink/60 max-w-[560px] leading-[1.8]">
           {settings.introduction}

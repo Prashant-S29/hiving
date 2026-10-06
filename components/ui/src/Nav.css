@@ -58,6 +58,7 @@
   border: 1.5px solid rgba(255, 140, 0, 0.4);
   border-radius: var(--hvg-radius-full);
   font-family: var(--hvg-font-mono);
+  font-variant-numeric: tabular-nums;
   font-size: 10.5px;
   color: var(--hvg-ember-strong);
 }
@@ -78,6 +79,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--hvg-font-mono);
+  font-variant-numeric: tabular-nums;
   font-size: 11px;
   color: var(--hvg-text-secondary);
 }

@@ -25,9 +25,8 @@ export default async function ConsultancyPage() {
     <section className="pt-32 pb-24">
       <div className="px-6 md:px-12 max-w-content mx-auto">
         <RevealOnScroll className="max-w-[700px] mb-16">
-          <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-signal mb-5">{page.eyebrow}</div>
           <h1 className="font-serif text-[40px] md:text-[58px] font-bold tracking-tight leading-[1.05] mb-7">
-            {page.heading} <span className="italic text-signal">{page.headingEmphasis}</span>
+            {page.heading} <span className="text-signal">{page.headingEmphasis}</span>
           </h1>
           <p className="font-body text-[16px] leading-[1.85] text-ink/70">{page.introduction}</p>
         </RevealOnScroll>

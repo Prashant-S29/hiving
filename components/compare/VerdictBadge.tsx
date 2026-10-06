@@ -19,7 +19,7 @@ export function VerdictBadge({ tag }: { tag: VerdictTag }) {
         background: "var(--hvg-ember-soft)",
         border: "1px solid rgba(255, 140, 0, 0.4)",
         color: "var(--hvg-ember-strong)",
-        fontFamily: "var(--hvg-font-mono)",
+        fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums",
         fontSize: 11,
         fontWeight: 700,
         whiteSpace: "nowrap",

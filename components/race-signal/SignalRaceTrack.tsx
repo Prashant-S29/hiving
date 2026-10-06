@@ -56,11 +56,11 @@ export default function SignalRaceTrack({ models, copy }: SignalRaceTrackProps) 
           same reasoning as the old RaceTrack: comparison tables in real
           HTML, not just cards, matter for AEO. */}
       <table className="mt-10 w-full border-collapse text-sm">
-        <caption className="mb-2 text-left text-[11px] uppercase tracking-[0.1em]" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)" }}>
+        <caption className="mb-2 text-left text-[11px] uppercase tracking-[0.1em]" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
           {copy.tableCaption}
         </caption>
         <thead>
-          <tr className="border-b text-left text-[11px] uppercase tracking-wider" style={{ borderColor: "var(--hvg-border-strong)", color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)" }}>
+          <tr className="border-b text-left text-[11px] uppercase tracking-wider" style={{ borderColor: "var(--hvg-border-strong)", color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
             <th className="py-2 pr-4">{copy.rankColumnLabel}</th>
             <th className="py-2 pr-4">{copy.modelColumnLabel}</th>
             <th className="py-2 pr-4">{copy.organizationColumnLabel}</th>
@@ -73,7 +73,7 @@ export default function SignalRaceTrack({ models, copy }: SignalRaceTrackProps) 
         <tbody>
           {models.map((model) => (
             <tr key={model.slug} className="border-b" style={{ borderColor: "var(--hvg-border)" }}>
-              <td className="py-2 pr-4" style={{ fontFamily: "var(--hvg-font-mono)", color: "var(--hvg-text-primary)" }}>{model.rank_current}</td>
+              <td className="py-2 pr-4" style={{ fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--hvg-text-primary)" }}>{model.rank_current}</td>
               <td className="py-2 pr-4">
                 <a href={`/race/models/${model.slug}`} style={{ color: "var(--hvg-text-primary)" }}>{model.model_name}</a>
               </td>
@@ -84,7 +84,7 @@ export default function SignalRaceTrack({ models, copy }: SignalRaceTrackProps) 
               <td className="py-2 pr-4" style={{ color: "var(--hvg-text-secondary)" }}>
                 {model.benchmark_scores?.score ?? "—"}
                 {model.benchmark_scores?.source ? (
-                  <span className="ml-1 text-xs" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>
+                  <span className="ml-1 text-xs" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
                     ({model.benchmark_scores.source})
                   </span>
                 ) : null}

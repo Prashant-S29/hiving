@@ -17,23 +17,8 @@ export function RaceScoreStrip({ models }: { models: RaceModel[] }) {
       style={{ display: "block", background: "#fff8f5", borderBottom: "1px solid #ddc1ae", overflow: "hidden", padding: "20px 0", textDecoration: "none" }}
     >
       <div style={{ maxWidth: 1440, margin: "0 auto", padding: "0 32px", display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 7,
-            fontFamily: "var(--font-jetbrains-mono), monospace",
-            fontSize: 11,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#904d00",
-          }}
-        >
-          <span className="hv-anim-blink" style={{ width: 6, height: 6, background: "#ff8c00", borderRadius: "50%" }} />
-          Live AI Race · Top 10
-        </span>
         <span style={{ flex: 1, height: 1, background: "#ddc1ae" }} />
-        <span style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, color: "#904d00", fontWeight: 700, whiteSpace: "nowrap" }}>
+        <span style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 11, color: "#904d00", fontWeight: 700, whiteSpace: "nowrap" }}>
           See the full leaderboard →
         </span>
       </div>
@@ -63,7 +48,7 @@ export function RaceScoreStrip({ models }: { models: RaceModel[] }) {
                     borderRadius: "50%",
                     background: "#ff8c00",
                     color: "#241912",
-                    fontFamily: "var(--font-jetbrains-mono), monospace",
+                    fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
                     fontSize: 10,
                     fontWeight: 700,
                   }}
@@ -73,7 +58,7 @@ export function RaceScoreStrip({ models }: { models: RaceModel[] }) {
                 <span style={{ fontWeight: 700, fontSize: 15, color: "#241912" }}>{m.model_name}</span>
                 <span style={{ fontSize: 13, color: "#897362" }}>{m.org_name}</span>
                 {typeof m.race_score === "number" ? (
-                  <span style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, fontWeight: 700, color: "#904d00" }}>
+                  <span style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 12, fontWeight: 700, color: "#904d00" }}>
                     {m.race_score.toFixed(1)}
                   </span>
                 ) : null}

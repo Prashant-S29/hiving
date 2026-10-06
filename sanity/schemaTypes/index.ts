@@ -9,7 +9,7 @@ import { articleType, author, industry, platform } from "./documents/editorialTa
 import { privacyPage, termsPage } from "./documents/legalPages";
 import { manifestoPage } from "./documents/manifestoPage";
 import { notFoundPage } from "./documents/notFoundPage";
-import { aiModel, benchmarkRecord, organization, sourceCitation } from "./documents/raceData";
+import { aiModel, benchmarkRecord, caseStudy, organization, sourceCitation } from "./documents/raceData";
 import { raceSettings } from "./documents/raceSettings";
 import { subscribePage } from "./documents/subscribePage";
 import { page } from "./documents/page";
@@ -36,6 +36,7 @@ export const schemaTypes = [
   articleType,
   author,
   benchmarkRecord,
+  caseStudy,
   compareSettings,
   consultancyPage,
   editorialSettings,

@@ -43,7 +43,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
         borderBottom: "1px solid #ddc1ae",
-        fontFamily: "'Geist', system-ui, sans-serif",
+        fontFamily: "var(--font-body)",
       }}
     >
       <div style={{ maxWidth: 1440, margin: "0 auto", padding: "0 24px", height: 66, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -52,7 +52,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
             // eslint-disable-next-line @next/next/no-img-element
             <img src={settings.brand.logoUrl} alt={settings.brand.logoAlt || settings.siteName} style={{ height: 28, width: "auto", borderRadius: 6, display: "block" }} />
           ) : (
-            <span style={{ fontFamily: "'Geist', system-ui, sans-serif", fontWeight: 800, fontSize: 20, color: "#241912" }}>
+            <span style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: 20, color: "#241912" }}>
               {settings.brand.primaryText}
               <span style={{ color: "#904d00" }}>{settings.brand.accentText}</span>
             </span>
@@ -60,7 +60,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
           <span
             className="hidden sm:inline-block"
             style={{
-              fontFamily: "var(--font-jetbrains-mono), monospace",
+              fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
               fontSize: 10,
               color: "#904d00",
               letterSpacing: "0.14em",
@@ -84,7 +84,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
                 <CmsLink
                   link={item}
                   style={{
-                    fontFamily: "var(--font-jetbrains-mono), monospace",
+                    fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
                     fontSize: 12,
                     color: ACCENT_COLORS[item.accent || "default"],
                     fontWeight: item.accent && item.accent !== "default" ? 700 : 400,
@@ -100,7 +100,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
           {settings.headerBadge ? (
             <span
               style={{
-                fontFamily: "var(--font-jetbrains-mono), monospace",
+                fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
                 fontSize: 10,
                 color: "#897362",
                 border: "1px solid #ddc1ae",
@@ -215,7 +215,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
                   style={{
                     display: "block",
                     padding: "14px 2px",
-                    fontFamily: "var(--font-jetbrains-mono), monospace",
+                    fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
                     fontSize: 14,
                     color: ACCENT_COLORS[item.accent || "default"],
                     fontWeight: item.accent && item.accent !== "default" ? 700 : 500,
@@ -232,7 +232,7 @@ export default function Nav({ settings }: { settings: SiteSettings }) {
             {settings.headerBadge ? (
               <span
                 style={{
-                  fontFamily: "var(--font-jetbrains-mono), monospace",
+                  fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
                   fontSize: 10,
                   color: "#897362",
                   border: "1px solid #ddc1ae",

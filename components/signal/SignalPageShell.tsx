@@ -5,7 +5,7 @@
 // this repo's own "page shell," since the package doesn't ship one. Imports
 // the stylesheet once per page (scoped here, not in the root layout — see
 // .claude/skills/hivig-signal-room/SKILL.md) and applies the paper
-// background + Geist font to everything inside it.
+// background + the body font (Inter) to everything inside it; headings pick up Geist from the global h1-h6 rule.
 
 import "@hivig/design-system/styles.css";
 
@@ -13,7 +13,7 @@ export default function SignalPageShell({ children }: { children: React.ReactNod
   return (
     <div
       className="hvg-scope min-h-screen pt-32 pb-24 px-6 md:px-12"
-      style={{ background: "var(--hvg-paper)", fontFamily: "var(--hvg-font-display)" }}
+      style={{ background: "var(--hvg-paper)", fontFamily: "var(--hvg-font-body)" }}
     >
       {children}
     </div>

@@ -92,14 +92,14 @@ export default function SignalDiscoverSearch({ copy }: { copy: DiscoverInterface
       )}
 
       {loading && (
-        <div className="mt-10 animate-pulse text-center text-[11px] uppercase tracking-wider" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)" }}>
+        <div className="mt-10 animate-pulse text-center text-[11px] uppercase tracking-wider" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
           {copy.loadingMessage}
         </div>
       )}
 
       {result && !loading && (
         <div className="mt-10">
-          <p className="text-[11px] uppercase tracking-wider" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)" }}>
+          <p className="text-[11px] uppercase tracking-wider" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
             <Link href="/agents" className="transition-colors" style={{ color: "var(--hvg-text-muted)" }}>{copy.agentStoreLabel}</Link>
             {" / "}
             <span>{copy.discoverLabel}</span>
@@ -107,7 +107,7 @@ export default function SignalDiscoverSearch({ copy }: { copy: DiscoverInterface
             <span className="normal-case tracking-normal" style={{ color: "var(--hvg-text-primary)" }}>{result.study.agentName}</span>
           </p>
 
-          <p className="mt-2 text-[11px]" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>
+          <p className="mt-2 text-[11px]" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
             {copy.generatedForLabel} &ldquo;{lastQuery}&rdquo;
           </p>
 
@@ -121,7 +121,7 @@ export default function SignalDiscoverSearch({ copy }: { copy: DiscoverInterface
                   {result.study.agentName.slice(0, 1).toUpperCase()}
                 </div>
                 <p className="mt-3 text-sm font-medium" style={{ color: "var(--hvg-text-primary)" }}>{result.study.agentName}</p>
-                <p className="mt-1 text-[10px] uppercase tracking-wider" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)" }}>
+                <p className="mt-1 text-[10px] uppercase tracking-wider" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
                   {copy.conceptPreviewLabel}
                 </p>
               </div>
@@ -136,7 +136,7 @@ export default function SignalDiscoverSearch({ copy }: { copy: DiscoverInterface
                   background: VERDICT_STYLE[result.study.feasibility].bg,
                   color: VERDICT_STYLE[result.study.feasibility].text,
                   border: `1px solid ${VERDICT_STYLE[result.study.feasibility].border}`,
-                  fontFamily: "var(--hvg-font-mono)",
+                  fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums",
                 }}
               >
                 {{
@@ -159,7 +159,7 @@ export default function SignalDiscoverSearch({ copy }: { copy: DiscoverInterface
                   modelCreditsCostUSD={result.quote.modelCreditsCostUSD}
                   humanHoursCostUSD={result.quote.humanHoursCostUSD}
                 />
-                <p className="mt-3 text-[11px] leading-relaxed" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>
+                <p className="mt-3 text-[11px] leading-relaxed" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
                   {copy.estimateDisclaimer}{" "}
                   <Link href="/agents/pricing" className="transition-colors" style={{ color: "var(--hvg-ember)" }}>
                     {copy.pricingLinkLabel}
@@ -170,7 +170,7 @@ export default function SignalDiscoverSearch({ copy }: { copy: DiscoverInterface
 
               {result.study.capabilities.length > 0 && (
                 <div className="mt-6">
-                  <h2 className="text-[11px] uppercase tracking-wider" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)" }}>{copy.capabilitiesHeading}</h2>
+                  <h2 className="text-[11px] uppercase tracking-wider" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>{copy.capabilitiesHeading}</h2>
                   <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm" style={{ color: "var(--hvg-text-secondary)" }}>
                     {result.study.capabilities.map((c, i) => (
                       <li key={i}>{c}</li>
@@ -181,7 +181,7 @@ export default function SignalDiscoverSearch({ copy }: { copy: DiscoverInterface
 
               {result.study.risks.length > 0 && (
                 <div className="mt-6 rounded-[var(--hvg-radius-md)] p-4" style={{ background: "var(--hvg-warning-soft)", border: "1px solid var(--hvg-warning)" }}>
-                  <h2 className="text-[11px] uppercase tracking-wider" style={{ color: "var(--hvg-warning)", fontFamily: "var(--hvg-font-mono)" }}>{copy.risksHeading}</h2>
+                  <h2 className="text-[11px] uppercase tracking-wider" style={{ color: "var(--hvg-warning)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>{copy.risksHeading}</h2>
                   <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm" style={{ color: "var(--hvg-text-secondary)" }}>
                     {result.study.risks.map((r, i) => (
                       <li key={i}>{r}</li>
@@ -192,8 +192,8 @@ export default function SignalDiscoverSearch({ copy }: { copy: DiscoverInterface
 
               {result.study.assumptions.length > 0 && (
                 <div className="mt-5">
-                  <h2 className="text-[10px] uppercase tracking-wider" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>{copy.assumptionsHeading}</h2>
-                  <ul className="mt-2 list-disc space-y-1 pl-5 text-[11px]" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>
+                  <h2 className="text-[10px] uppercase tracking-wider" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>{copy.assumptionsHeading}</h2>
+                  <ul className="mt-2 list-disc space-y-1 pl-5 text-[11px]" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
                     {result.study.assumptions.map((a, i) => (
                       <li key={i}>{a}</li>
                     ))}

@@ -26,7 +26,7 @@ export default async function PricingPage() {
       <div className="mx-auto max-w-2xl">
         <CmsLink
           link={page.backAction}
-          className="text-[11px] uppercase tracking-wider text-[color:var(--hvg-ember)] transition-colors hover:text-[color:var(--hvg-ember-strong)] font-[family-name:var(--hvg-font-mono)]"
+          className="text-[11px] uppercase tracking-wider text-[color:var(--hvg-ember)] transition-colors hover:text-[color:var(--hvg-ember-strong)] font-[family-name:var(--hvg-font-mono)] tabular-nums"
         >
           {page.backAction.label}
         </CmsLink>
@@ -38,7 +38,7 @@ export default async function PricingPage() {
         <h2 className="mt-10 text-xl font-bold" style={{ color: "var(--hvg-text-primary)" }}>{page.regionalHeading}</h2>
         <table className="mt-4 w-full border-collapse text-sm">
           <thead>
-            <tr className="border-b text-left text-[11px] uppercase tracking-wider" style={{ borderColor: "var(--hvg-border-strong)", color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)" }}>
+            <tr className="border-b text-left text-[11px] uppercase tracking-wider" style={{ borderColor: "var(--hvg-border-strong)", color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
               <th className="py-2 pr-4">{page.regionColumnLabel}</th>
               <th className="py-2 pr-4">{page.multiplierColumnLabel}</th>
             </tr>
@@ -53,7 +53,7 @@ export default async function PricingPage() {
           </tbody>
         </table>
 
-        <p className="mt-10 text-[11px] leading-relaxed" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>{page.disclaimer}</p>
+        <p className="mt-10 text-[11px] leading-relaxed" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>{page.disclaimer}</p>
       </div>
     </SignalPageShell>
   );

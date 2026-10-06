@@ -207,6 +207,8 @@ export const raceSettingsQuery = `*[_type == "raceSettings" && _id == "raceSetti
   modelFaqCostQuestion,
   modelFaqTechDebtQuestion,
   modelFaqIntegrationQuestion,
+  modelFaqCaseStudiesQuestion,
+  modelCaseStudiesHeading,
   methodologyBackAction{
     label,
     "href": select(link.linkType == "external" => link.externalUrl, link.internalPath),
@@ -293,6 +295,18 @@ export const raceModelsQuery = `*[_type == "aiModel" && active != false] | order
     source->{_updatedAt, name, url, publicationDate, accessedDate, sourceType, verificationStatus}
   },
   sources[]->{_updatedAt, name, url, publicationDate, accessedDate, sourceType, summary, verificationStatus},
+  "caseStudies": caseStudies[@->active != false]->{
+    _id,
+    _updatedAt,
+    headline,
+    builderName,
+    builderUrl,
+    description,
+    category,
+    reviewedAt,
+    verificationStatus,
+    source->{_updatedAt, name, url, publicationDate, accessedDate, sourceType, verificationStatus}
+  },
   inputCostPer1M,
   outputCostPer1M,
   cachingSupported,

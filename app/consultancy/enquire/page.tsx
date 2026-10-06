@@ -23,11 +23,8 @@ export default async function ConsultancyEnquirePage() {
   return (
     <section className="pt-32 pb-24 grid md:grid-cols-2 min-h-[80vh]">
       <div className="bg-paper text-void px-6 md:px-14 py-16 flex flex-col justify-center">
-        <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-signal mb-6 flex items-center gap-3">
-          <span className="w-6 h-px bg-signal" /> {page.enquiryEyebrow}
-        </div>
         <h1 className="font-serif text-[40px] md:text-[58px] font-bold tracking-tight leading-[1] mb-6">
-          {page.enquiryHeadingLineOne}<br />{page.enquiryHeadingLineTwo} <span className="italic text-signal">{page.enquiryHeadingEmphasis}</span>
+          {page.enquiryHeadingLineOne}<br />{page.enquiryHeadingLineTwo} <span className="text-signal">{page.enquiryHeadingEmphasis}</span>
         </h1>
         <p className="font-body text-[15px] leading-[1.85] text-void/75 max-w-[420px]">{page.enquiryIntroduction}</p>
       </div>

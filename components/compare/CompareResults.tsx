@@ -141,7 +141,7 @@ export function CompareResults({
           <details key={group.label} open className="rounded-[var(--hvg-radius-lg)] border" style={{ borderColor: "var(--hvg-border)", background: "var(--hvg-surface)" }}>
             <summary
               className="cursor-pointer select-none px-4 py-3 text-[13px] font-bold uppercase tracking-wider"
-              style={{ color: "var(--hvg-text-primary)", fontFamily: "var(--hvg-font-mono)" }}
+              style={{ color: "var(--hvg-text-primary)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}
             >
               {group.label}
             </summary>

@@ -46,15 +46,17 @@ const config: Config = {
         rule: "rgba(var(--color-rule-base), var(--rule-alpha))",
         "rule-strong": "rgba(var(--color-rule-base), var(--rule-strong-alpha))",
       },
+      // Exactly two typefaces site-wide, defined once in app/globals.css
+      // (--font-heading = Geist, --font-body = Inter). The legacy utility names
+      // are kept so existing markup doesn't churn: serif/cta are the heading
+      // font; body/sans/mono are the body font (tabular numerals for former
+      // mono spots are applied by the .font-mono rule in globals.css).
       fontFamily: {
-        serif: ["var(--font-cormorant)", "Georgia", "serif"], // display headlines, logo
-        body: ["var(--font-baskerville)", "Georgia", "serif"], // long-form copy
-        mono: ["var(--font-dmmono)", "monospace"], // labels, timestamps, data
-        sans: ["var(--font-barlow)", "system-ui", "sans-serif"], // UI chrome, buttons
-        // Geist — CTA buttons and the shared Nav only, matching the "Orbit"
-        // homepage's look (loaded as a stylesheet in app/layout.tsx; not in
-        // this Next.js version's next/font/google list yet).
-        cta: ["Geist", "system-ui", "sans-serif"],
+        serif: ["var(--font-heading)"],
+        cta: ["var(--font-heading)"],
+        body: ["var(--font-body)"],
+        sans: ["var(--font-body)"],
+        mono: ["var(--font-body)"],
       },
       maxWidth: {
         content: "1280px",

@@ -6,7 +6,7 @@ import { getManifestoPage } from "@/lib/sanity/companyPages";
 const manifestoBodyComponents: PortableTextComponents = {
   block: { normal: ({ children }) => <p>{children}</p> },
   marks: {
-    signal: ({ children }) => <span className="text-signal italic">{children}</span>,
+    signal: ({ children }) => <span className="text-signal font-semibold">{children}</span>,
   },
 };
 
@@ -36,11 +36,8 @@ export default async function ManifestoPage() {
     <div className="pt-32">
       <section className="bg-void px-6 md:px-12 py-20 relative overflow-hidden">
         <RevealOnScroll className="max-w-content mx-auto">
-          <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-signal mb-8 flex items-center gap-4">
-            <span className="w-7 h-px bg-signal" /> {page.eyebrow}
-          </div>
           <p className="font-serif text-[32px] md:text-[60px] font-bold leading-[1.05] tracking-tight max-w-[820px]">
-            {page.heading} <span className="italic text-signal">{page.headingEmphasis}</span>
+            {page.heading} <span className="text-signal">{page.headingEmphasis}</span>
           </p>
         </RevealOnScroll>
       </section>
@@ -59,14 +56,14 @@ export default async function ManifestoPage() {
             <span className="font-serif text-4xl text-void/20">=</span>
             <div>
               <div className="font-serif text-[36px] font-bold tracking-tight">
-                {equationEmphasis && <span className="italic text-signal">{equationEmphasis}</span>}
+                {equationEmphasis && <span className="text-signal">{equationEmphasis}</span>}
                 {equationRemainder}
               </div>
               <div className="font-mono text-[11px] text-void/50 tracking-[0.1em] mt-1">{page.equationCaption}</div>
             </div>
           </div>
           <div className="bg-void text-paper p-7 border-l-[3px] border-signal mt-9">
-            <p className="font-serif italic text-[18px] leading-[1.65] mb-3">
+            <p className="font-serif text-[18px] leading-[1.65] mb-3">
               &ldquo;{page.positionQuote}&rdquo;
             </p>
             <cite className="font-mono text-[10px] tracking-[0.12em] uppercase text-muted not-italic">
@@ -80,7 +77,7 @@ export default async function ManifestoPage() {
             {page.whySectionTitle}
           </div>
           <div className="space-y-5 font-body text-[15.5px] leading-[1.9] text-void/85">
-            <p className="text-[18px] italic text-void border-l-[3px] border-signal pl-5">
+            <p className="text-[18px] text-void border-l-[3px] border-signal pl-5">
               {page.whyLead}
             </p>
             <PortableText value={page.whyBody} components={manifestoBodyComponents} />

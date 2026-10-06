@@ -6,6 +6,7 @@
 }
 .hvg-field__label {
   font-family: var(--hvg-font-mono);
+  font-variant-numeric: tabular-nums;
   font-size: 10.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -39,6 +40,7 @@
 }
 .hvg-field__error {
   font-family: var(--hvg-font-mono);
+  font-variant-numeric: tabular-nums;
   font-size: 10px;
   color: var(--hvg-danger);
 }

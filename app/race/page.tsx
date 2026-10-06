@@ -114,7 +114,7 @@ export default async function RacePage() {
         <RevealOnScroll className="mt-10">
           <p className="max-w-2xl text-[16px] leading-[1.85]" style={{ color: "var(--hvg-text-secondary)" }}>{definition}</p>
 
-          <p className="mt-3 text-[11px] uppercase tracking-wider" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>
+          <p className="mt-3 text-[11px] uppercase tracking-wider" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
             {settings.lastUpdatedLabel}: <time dateTime={dateModified}>{dateLabel}</time> ·{" "}
             <CmsLink
               link={settings.methodologyAction}

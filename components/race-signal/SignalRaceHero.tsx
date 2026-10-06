@@ -169,7 +169,7 @@ export default function SignalRaceHero({ topModels, weekLabel, copy }: SignalRac
                   boxShadow: "var(--hvg-shadow-card)",
                 }}
               >
-                <span className="font-bold text-[11px]" style={{ color: `var(${accentVar})`, fontFamily: "var(--hvg-font-mono)" }}>
+                <span className="font-bold text-[11px]" style={{ color: `var(${accentVar})`, fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
                   #{m.rank_current}
                 </span>
                 <span className="flex flex-col leading-tight">
@@ -178,7 +178,7 @@ export default function SignalRaceHero({ topModels, weekLabel, copy }: SignalRac
                 </span>
                 <span
                   className="rounded-[var(--hvg-radius-sm)] px-2 py-0.5 text-[13px] font-semibold"
-                  style={{ background: `var(${accentVar})`, color: ACCENT_SCORE_TEXT[accentVar], fontFamily: "var(--hvg-font-mono)" }}
+                  style={{ background: `var(${accentVar})`, color: ACCENT_SCORE_TEXT[accentVar], fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}
                 >
                   {m.race_score != null ? m.race_score.toFixed(1) : "—"}
                 </span>
@@ -191,13 +191,6 @@ export default function SignalRaceHero({ topModels, weekLabel, copy }: SignalRac
       {/* header row */}
       <div className="relative z-10 flex flex-wrap items-start justify-between gap-6 border-b pb-6" style={{ borderColor: "var(--hvg-border)" }}>
         <div className="max-w-xl">
-          <div
-            className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em]"
-            style={{ color: "var(--hvg-ember-strong)", fontFamily: "var(--hvg-font-mono)" }}
-          >
-            <span className={`h-2 w-2 rounded-full ${reducedMotion ? "" : "animate-blink"}`} style={{ background: "var(--hvg-ember)" }} />
-            {copy.heroEyebrow}
-          </div>
           <h1 className="text-[34px] md:text-[52px] font-bold leading-[1.02] tracking-tight" style={{ color: "var(--hvg-text-primary)" }}>
             {copy.heroHeadingLead}
             <br /> scored in <span style={{ color: "var(--hvg-ember)" }}>{copy.heroHeadingEmphasis}</span>.
@@ -205,25 +198,25 @@ export default function SignalRaceHero({ topModels, weekLabel, copy }: SignalRac
           <p className="mt-3 max-w-md text-[15px] leading-[1.6]" style={{ color: "var(--hvg-text-secondary)" }}>{copy.heroSubhead}</p>
         </div>
         <div className="flex-shrink-0 text-right">
-          <div className="mb-1 text-[10px] uppercase tracking-[0.18em]" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>
+          <div className="mb-1 text-[10px] uppercase tracking-[0.18em]" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
             {copy.heroTrackingWeekLabel}
           </div>
-          <div className="text-2xl font-semibold" style={{ color: "var(--hvg-text-primary)", fontFamily: "var(--hvg-font-mono)" }}>{weekLabel}</div>
-          <div className="mt-1 text-[11px]" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>{copy.heroNextUpdateLabel}</div>
+          <div className="text-2xl font-semibold" style={{ color: "var(--hvg-text-primary)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>{weekLabel}</div>
+          <div className="mt-1 text-[11px]" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>{copy.heroNextUpdateLabel}</div>
         </div>
       </div>
 
       {/* Live Leaderboard — real LeaderboardCard components from the design system */}
       <div className="relative z-10 flex flex-1 items-center py-6">
         {cards.length === 0 ? (
-          <div className="text-xs uppercase tracking-wider" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)" }}>
+          <div className="text-xs uppercase tracking-wider" style={{ color: "var(--hvg-text-muted)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
             {copy.heroEmptyStateLabel}
           </div>
         ) : (
           <div className="grid w-full max-w-[420px] gap-3">
             <div
               className="flex items-center justify-between px-1 text-[10px] font-bold uppercase tracking-[0.2em]"
-              style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}
+              style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}
             >
               <span>{copy.heroLeaderboardLabel}</span>
               <span>{copy.heroScoreUnitLabel}</span>
