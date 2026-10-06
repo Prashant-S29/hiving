@@ -99,7 +99,7 @@ export function CompareModelPicker({
       <div className="mb-8 max-w-2xl">
         <div
           className="mb-3 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em]"
-          style={{ color: "var(--hvg-ember-strong)", fontFamily: "var(--hvg-font-mono)" }}
+          style={{ color: "var(--hvg-ember-strong)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}
         >
           {heroEyebrow}
         </div>
@@ -121,7 +121,7 @@ export function CompareModelPicker({
               style={{ background: "var(--hvg-surface)", borderColor: "var(--hvg-border)", boxShadow: "var(--hvg-shadow-card)" }}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>
+                <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
                   Model {i + 1}
                 </span>
                 {slots.length > 1 && (

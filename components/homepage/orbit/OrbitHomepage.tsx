@@ -7,8 +7,8 @@ import { OrbitalHero } from "./OrbitalHero";
 import { RaceScoreStrip } from "./RaceScoreStrip";
 import "./orbit-hero.css";
 
-// Geist and JetBrains Mono are loaded once, globally, in app/layout.tsx —
-// this page just references them ('Geist' / var(--font-jetbrains-mono)).
+// Fonts (Geist headings, Inter body) are loaded once, globally, in app/layout.tsx;
+// this page references them via var(--font-heading) / var(--font-body).
 
 const marqueeNames = ["NORTHWIND", "Arclight", "MERIDIAN", "Foundry AI", "Halcyon", "BRIGHTPATH", "Kestrel", "OMNICORE"];
 
@@ -45,7 +45,7 @@ export function OrbitHomepage({
 }) {
   const spotlight = articles[0];
   return (
-    <div className="hv-orbit-root hv-orbit-grain" style={{ fontFamily: "'Geist', system-ui, sans-serif", color: "#241912", background: "#fff8f5" }}>
+    <div className="hv-orbit-root hv-orbit-grain" style={{ fontFamily: "var(--font-body)", color: "#241912", background: "#fff8f5" }}>
       <Nav settings={settings} />
 
       {/* ============ ORBITAL HERO ============ */}
@@ -104,7 +104,7 @@ export function OrbitHomepage({
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 9,
-                fontFamily: "var(--font-jetbrains-mono), monospace",
+                fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
                 fontSize: 12,
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
@@ -188,8 +188,8 @@ export function OrbitHomepage({
           >
             {stats.map((s, i) => (
               <div key={s.label} style={{ padding: "22px 24px", borderLeft: i > 0 ? "1px solid #ddc1ae" : undefined }}>
-                <div style={{ fontWeight: 800, fontSize: 36, color: s.color, letterSpacing: "-0.03em" }}>{s.value}</div>
-                <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase", color: "#897362", marginTop: 6 }}>
+                <div style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: 36, color: s.color, letterSpacing: "-0.03em" }}>{s.value}</div>
+                <div style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase", color: "#897362", marginTop: 6 }}>
                   {s.label}
                 </div>
               </div>
@@ -204,7 +204,7 @@ export function OrbitHomepage({
       <div style={{ background: "#fff1e9", borderBottom: "1px solid #ddc1ae", overflow: "hidden", padding: "24px 0" }}>
         <div
           style={{
-            fontFamily: "var(--font-jetbrains-mono), monospace",
+            fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
             fontSize: 11,
             letterSpacing: "0.14em",
             textTransform: "uppercase",
@@ -229,11 +229,11 @@ export function OrbitHomepage({
       {/* ============ FEATURED DEEP DIVE ============ */}
       <div style={{ maxWidth: 1440, margin: "0 auto", padding: "80px 32px 0" }}>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", borderBottom: "2px solid #241912", paddingBottom: 14, marginBottom: 32 }}>
-          <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", color: "#904d00" }}>
+          <div style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", color: "#904d00" }}>
             // This week's dispatch
           </div>
           {spotlight && (
-            <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, color: "#897362" }}>
+            <div style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 12, color: "#897362" }}>
               {new Date(spotlight.publishedAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
             </div>
           )}
@@ -247,7 +247,7 @@ export function OrbitHomepage({
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 8,
-                fontFamily: "var(--font-jetbrains-mono), monospace",
+                fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
                 fontSize: 11,
                 fontWeight: 700,
                 letterSpacing: "0.06em",
@@ -269,7 +269,7 @@ export function OrbitHomepage({
             <p style={{ fontSize: 16, lineHeight: 1.6, color: "#564334", margin: "0 0 28px", maxWidth: "46ch" }}>
               {spotlight.deck}
             </p>
-            <div style={{ display: "flex", alignItems: "center", gap: 16, fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, color: "#897362" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 16, fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 12, color: "#897362" }}>
               <span style={{ color: "#904d00", fontWeight: 700 }}>Read the analysis →</span>
               <span>{spotlight.readTimeMinutes} min read</span>
             </div>
@@ -284,7 +284,7 @@ export function OrbitHomepage({
               color: "#ffede3",
             }}
           >
-            <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: "#ffb77d" }}>
+            <div style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: "#ffb77d" }}>
               Verdict scorecard
             </div>
             <div>
@@ -300,11 +300,11 @@ export function OrbitHomepage({
                   }}
                 >
                   <span style={{ fontSize: 14 }}>{row.label}</span>
-                  <span style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontWeight: 700, color: row.color }}>{row.value}</span>
+                  <span style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontWeight: 700, color: row.color }}>{row.value}</span>
                 </div>
               ))}
             </div>
-            <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, color: "#ffb77d" }}>Independently scored · no vendor input</div>
+            <div style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 11, color: "#ffb77d" }}>Independently scored · no vendor input</div>
           </div>
         </div>
         )}
@@ -314,7 +314,7 @@ export function OrbitHomepage({
       <div style={{ maxWidth: 1440, margin: "0 auto", padding: "64px 32px 0" }}>
         <div
           style={{
-            fontFamily: "var(--font-jetbrains-mono), monospace",
+            fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
             fontSize: 12,
             letterSpacing: "0.06em",
             textTransform: "uppercase",
@@ -332,7 +332,7 @@ export function OrbitHomepage({
               href={`/intel/${a.slug.current}`}
               style={{ display: "block", padding: "30px 30px 34px", borderRight: i < articles.length - 1 ? "1px solid #ddc1ae" : undefined, background: "#ffffff" }}
             >
-              <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, color: "#904d00", marginBottom: 14, letterSpacing: "0.05em" }}>
+              <div style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 11, color: "#904d00", marginBottom: 14, letterSpacing: "0.05em" }}>
                 {articleCategoryLabels[a.tagType].toUpperCase()} · {a.readTimeMinutes} MIN
               </div>
               <h3 style={{ fontWeight: 600, fontSize: 22, lineHeight: 1.14, letterSpacing: "-0.02em", margin: "0 0 10px" }}>{a.title}</h3>
@@ -366,7 +366,7 @@ export function OrbitHomepage({
             }}
           />
           <div style={{ position: "relative", maxWidth: 660 }}>
-            <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "#ffdcc3", marginBottom: 20 }}>
+            <div style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "#ffdcc3", marginBottom: 20 }}>
               The Hivig promise
             </div>
             <div style={{ fontWeight: 800, fontSize: 46, lineHeight: 1.06, letterSpacing: "-0.03em", color: "#fffaf7" }}>
@@ -434,7 +434,7 @@ export function OrbitHomepage({
               padding: "20px 32px",
               display: "flex",
               justifyContent: "space-between",
-              fontFamily: "var(--font-jetbrains-mono), monospace",
+              fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums",
               fontSize: 11,
               color: "#a58b78",
             }}
@@ -451,7 +451,7 @@ export function OrbitHomepage({
 function FooterCol({ title, items }: { title: string; items: { label: string; href?: string }[] }) {
   return (
     <div>
-      <div style={{ fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: "#ffb77d", marginBottom: 14 }}>
+      <div style={{ fontFamily: "var(--font-body)", fontVariantNumeric: "tabular-nums", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: "#ffb77d", marginBottom: 14 }}>
         {title}
       </div>
       <div style={{ fontSize: 13, lineHeight: 2.2 }}>

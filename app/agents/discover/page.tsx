@@ -23,7 +23,7 @@ export default async function DiscoverPage() {
   return (
     <SignalPageShell>
       <div className="mx-auto max-w-4xl">
-        <div className="mb-5 flex items-center gap-4 text-[11px] uppercase tracking-[0.25em]" style={{ color: "var(--hvg-ember-strong)", fontFamily: "var(--hvg-font-mono)" }}>
+        <div className="mb-5 flex items-center gap-4 text-[11px] uppercase tracking-[0.25em]" style={{ color: "var(--hvg-ember-strong)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
           <span className="h-px w-8" style={{ background: "var(--hvg-ember)" }} /> {page.eyebrow}
         </div>
 

@@ -91,7 +91,7 @@ export default function SignalAgentIntakeForm({ copy }: { copy: AgentQuoteFormCo
             modelCreditsCostUSD={quote.modelCreditsCostUSD}
             humanHoursCostUSD={quote.humanHoursCostUSD}
           />
-          <p className="mt-3 text-[11px] leading-relaxed" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)" }}>
+          <p className="mt-3 text-[11px] leading-relaxed" style={{ color: "var(--hvg-text-dim)", fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums" }}>
             {copy.quoteDisclaimer}
           </p>
         </div>

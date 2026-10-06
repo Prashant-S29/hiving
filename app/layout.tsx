@@ -1,46 +1,18 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
-import { Cormorant_Garamond, Libre_Baskerville, DM_Mono, Barlow, JetBrains_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 import { getSiteSettings } from "@/lib/sanity/siteSettings";
 
-const cormorant = Cormorant_Garamond({
+// The site uses exactly two typefaces: Geist for headings (loaded via <link>
+// below) and Inter for subheads/body, exposed as --font-inter and surfaced to
+// the rest of the app as --font-body (see app/globals.css).
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
-  variable: "--font-cormorant",
-  display: "swap",
-});
-
-const baskerville = Libre_Baskerville({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-baskerville",
-  display: "swap",
-});
-
-const dmMono = DM_Mono({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-dmmono",
-  display: "swap",
-});
-
-const barlow = Barlow({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-barlow",
-  display: "swap",
-});
-
-// Used by the shared Nav (and the "Orbit" homepage) for technical/mono text —
-// timestamps, nav labels, badges.
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-jetbrains-mono",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -79,11 +51,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const previewEnabled = draftMode().isEnabled;
 
   return (
-    <html lang="en" className={`${cormorant.variable} ${baskerville.variable} ${dmMono.variable} ${barlow.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={inter.variable}>
       <head>
         {/* Geist isn't in this Next.js version's next/font/google list yet — loaded
-            as a regular stylesheet instead. Used by the shared Nav (and the "Orbit"
-            homepage) for its display type. */}
+            as a regular stylesheet instead. It's the site's heading font
+            (--font-heading in app/globals.css). */}
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap" />
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>

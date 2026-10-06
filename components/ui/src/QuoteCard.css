@@ -17,6 +17,7 @@
 }
 .hvg-qcard__label {
   font-family: var(--hvg-font-mono);
+  font-variant-numeric: tabular-nums;
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -24,11 +25,13 @@
 }
 .hvg-qcard__region {
   font-family: var(--hvg-font-mono);
+  font-variant-numeric: tabular-nums;
   font-size: 10px;
   color: var(--hvg-text-dim);
 }
 .hvg-qcard__price {
   font-family: var(--hvg-font-mono);
+  font-variant-numeric: tabular-nums;
   font-weight: 600;
   font-size: 36px;
   color: var(--hvg-text-primary);
@@ -38,6 +41,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 6px 16px;
   font-family: var(--hvg-font-mono);
+  font-variant-numeric: tabular-nums;
   font-size: 11.5px;
 }
 .hvg-qcard__line {
@@ -54,6 +58,7 @@
 }
 .hvg-qcard__breakdown {
   font-family: var(--hvg-font-mono);
+  font-variant-numeric: tabular-nums;
   font-size: 10px;
   letter-spacing: 0.04em;
   color: var(--hvg-text-dim);

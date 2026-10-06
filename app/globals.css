@@ -54,6 +54,33 @@
   --rule-strong-alpha: 0.14;
 }
 
+/* TYPOGRAPHY — the site uses exactly two typefaces. Change them here (and in
+ * app/layout.tsx where they're loaded) and everything follows: Tailwind's
+ * font-* utilities (tailwind.config.ts), the .prose-hivig article styles
+ * below, the Signal Room design system tokens, and the Orbit homepage's
+ * inline styles all point at these two variables. */
+:root {
+  --font-heading: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Numbers in former-monospace spots (scores, ranks, tables) stay column-aligned
+ * now that there's no mono face. */
+.font-mono {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Every heading element is the heading font by default, on every page and in
+ * all three design systems; utility classes / inline styles still win. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -115,13 +142,13 @@ body {
 
 /* Article body typography (Sanity Portable Text renders into this) */
 .prose-hivig {
-  font-family: var(--font-baskerville);
+  font-family: var(--font-body);
   font-size: 18px;
   line-height: 1.85;
   color: rgba(var(--color-ink), 0.85);
 }
 .prose-hivig h2 {
-  font-family: var(--font-cormorant);
+  font-family: var(--font-heading);
   font-size: 30px;
   font-weight: 700;
   color: rgb(var(--color-ink));
@@ -129,7 +156,7 @@ body {
   letter-spacing: -0.5px;
 }
 .prose-hivig h3 {
-  font-family: var(--font-cormorant);
+  font-family: var(--font-heading);
   font-size: 24px;
   font-weight: 700;
   color: rgb(var(--color-ink));
@@ -141,20 +168,19 @@ body {
 .prose-hivig blockquote {
   border-left: 3px solid rgb(var(--color-signal));
   padding-left: 20px;
-  font-style: italic;
   font-size: 20px;
   color: rgb(var(--color-ink));
   margin: 1.8em 0;
 }
 .prose-hivig code {
-  font-family: var(--font-dmmono);
+  font-family: var(--font-body);
   background: rgb(var(--color-surface));
   padding: 2px 6px;
   font-size: 0.85em;
   border-radius: 2px;
 }
 .prose-hivig pre {
-  font-family: var(--font-dmmono);
+  font-family: var(--font-body);
   background: rgb(var(--color-surface));
   padding: 20px;
   overflow-x: auto;
@@ -199,7 +225,7 @@ body {
   vertical-align: top;
 }
 .prose-hivig th {
-  font-family: var(--font-dmmono);
+  font-family: var(--font-body);
   font-size: 0.75em;
   text-transform: uppercase;
   letter-spacing: 0.05em;

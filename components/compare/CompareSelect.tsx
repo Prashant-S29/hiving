@@ -28,7 +28,7 @@ export function CompareSelect({ label, value, onChange, options, placeholder, di
     <label style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1, minWidth: 0 }}>
       <span
         style={{
-          fontFamily: "var(--hvg-font-mono)",
+          fontFamily: "var(--hvg-font-mono)", fontVariantNumeric: "tabular-nums",
           fontSize: 10,
           letterSpacing: "0.14em",
           textTransform: "uppercase",

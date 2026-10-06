@@ -18,6 +18,7 @@
 }
 .hvg-statcard__label {
   font-family: var(--hvg-font-mono);
+  font-variant-numeric: tabular-nums;
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -39,6 +40,7 @@
 }
 .hvg-statcard__value {
   font-family: var(--hvg-font-mono);
+  font-variant-numeric: tabular-nums;
   font-weight: 600;
   font-size: 42px;
   color: var(--hvg-text-primary);
